@@ -162,6 +162,7 @@ bool GameData::BeginLoad(const char * const *argv)
 	bool printShips = false;
 	bool printTests = false;
 	bool printWeapons = false;
+	bool printFleets = false;
 	bool debugMode = false;
 	for(const char * const *it = argv + 1; *it; ++it)
 	{
@@ -176,6 +177,8 @@ bool GameData::BeginLoad(const char * const *argv)
 				printTests = true;
 			if(arg == "-d" || arg == "--debug")
 				debugMode = true;
+			if(arg == "-f" || arg == "--fleet")
+				printFleets = true;
 			continue;
 		}
 	}
@@ -256,6 +259,8 @@ bool GameData::BeginLoad(const char * const *argv)
 		PrintTestsTable();
 	if(printWeapons)
 		PrintWeaponTable();
+	if(printFleets)
+		PrintFleetList();
 	return !(printShips || printWeapons || printTests);
 }
 
@@ -1324,6 +1329,18 @@ void GameData::PrintWeaponTable()
 		cout << outfit.Homing() << '\t';
 		double strength = outfit.MissileStrength() + outfit.AntiMissile();
 		cout << strength << '\n';
+	}
+	cout.flush();
+}
+
+
+
+// Print the game's instantiated fleets to the console for debugging.
+void GameData::PrintFleetList()
+{
+	for (auto &it : fleets)
+	{
+		it.second.PrintShipList();
 	}
 	cout.flush();
 }

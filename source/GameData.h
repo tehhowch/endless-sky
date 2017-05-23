@@ -156,6 +156,7 @@ private:
 	static void PrintShipTable();
 	static void PrintTestsTable();
 	static void PrintWeaponTable();
+	static void PrintFleetList();
 };
 
 

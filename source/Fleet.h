@@ -61,6 +61,9 @@ public:
 	// uncarried ships will be added to the list (as any carriables will be stored in bays).
 	void Place(const System &system, std::list<std::shared_ptr<Ship>> &ships, bool carried = true) const;
 	
+	// Allow printing the game fleets to the console for debugging purposes.
+	void PrintShipList();
+	
 	// Do the randomization to make a ship enter or be in the given system.
 	// Return the system that was chosen for the ship to enter from.
 	static const System *Enter(const System &system, Ship &ship, const System *source = nullptr);

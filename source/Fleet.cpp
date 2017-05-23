@@ -21,11 +21,13 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Planet.h"
 #include "Random.h"
 #include "Ship.h"
+#include "Sprite.h"
 #include "StellarObject.h"
 #include "System.h"
 
 #include <algorithm>
 #include <cmath>
+#include <iostream>
 #include <iterator>
 
 using namespace std;
@@ -504,6 +506,33 @@ void Fleet::Place(const System &system, list<shared_ptr<Ship>> &ships, bool carr
 		
 		SetCargo(&*ship);
 	}
+}
+
+
+
+// Print the contents of this fleet
+void Fleet::PrintShipList()
+{
+	cout << "\n------------------------" << endl;
+	std::cout << "Fleet: " << fleetName << std::endl;
+	for(const Variant &variant : variants)
+	{
+		if(variant.ships.empty())
+			std::cout << "No ships in this fleet." << std::endl;
+		else
+		{
+			std::cout << "Weight: " << variant.weight << endl;
+			for(const Ship *model : variant.ships)
+			{
+				const Sprite *sprite = model->GetSprite();
+				if(sprite)
+					std::cout << "\t" << model->VariantName() << ": (" << sprite->Name().substr(5) << ")" << endl;
+				else
+					std::cout << "\t" << model->VariantName() << ": (no sprite)" << endl;
+			}
+		}
+	}
+	return;
 }
 
 
