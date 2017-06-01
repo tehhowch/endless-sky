@@ -69,7 +69,8 @@ int main(int argc, char *argv[])
 	bool debugMode = false;
 	bool loadOnly = false;
 	string testToRunName = "";
-
+	bool printFleets = false;
+	
 	for(const char *const *it = argv + 1; *it; ++it)
 	{
 		string arg = *it;
@@ -91,6 +92,8 @@ int main(int argc, char *argv[])
 			loadOnly = true;
 		else if(arg == "--test" && *++it)
 			testToRunName = *it;
+		else if(arg == "--player-fleets")
+			printFleets = true;
 	}
 	
 	try {
@@ -112,6 +115,11 @@ int main(int argc, char *argv[])
 			if(!checkedReferences)
 				GameData::CheckReferences();
 			cout << "Parse completed." << endl;
+			return 0;
+		}
+		else if(printFleets)
+		{
+			GameData::PrintFleetList();
 			return 0;
 		}
 		
@@ -340,6 +348,8 @@ void PrintHelp()
 	cerr << "    -p, --parse-save: load the most recent saved game and inspect it for content errors" << endl;
 	cerr << "    --tests: print table of available tests, then exit." << endl;
 	cerr << "    --test <name>: run given test from resources directory" << endl;
+	cerr << "    -f, --fleets: print list of fleets from the game, before loading a save." << endl;
+	cerr << "    --player-fleets: print list of fleets from the default saved game." << endl;
 	cerr << endl;
 	cerr << "Report bugs to: <https://github.com/endless-sky/endless-sky/issues>" << endl;
 	cerr << "Home page: <https://endless-sky.github.io>" << endl;

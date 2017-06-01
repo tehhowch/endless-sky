@@ -146,7 +146,7 @@ public:
 	static const std::map<std::string, std::string> &HelpTemplates();
 	
 	static const std::map<std::string, std::string> &PluginAboutText();
-	
+	static void PrintFleetList();
 	
 private:
 	static void LoadSources();
@@ -156,7 +156,6 @@ private:
 	static void PrintShipTable();
 	static void PrintTestsTable();
 	static void PrintWeaponTable();
-	static void PrintFleetList();
 };
 
 

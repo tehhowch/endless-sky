@@ -513,6 +513,7 @@ void Fleet::Place(const System &system, list<shared_ptr<Ship>> &ships, bool carr
 // Print the contents of this fleet
 void Fleet::PrintShipList()
 {
+	int total = 0;
 	cout << "\n------------------------" << endl;
 	std::cout << "Fleet: " << fleetName << std::endl;
 	for(const Variant &variant : variants)
@@ -521,6 +522,7 @@ void Fleet::PrintShipList()
 			std::cout << "No ships in this fleet." << std::endl;
 		else
 		{
+			total += variant.weight;
 			std::cout << "Weight: " << variant.weight << endl;
 			for(const Ship *model : variant.ships)
 			{
@@ -532,6 +534,7 @@ void Fleet::PrintShipList()
 			}
 		}
 	}
+	std::cout << "Total Weight: " << total << endl;
 	return;
 }
 
