@@ -1124,7 +1124,7 @@ void Engine::CalculateStep()
 		else
 		{
 			// Missiles have a chance to target nearby ships if they have no target,
-			// or have failed to lock their current target for a
+			// or have failed to lock onto their current target for multiple steps.
 			if(it->MissileStrength())
 				it->AcquireTarget(shipCollisions);
 			++it;

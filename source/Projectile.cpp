@@ -153,7 +153,7 @@ bool Projectile::Move(list<Effect> &effects)
 		CheckLock(*target);
 	if(target && homing && hasLock)
 	{
-		// The longer a lock has been held, the less likely the ship will retarget.
+		// The longer a lock has been held, the less likely the missile will retarget.
 		++lockLifetime;
 		
 		// Vector d is the direction we want to turn towards.
@@ -306,22 +306,21 @@ const Ship *Projectile::Target() const
 void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 {
 	// Retargeting only makes sense if this projectile is a missile with homing ability.
-	if(weapon->Homing() && weapon->MissileStrength() && !Random::Int(5) && lifetime > 30)
+	if(weapon->Homing() && weapon->MissileStrength() && !Random::Int(10) && lifetime > 30)
 	{
 		// Only missiles that have no current target, or have failed to lock their current
 		// target for a substantial portion of time, should try to retarget.
 		const Ship *target = cachedTarget;
-		shared_ptr<Ship> newTarget;
-		const bool shouldRetarget = (lockLifetime < 1 || !target);
-		if(shouldRetarget)
+		std::weak_ptr<const Ship> newTargetShip;
+		if(lockLifetime < 1 || !target)
 		{
 			// Target the "closest" hostile ship, as identified by the missile's tracking.
 			const double remainingRange = lifetime * weapon->Velocity();
 			double closest = remainingRange;
-			for(const Body *body : possibleTargets.Circle(position, remainingRange))
+			for(Body *body : possibleTargets.Circle(position, remainingRange))
 			{
 				// Ships must already be hostile to be targeted.
-				Ship *ship = reinterpret_cast<Ship *>(&body);
+				Ship *ship = reinterpret_cast<Ship *>(body);
 				if(ship && this->GetGovernment()->IsEnemy(body->GetGovernment()))
 				{
 					// Prefer targets in front of the missile, especially if the missile is slow-turning.
@@ -337,17 +336,20 @@ void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 					
 					if(range < closest)
 					{
-						newTarget = ship->shared_from_this();
+						newTargetShip = ship->shared_from_this();
 						closest = range;
 					}
 				}
 			}
 		}
 		
-		if(newTarget)
+		if(newTargetShip.lock().get())
 		{
-			cachedTarget = target;
-			targetGovernment = target->GetGovernment();
+			targetShip.reset();
+			targetShip.swap(newTargetShip);
+			cachedTarget = targetShip.lock().get();
+			targetGovernment = cachedTarget->GetGovernment();
+			hasLock = true;
 			lockLifetime = 10;
 		}
 	}
