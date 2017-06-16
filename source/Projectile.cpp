@@ -306,7 +306,7 @@ const Ship *Projectile::Target() const
 void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 {
 	// Retargeting only makes sense if this projectile is a missile with homing ability.
-	if(weapon->Homing() && weapon->MissileStrength() && !Random::Int(10) && lifetime > 30)
+	if(weapon->Homing() && weapon->MissileStrength() && lifetime > 30)
 	{
 		// Only missiles that have no current target, or have failed to lock their current
 		// target for a substantial portion of time, should try to retarget.
@@ -316,7 +316,7 @@ void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 		{
 			// Target the "closest" hostile ship, as identified by the missile's tracking.
 			const double remainingRange = lifetime * weapon->Velocity();
-			double closest = remainingRange;
+			double closest = remainingRange / 2;
 			for(Body *body : possibleTargets.Circle(position, remainingRange))
 			{
 				// Ships must already be hostile to be targeted.
