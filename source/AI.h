@@ -27,6 +27,7 @@ class Body;
 class Flotsam;
 class Government;
 class Minable;
+class Planet;
 class Ship;
 class ShipEvent;
 class StellarObject;
@@ -125,7 +126,7 @@ private:
 		static const int HOLD_POSITION = 0x000;
 		static const int MOVE_TO = 0x001;
 		static const int TRAVEL_TO = 0x002;
-		static const int LAND_ON = 0x003
+		static const int LAND_ON = 0x003;
 		static const int KEEP_STATION = 0x100;
 		static const int GATHER = 0x101;
 		static const int ATTACK = 0x102;

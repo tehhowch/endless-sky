@@ -94,13 +94,13 @@ void AI::IssueNPCTravelOrders(const Ship &npcShip, const System *moveToSystem, c
 		if(targetPlanet)
 			newOrders.targetPlanet = targetPlanet;
 	}
-	else if(targetPlanet && targetPlanet->IsInSystem(npc.GetSystem()))
+	else if(targetPlanet && targetPlanet->IsInSystem(npcShip.GetSystem()))
 	{
 		newOrders.type = Orders::LAND_ON;
 		newOrders.targetPlanet = targetPlanet;
 	}
 	// Replace the NPC's existing orders with these updated orders.
-	Orders &existing = orders[npcShip];
+	Orders &existing = orders[&npcShip];
 	existing = newOrders;
 }
 
