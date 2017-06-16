@@ -83,6 +83,29 @@ AI::AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsa
 
 
 	
+// NPC commands from mission events (e.g. "on enter") or from game state instantiation.
+void AI::IssueNPCTravelOrders(const Ship &npcShip, const System *moveToSystem, const Planet *targetPlanet)
+{
+	Orders newOrders;
+	if(moveToSystem && npcShip.GetSystem() != moveToSystem)
+	{
+		newOrders.type = Orders::TRAVEL_TO;
+		newOrders.targetSystem = moveToSystem;
+		if(targetPlanet)
+			newOrders.targetPlanet = targetPlanet;
+	}
+	else if(targetPlanet && targetPlanet->IsInSystem(npc.GetSystem()))
+	{
+		newOrders.type = Orders::LAND_ON;
+		newOrders.targetPlanet = targetPlanet;
+	}
+	// Replace the NPC's existing orders with these updated orders.
+	Orders &existing = orders[npcShip];
+	existing = newOrders;
+}
+
+
+
 // Fleet commands from the player.
 void AI::IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &target)
 {
@@ -814,6 +837,7 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		return false;
 	
 	int type = it->second.type;
+	const bool isTravelOrder = (type == Orders::MOVE_TO || type == Orders::TRAVEL_TO);
 	
 	// If your parent is jumping or absent, that overrides your orders unless
 	// your orders are to hold position.
@@ -827,7 +851,7 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 	}
 	
 	shared_ptr<Ship> target = it->second.target.lock();
-	if(type == Orders::MOVE_TO && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
+	if(isTravelOrder && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
 	{
 		// The desired position is in a different system.
 		DistanceMap distance(ship, it->second.targetSystem);
@@ -843,6 +867,13 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 			Stop(ship, command);
 		else
 			command.SetTurn(TurnToward(ship, TargetAim(ship)));
+	}
+	else if(type == Orders::LAND_ON && it->second.targetPlanet)
+	{
+		// LAND_ON would not be issued unless the planet was in this system.
+		ship.SetTargetStellar(ship.GetSystem()->FindStellar(it->second.targetPlanet));
+		command |= Command::LAND;
+		return false;
 	}
 	else if(!target)
 	{

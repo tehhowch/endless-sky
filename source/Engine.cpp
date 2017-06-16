@@ -211,6 +211,10 @@ void Engine::Place()
 				if(!ship->GetPersonality().IsUninterested())
 					ship->SetParent(flagship);
 			}
+			
+			// Missions may have given an NPC a destination system that is not its current system.
+			if(ship->GetDestinationSystem() || ship->GetTravelDestination())
+				ai.IssueNPCTravelOrders(*ship, ship->GetDestinationSystem(), ship->GetTravelDestination());
 		}
 	
 	// Get the coordinates of the planet the player is leaving.

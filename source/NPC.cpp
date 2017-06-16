@@ -386,6 +386,10 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 	{
 		result.ships.push_back(make_shared<Ship>(*ship));
 		result.ships.back()->FinishLoading();
+		if(landingTarget)
+			result.ships.back()->SetTravelDestination(landingTarget);
+		if(targetSystem)
+			result.ships.back()->SetDestinationSystem(targetSystem);
 	}
 	auto shipIt = stockShips.begin();
 	auto nameIt = shipNames.begin();
