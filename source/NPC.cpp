@@ -386,10 +386,6 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 	{
 		result.ships.push_back(make_shared<Ship>(*ship));
 		result.ships.back()->FinishLoading();
-		if(landingTarget)
-			result.ships.back()->SetTravelDestination(landingTarget);
-		if(targetSystem)
-			result.ships.back()->SetDestinationSystem(targetSystem);
 	}
 	auto shipIt = stockShips.begin();
 	auto nameIt = shipNames.begin();
@@ -408,6 +404,10 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 		ship->SetGovernment(result.government);
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
+		if(landingTarget)
+			ship->SetTravelDestination(landingTarget);
+		if(targetSystem)
+			ship->SetDestinationSystem(targetSystem);
 		
 		if(personality.IsEntering())
 			Fleet::Enter(*result.system, *ship);
