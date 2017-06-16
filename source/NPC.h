@@ -69,6 +69,10 @@ private:
 	const System *system = nullptr;
 	bool isAtDestination = false;
 	
+	// NPCs may have been given a destination system or planet.
+	const System *targetSystem = nullptr;
+	const Planet *landingTarget = nullptr;
+	
 	// Dialog or conversation to show when all requirements for this NPC are met:
 	std::string dialogText;
 	Conversation conversation;

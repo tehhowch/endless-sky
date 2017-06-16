@@ -73,6 +73,10 @@ void NPC::Load(const DataNode &node)
 			else
 				location.Load(child);
 		}
+		else if(child.Token(0) == "destination" && child.Size() >= 2)
+			targetSystem = GameData::Systems().Get(child.Token(1));
+		else if(child.Token(0) == "land" && child.Size() >= 2)
+			landingTarget = GameData::Planets().Get(child.Token(1));
 		else if(child.Token(0) == "succeed" && child.Size() >= 2)
 			succeedIf = child.Value(1);
 		else if(child.Token(0) == "fail" && child.Size() >= 2)
@@ -164,6 +168,11 @@ void NPC::Save(DataWriter &out) const
 		if(government)
 			out.Write("government", government->GetName());
 		personality.Save(out);
+		
+		if(targetSystem)
+			out.Write("destination", targetSystem->Name());
+		if(landingTarget)
+			out.Write("land", landingTarget->Name());
 		
 		if(!dialogText.empty())
 		{
