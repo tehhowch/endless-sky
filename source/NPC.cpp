@@ -154,6 +154,10 @@ void NPC::Load(const DataNode &node)
 		ship->SetGovernment(government);
 		ship->SetPersonality(personality);
 		ship->SetIsSpecial();
+		if(targetSystem)
+			ship->SetDestinationSystem(targetSystem);
+		if(landingTarget)
+			ship->SetTravelDestination(landingTarget);
 	}
 }
 
