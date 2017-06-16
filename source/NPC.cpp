@@ -73,10 +73,20 @@ void NPC::Load(const DataNode &node)
 			else
 				location.Load(child);
 		}
-		else if(child.Token(0) == "destination" && child.Size() >= 2)
-			targetSystem = GameData::Systems().Get(child.Token(1));
-		else if(child.Token(0) == "land" && child.Size() >= 2)
-			landingTarget = GameData::Planets().Get(child.Token(1));
+		else if(child.Token(0) == "destination")
+		{
+			if(child.Size() >= 2)
+				targetSystem = GameData::Systems().Get(child.Token(1));
+			else
+				needsTravelTarget = true;
+		}
+		else if(child.Token(0) == "land")
+		{ 
+			if(child.Size() >= 2)
+				landingTarget = GameData::Planets().Get(child.Token(1));
+			else
+				needsLandingTarget = true;
+		}
 		else if(child.Token(0) == "succeed" && child.Size() >= 2)
 			succeedIf = child.Value(1);
 		else if(child.Token(0) == "fail" && child.Size() >= 2)
@@ -408,6 +418,8 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 			ship->SetTravelDestination(landingTarget);
 		if(targetSystem)
 			ship->SetDestinationSystem(targetSystem);
+		if(needsTravelTarget)
+			ship->SetDestinationSystem(destination);
 		
 		if(personality.IsEntering())
 			Fleet::Enter(*result.system, *ship);
