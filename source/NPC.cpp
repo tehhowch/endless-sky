@@ -363,9 +363,10 @@ bool NPC::HasFailed() const
 
 // Create a copy of this NPC but with the fleets replaced by the actual
 // ships they represent, wildcards in the conversation text replaced, etc.
-NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const System *destination) const
+NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Planet *destinationPlanet) const
 {
 	NPC result;
+	const System *destination = destinationPlanet->GetSystem();
 	result.government = government;
 	if(!result.government)
 		result.government = GameData::PlayerGovernment();
@@ -375,6 +376,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 	result.mustEvade = mustEvade;
 	result.mustAccompany = mustAccompany;
 	result.targetSystem = needsTravelTarget ? destination : targetSystem;
+	result.landingTarget = needsLandingTarget ? destinationPlanet : landingTarget;
 	
 	// Pick the system for this NPC to start out in.
 	result.system = system;
