@@ -370,6 +370,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 	result.failIf = failIf;
 	result.mustEvade = mustEvade;
 	result.mustAccompany = mustAccompany;
+	result.targetSystem = needsTravelTarget ? destination : targetSystem;
 	
 	// Pick the system for this NPC to start out in.
 	result.system = system;
@@ -416,10 +417,8 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Syst
 		ship->SetPersonality(result.personality);
 		if(landingTarget)
 			ship->SetTravelDestination(landingTarget);
-		if(targetSystem)
-			ship->SetDestinationSystem(targetSystem);
-		if(needsTravelTarget)
-			ship->SetDestinationSystem(destination);
+		if(result.targetSystem)
+			ship->SetDestinationSystem(result.targetSystem);
 		
 		if(personality.IsEntering())
 			Fleet::Enter(*result.system, *ship);
