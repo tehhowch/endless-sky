@@ -1074,7 +1074,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 	// "parent" to land (because the parent may not be planning on landing).
 	if(hasFuelCapacity && !ship.JumpsRemaining() && ship.GetSystem()->HasFuelFor(ship))
 		Refuel(ship, command);
-	else if(!parentIsHere && !isStaying)
+	else if(!parentIsHere && (!isStaying || ship.GetDestinationSystem()))
 	{
 		// Check whether the ship has a target system and is able to jump to it.
 		bool hasJump = (ship.GetTargetSystem() && ship.JumpFuel(ship.GetTargetSystem()));
@@ -1091,7 +1091,9 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 					ship.SetTargetStellar(&object);
 					break;
 				}
-			ship.SetTargetSystem(to);
+			// If the npc/escort had already been given a destination, do not overwrite it.
+			if(!ship.GetDestinationSystem())
+				ship.SetTargetSystem(to);
 			// Check if we need to refuel. Wormhole travel does not require fuel.
 			if(!ship.GetTargetStellar() && (!to || 
 					(from->HasFuelFor(ship) && !to->HasFuelFor(ship) && ship.JumpsRemaining() == 1)))
@@ -1120,9 +1122,12 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 		Stop(ship, command, .2);
 	else if(parent.Commands().Has(Command::JUMP) && parent.GetTargetSystem() && !isStaying)
 	{
+		// If the npc/escort does not already have a travel target, follow the parent.
 		DistanceMap distance(ship, parent.GetTargetSystem());
 		const System *dest = distance.Route(ship.GetSystem());
-		ship.SetTargetSystem(dest);
+		if(!ship.GetDestinationSystem())
+			ship.SetTargetSystem(dest);
+		
 		if(!dest || (ship.GetSystem()->HasFuelFor(ship) && !dest->HasFuelFor(ship) && ship.JumpsRemaining() == 1))
 			Refuel(ship, command);
 		else

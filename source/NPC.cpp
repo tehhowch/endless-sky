@@ -81,7 +81,7 @@ void NPC::Load(const DataNode &node)
 				needsTravelTarget = true;
 		}
 		else if(child.Token(0) == "land")
-		{ 
+		{
 			if(child.Size() >= 2)
 				landingTarget = GameData::Planets().Get(child.Token(1));
 			else
