@@ -421,8 +421,8 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetGovernment(result.government);
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
-		if(landingTarget)
-			ship->SetTravelDestination(landingTarget);
+		if(result.landingTarget)
+			ship->SetTravelDestination(result.landingTarget);
 		if(result.targetSystem)
 			ship->SetDestinationSystem(result.targetSystem);
 		
