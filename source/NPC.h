@@ -71,9 +71,13 @@ private:
 	
 	// NPCs may have been given a destination system or planet.
 	const System *targetSystem = nullptr;
+	std::vector<const System *> targetSystems;
+	const System *destination;
+	
 	const Planet *landingTarget = nullptr;
 	bool needsTravelTarget = false;
 	bool needsLandingTarget = false;
+	size_t destinationQueue = 0;
 	
 	// Dialog or conversation to show when all requirements for this NPC are met:
 	std::string dialogText;
