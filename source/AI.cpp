@@ -639,7 +639,7 @@ void AI::Step(const PlayerInfo &player)
 		{
 			// If your parent is your enemy, move toward them until you have
 			// selected a target to fight. Then, fight it.
-			if(target)
+			if(target || !parent->IsTargetable())
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -979,8 +979,8 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		return;
 	}
 	
-	const bool shouldStay = ship.GetPersonality().IsStaying() || (ship.GetParent() 
-							&& ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
+	const bool shouldStay = ship.GetPersonality().IsStaying()
+			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
 	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !ship.GetDestinationSystem() && !shouldStay)
 	{
 		int jumps = ship.JumpsRemaining();
@@ -2329,8 +2329,8 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 	{
 		const System *system = player.TravelPlan().back();
 		for(const StellarObject &object : ship.GetSystem()->Objects())
-			if(object.GetPlanet() && object.GetPlanet()->WormholeDestination(ship.GetSystem()) == system
-				&& player.HasVisited(object.GetPlanet()) && player.HasVisited(system))
+			if(object.GetPlanet() && object.GetPlanet()->IsAccessible(&ship) && player.HasVisited(object.GetPlanet())
+				&& object.GetPlanet()->WormholeDestination(ship.GetSystem()) == system && player.HasVisited(system))
 			{
 				isWormhole = true;
 				ship.SetTargetStellar(&object);
@@ -2484,8 +2484,8 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 	}
 	else if(keyDown.Has(Command::LAND))
 	{
-		// If the player is right over an uninhabited planet, display a message
-		// explaining why they cannot land there.
+		// If the player is right over an uninhabited or inaccessible planet, display
+		// the default message explaining why they cannot land there.
 		string message;
 		for(const StellarObject &object : ship.GetSystem()->Objects())
 			if((!object.GetPlanet() || !object.GetPlanet()->IsAccessible(&ship)) && object.HasSprite())
@@ -2696,7 +2696,7 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 		// The player completed their travel plan, which may have indicated a destination within the final system
 		keyStuck.Clear(Command::JUMP);
 		const Planet *planet = player.TravelDestination();
-		if(planet && planet->IsInSystem(ship.GetSystem()))
+		if(planet && planet->IsInSystem(ship.GetSystem()) && planet->IsAccessible(&ship))
 		{
 			Messages::Add("Autopilot: landing on " + planet->Name() + ".");
 			keyStuck |= Command::LAND;
