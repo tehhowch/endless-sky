@@ -1036,9 +1036,13 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 					SetTargetStellar(nullptr);
 					landingPlanet = nullptr;
 				}
-				else if(!isSpecial || personality.IsFleeing()
-						|| (isSpecial && !isYours && travelDestination && travelDestination == landingPlanet))
+				else if(!isSpecial || personality.IsFleeing())
 					return false;
+				else if(isSpecial && !isYours && travelDestination && travelDestination == landingPlanet)
+				{
+					hasLanded = true;
+					return false;
+				}
 				
 				zoom = 0.;
 			}
@@ -1778,6 +1782,14 @@ void Ship::Restore()
 bool Ship::IsDestroyed() const
 {
 	return (hull < 0.);
+}
+
+
+
+// Check if this ship has permanently landed.
+bool Ship::HasLanded() const
+{
+	return hasLanded;
 }
 
 

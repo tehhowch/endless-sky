@@ -214,6 +214,8 @@ public:
 	void Restore();
 	// Check if this ship has been destroyed.
 	bool IsDestroyed() const;
+	// Check if this ship has permanently landed.
+	bool HasLanded() const;
 	// Recharge and repair this ship (e.g. because it has landed).
 	void Recharge(bool atSpaceport = true);
 	// Check if this ship is able to give the given ship enough fuel to jump.
@@ -404,6 +406,7 @@ private:
 	bool neverDisabled = false;
 	bool isCapturable = true;
 	bool isInvisible = false;
+	bool hasLanded = false;
 	int customSwizzle = -1;
 	double cloak = 0.;
 	double cloakDisruption = 0.;
