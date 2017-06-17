@@ -979,10 +979,9 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		return;
 	}
 	
-	const bool shouldStay = !(ship.GetDestinationSystem() || ship.GetTravelDestination())
-			&& ((ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()))
-				|| ship.GetPersonality().IsStaying());
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !shouldStay)
+	const bool shouldStay = ship.GetPersonality().IsStaying() || (ship.GetParent() 
+							&& ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
+	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !ship.GetDestinationSystem() && !shouldStay)
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
