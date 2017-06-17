@@ -1014,8 +1014,8 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 		if(isDisabled)
 			landingPlanet = nullptr;
 		
-		// Special ships do not disappear forever when they land; they
-		// just slowly refuel.
+		// Special ships do not disappear forever when they land; they just slowly refuel.
+		// Exception: mission NPCs given the 'land' directive will delete when they land on their target.
 		if(landingPlanet && zoom)
 		{
 			// Move the ship toward the center of the planet while landing.
@@ -1036,7 +1036,8 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 					SetTargetStellar(nullptr);
 					landingPlanet = nullptr;
 				}
-				else if(!isSpecial || personality.IsFleeing())
+				else if(!isSpecial || personality.IsFleeing()
+						|| (isSpecial && !isYours && travelDestination && travelDestination == landingPlanet))
 					return false;
 				
 				zoom = 0.;
@@ -1860,6 +1861,8 @@ void Ship::WasCaptured(const shared_ptr<Ship> &capturer)
 	isDisabled = false;
 	hyperspaceSystem = nullptr;
 	landingPlanet = nullptr;
+	travelDestination = nullptr;
+	destinationSystem = nullptr;
 	
 	isSpecial = capturer->isSpecial;
 	personality = capturer->personality;

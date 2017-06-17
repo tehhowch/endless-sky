@@ -100,7 +100,7 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *moveToSystem, const P
 		else
 			npcShip.SetDestinationSystem(nullptr);
 	}
-	else if(targetPlanet && targetPlanet->IsInSystem(npcShip.GetSystem()))
+	if(targetPlanet && targetPlanet->IsInSystem(npcShip.GetSystem()))
 	{
 		newOrders.type = Orders::LAND_ON;
 		newOrders.targetPlanet = targetPlanet;
@@ -871,10 +871,10 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		return false;
 	
 	int type = it->second.type;
-	const bool isTravelOrder = (type == Orders::MOVE_TO || type == Orders::TRAVEL_TO);
+	const bool isTravelOrder = (type == Orders::MOVE_TO || type == Orders::TRAVEL_TO || type == Orders::LAND_ON);
 	
 	// If your parent is jumping or absent, that overrides your orders unless
-	// your orders are to hold position.
+	// your orders are to hold position, or a travel directive.
 	shared_ptr<Ship> parent = ship.GetParent();
 	if(parent && type != Orders::HOLD_POSITION && !isTravelOrder)
 	{
@@ -885,7 +885,14 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 	}
 	
 	shared_ptr<Ship> target = it->second.target.lock();
-	if(isTravelOrder && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
+	if(type == Orders::LAND_ON && it->second.targetPlanet)
+	{
+		// LAND_ON would not be issued unless the planet was in this system.
+		ship.SetTargetStellar(ship.GetSystem()->FindStellar(it->second.targetPlanet));
+		command |= Command::LAND;
+		MoveIndependent(ship, command);
+	}
+	else if(isTravelOrder && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
 	{
 		// The desired position is in a different system.
 		DistanceMap distance(ship, it->second.targetSystem);
@@ -901,13 +908,6 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 			Stop(ship, command);
 		else
 			command.SetTurn(TurnToward(ship, TargetAim(ship)));
-	}
-	else if(type == Orders::LAND_ON && it->second.targetPlanet)
-	{
-		// LAND_ON would not be issued unless the planet was in this system.
-		ship.SetTargetStellar(ship.GetSystem()->FindStellar(it->second.targetPlanet));
-		command |= Command::LAND;
-		MoveIndependent(ship, command);
 	}
 	else if(!target)
 	{
@@ -979,7 +979,10 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		return;
 	}
 	
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !ship.GetPersonality().IsStaying())
+	const bool shouldStay = !(ship.GetDestinationSystem() || ship.GetTravelDestination())
+			&& ((ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()))
+				|| ship.GetPersonality().IsStaying());
+	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !shouldStay)
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
@@ -1072,12 +1075,12 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
-		if(!ship.GetPersonality().IsStaying() && ship.Attributes().Get("fuel capacity"))
+		if(!shouldStay && ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(ship.GetPersonality().IsStaying() && ship.GetSystem()->Objects().size())
+	else if(shouldStay && ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
 		ship.SetTargetStellar(&ship.GetSystem()->Objects()[i]);
