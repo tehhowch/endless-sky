@@ -1102,7 +1102,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 	// "parent" to land (because the parent may not be planning on landing).
 	if(hasFuelCapacity && !ship.JumpsRemaining() && ship.GetSystem()->HasFuelFor(ship))
 		Refuel(ship, command);
-	else if(!parentIsHere && (!isStaying || ship.GetDestinationSystem()))
+	else if((!parentIsHere && !isStaying) || ship.GetDestinationSystem())
 	{
 		// Check whether the ship has a target system and is able to jump to it.
 		bool hasJump = (ship.GetTargetSystem() && ship.JumpFuel(ship.GetTargetSystem()));
