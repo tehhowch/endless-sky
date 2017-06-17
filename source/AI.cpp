@@ -83,16 +83,22 @@ AI::AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsa
 
 
 	
-// NPC commands from mission events (e.g. "on enter") or from game state instantiation.
-void AI::IssueNPCTravelOrders(const Ship &npcShip, const System *moveToSystem, const Planet *targetPlanet)
+// NPC commands from npc mission directives 'destination' and 'land'
+void AI::IssueNPCTravelOrders(Ship &npcShip, const System *moveToSystem, const Planet *targetPlanet)
 {
 	Orders newOrders;
-	if(moveToSystem && npcShip.GetSystem() != moveToSystem)
+	if(moveToSystem)
 	{
-		newOrders.type = Orders::TRAVEL_TO;
-		newOrders.targetSystem = moveToSystem;
-		if(targetPlanet)
-			newOrders.targetPlanet = targetPlanet;
+		if(npcShip.GetSystem() != moveToSystem)
+		{
+			newOrders.type = Orders::TRAVEL_TO;
+			newOrders.targetSystem = moveToSystem;
+			if(targetPlanet)
+				newOrders.targetPlanet = targetPlanet;
+		}
+		// The NPC has arrived in its destination system and should no longer receive TRAVEL_TO orders.
+		else
+			npcShip.SetDestinationSystem(nullptr);
 	}
 	else if(targetPlanet && targetPlanet->IsInSystem(npcShip.GetSystem()))
 	{
