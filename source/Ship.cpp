@@ -208,6 +208,8 @@ void Ship::Load(const DataNode &node)
 		}
 		else if(key == "destination system" && child.Size() >= 2)
 			targetSystem = GameData::Systems().Get(child.Token(1));
+		else if(key == "destination queue" && child.Size() >= 2)
+			destinationQueue = child.Value(1);
 		else if(key == "parked")
 			isParked = true;
 		else if(key == "description" && child.Size() >= 2)
@@ -470,6 +472,8 @@ void Ship::Save(DataWriter &out) const
 			out.Write("planet", landingPlanet->Name());
 		if(targetSystem && !targetSystem->Name().empty())
 			out.Write("destination system", targetSystem->Name());
+		if(destinationQueue > 0)
+			out.Write("destination queue", destinationQueue);
 		if(isParked)
 			out.Write("parked");
 	}
@@ -2557,9 +2561,34 @@ void Ship::SetTravelDestination(const Planet *planet)
 
 
 
-void Ship::SetDestinationSystem(const System *system)
+void Ship::SetDestinationSystem(std::vector<const System *> systems, bool doPatrol)
 {
-	destinationSystem = system;
+	
+	if(destinationQueue < systems.size())
+	{
+		doPatrol = doPatrol;
+		destinationSystems = systems;
+		destinationSystem = systems[destinationQueue];		
+	}
+	else
+		destinationSystem = nullptr;
+}
+
+
+
+void Ship::NextDestinationSystem()
+{
+	++destinationQueue;
+	if(destinationQueue < destinationSystems.size())
+		destinationSystem = destinationSystems[destinationQueue];
+	// If the NPC should patrol, reset the destination queue.
+	else if(doPatrol && destinationSystems.size() >= 2)
+	{
+		destinationQueue = 0;
+		destinationSystem = destinationSystems[destinationQueue];
+	}
+	else
+		destinationSystem = nullptr;	
 }
 
 

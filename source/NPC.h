@@ -67,16 +67,15 @@ private:
 	// Start out in a location matching this filter, or in a particular system:
 	LocationFilter location;
 	const System *system = nullptr;
+	const System *destination;
 	bool isAtDestination = false;
 	
 	// NPCs may have been given a destination system or planet.
-	const System *targetSystem = nullptr;
 	std::vector<const System *> targetSystems;
-	const System *destination;
-	
 	const Planet *landingTarget = nullptr;
 	bool needsTravelTarget = false;
 	bool needsLandingTarget = false;
+	bool doPatrol = false;
 	size_t destinationQueue = 0;
 	
 	// Dialog or conversation to show when all requirements for this NPC are met:

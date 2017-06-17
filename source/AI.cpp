@@ -98,7 +98,7 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *moveToSystem, const P
 		}
 		// The NPC has arrived in its destination system and should no longer receive TRAVEL_TO orders.
 		else
-			npcShip.SetDestinationSystem(nullptr);
+			npcShip.NextDestinationSystem();
 	}
 	if(targetPlanet && targetPlanet->IsInSystem(npcShip.GetSystem()))
 	{

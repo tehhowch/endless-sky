@@ -338,9 +338,10 @@ public:
 	void SetShipToAssist(const std::shared_ptr<Ship> &ship);
 	void SetTargetStellar(const StellarObject *object);
 	void SetTargetSystem(const System *system);
-	// Persistent ship targets
+	// Persistent ship targets.
 	void SetTravelDestination(const Planet *planet);
-	void SetDestinationSystem(const System *system);
+	void SetDestinationSystem(std::vector<const System *> systems, bool doPatrol);
+	void NextDestinationSystem();
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
 	void SetTargetFlotsam(const std::shared_ptr<Flotsam> &flotsam);
@@ -477,8 +478,12 @@ private:
 	std::weak_ptr<Ship> shipToAssist;
 	const StellarObject *targetPlanet = nullptr;
 	const System *targetSystem = nullptr;
+	std::vector<const System *> targetSystems; // CHECK: NEEDED?
+	size_t destinationQueue = 0;
+	bool doPatrol = false;
 	const Planet *travelDestination = nullptr;
 	const System *destinationSystem = nullptr;
+	std::vector<const System *> destinationSystems;
 	std::weak_ptr<Minable> targetAsteroid;
 	std::weak_ptr<Flotsam> targetFlotsam;
 	
