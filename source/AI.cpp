@@ -102,6 +102,8 @@ void AI::IssueNPCTravelOrders(const Ship &npcShip, const System *moveToSystem, c
 	// Replace the NPC's existing orders with these updated orders.
 	Orders &existing = orders[&npcShip];
 	existing = newOrders;
+	if(existing.type == 0)
+		orders.erase(&npcShip);
 }
 
 
@@ -323,6 +325,10 @@ void AI::Step(const PlayerInfo &player)
 			MovePlayer(*it, player);
 			continue;
 		}
+		
+		// Update any orders NPCs may have
+		if(it->IsSpecial() && !it->IsYours() && (it->GetDestinationSystem() || it->GetTravelDestination()))
+			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetTravelDestination());
 		
 		const Government *gov = it->GetGovernment();
 		double health = .5 * it->Shields() + it->Hull();
