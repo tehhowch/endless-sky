@@ -907,7 +907,7 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		// LAND_ON would not be issued unless the planet was in this system.
 		ship.SetTargetStellar(ship.GetSystem()->FindStellar(it->second.targetPlanet));
 		command |= Command::LAND;
-		return false;
+		MoveIndependent(ship, command);
 	}
 	else if(!target)
 	{
