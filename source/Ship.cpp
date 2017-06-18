@@ -2566,7 +2566,7 @@ void Ship::SetDestinationSystem(std::vector<const System *> systems, bool doPatr
 	
 	if(destinationQueue < systems.size())
 	{
-		doPatrol = doPatrol;
+		this->doPatrol = doPatrol;
 		destinationSystems = systems;
 		destinationSystem = systems[destinationQueue];		
 	}
