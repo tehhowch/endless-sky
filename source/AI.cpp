@@ -979,9 +979,9 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		return;
 	}
 	
-	const bool shouldStay = ship.GetPersonality().IsStaying()
-			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !ship.GetDestinationSystem() && !shouldStay)
+	const bool shouldStay = ship.GetPersonality().IsStaying() || (ship.GetParent() 
+							&& ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
+	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !(shouldStay && !ship.GetDestinationSystem()))
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
@@ -1074,12 +1074,14 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
-		if(!shouldStay && ship.Attributes().Get("fuel capacity"))
+		if(!(shouldStay && !(ship.GetDestinationSystem() || ship.GetTravelDestination()))
+			&& ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(shouldStay && ship.GetSystem()->Objects().size())
+	else if(shouldStay && !(ship.GetDestinationSystem() || ship.GetTravelDestination()) 
+			&& ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
 		ship.SetTargetStellar(&ship.GetSystem()->Objects()[i]);
