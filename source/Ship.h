@@ -326,6 +326,7 @@ public:
 	const StellarObject *GetTargetStellar() const;
 	const System *GetTargetSystem() const;
 	// Targets for persistent ships (e.g. mission NPCs).
+	const bool HasTravelDirective() const;
 	std::map<const Planet *, bool> GetTravelDestinations() const;
 	const System *GetDestinationSystem() const;
 	
@@ -338,9 +339,9 @@ public:
 	void SetShipToAssist(const std::shared_ptr<Ship> &ship);
 	void SetTargetStellar(const StellarObject *object);
 	void SetTargetSystem(const System *system);
-	// Persistent ship targets.
-	void SetTravelDestination(std::vector<const Planet *> planets, bool doVisit);
-	void SetDestinationSystem(std::vector<const System *> systems, bool doPatrol);
+	// Persistent targets associated with mission NPCs.
+	void SetTravelDestinations(std::vector<const Planet *> planets, bool doVisit);
+	void SetDestinationSystems(std::vector<const System *> systems, bool doPatrol);
 	void NextDestinationSystem();
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
@@ -478,13 +479,20 @@ private:
 	std::weak_ptr<Ship> shipToAssist;
 	const StellarObject *targetPlanet = nullptr;
 	const System *targetSystem = nullptr;
+	// NPC travel directives
 	std::vector<const System *> targetSystems;
 	size_t destinationQueue = 0;
+	// NPCs may patrol the set of destination systems, in order A B C A.
 	bool doPatrol = false;
+	// NPCs with a landing directive may only visit the destination
+	// planet, or they may permanently land.
 	bool doVisit = false;
 	const Planet *travelDestination = nullptr;
 	const System *destinationSystem = nullptr;
+	// The list of consecutive NPC destination systems (or a patrol sequence).
 	std::vector<const System *> destinationSystems;
+	// The list of planets this NPC may land on, and if they have already
+	// been landed on in this sequence.
 	std::map<const Planet *, bool> travelDestinations;
 	std::weak_ptr<Minable> targetAsteroid;
 	std::weak_ptr<Flotsam> targetFlotsam;

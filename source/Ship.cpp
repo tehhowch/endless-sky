@@ -2489,6 +2489,13 @@ const System *Ship::GetTargetSystem() const
 
 
 // Persistent targets for mission NPCs.
+const bool Ship::HasTravelDirective() const
+{
+	return !travelDestinations.empty() || destinationSystem;
+}
+
+
+
 std::map<const Planet *, bool> Ship::GetTravelDestinations() const
 {
 	return travelDestinations;
@@ -2554,7 +2561,7 @@ void Ship::SetTargetSystem(const System *system)
 
 
 // Persistent targets for mission NPCs.
-void Ship::SetTravelDestination(std::vector<const Planet *> planets, bool doVisit)
+void Ship::SetTravelDestinations(std::vector<const Planet *> planets, bool doVisit)
 {
 	this->doVisit = doVisit;
 	
@@ -2564,7 +2571,7 @@ void Ship::SetTravelDestination(std::vector<const Planet *> planets, bool doVisi
 
 
 
-void Ship::SetDestinationSystem(std::vector<const System *> systems, bool doPatrol)
+void Ship::SetDestinationSystems(std::vector<const System *> systems, bool doPatrol)
 {
 	
 	if(destinationQueue < systems.size())

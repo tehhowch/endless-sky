@@ -341,7 +341,7 @@ void AI::Step(const PlayerInfo &player)
 		}
 		
 		// Update any orders NPCs may have
-		if(it->IsSpecial() && !it->IsYours() && (it->GetDestinationSystem() || !it->GetTravelDestinations().empty()))
+		if(it->IsSpecial() && !it->IsYours() && it->HasTravelDirective())
 			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetTravelDestinations());
 		
 		const Government *gov = it->GetGovernment();
@@ -1085,15 +1085,15 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
-		// Ships should land on their destination planet if they are free to move about.
-		if(!(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestinations().empty()))
-				&& ship.Attributes().Get("fuel capacity"))
+		// Ships should land on their destination planet if they are free to move about, or have
+		// a travel directive indicating they should land. Fighers and drones should not land.
+		if((!shouldStay || ship.HasTravelDirective()) && !ship.CanBeCarried())
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestinations().empty()) 
-			&& ship.GetSystem()->Objects().size())
+	// Ships which are not free to move about should patrol this system (e.g. seek a target ship).
+	else if(shouldStay && ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
 		ship.SetTargetStellar(&ship.GetSystem()->Objects()[i]);
@@ -1163,7 +1163,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 		Stop(ship, command, .2);
 	else if(parent.Commands().Has(Command::JUMP) && parent.GetTargetSystem() && !isStaying)
 	{
-		// If the npc/escort does not already have a travel target, follow the parent.
+		// If the NPC/escort does not already have a travel target, follow the parent.
 		DistanceMap distance(ship, parent.GetTargetSystem());
 		const System *dest = distance.Route(ship.GetSystem());
 		if(!ship.GetDestinationSystem())
