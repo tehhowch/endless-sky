@@ -1056,6 +1056,7 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 						else
 						{
 							hasLanded = true;
+							// Destroy(); // may not be needed
 							return false;
 						}
 					}
@@ -1811,7 +1812,7 @@ bool Ship::HasLanded() const
 
 
 
-// Recharge and repair this ship (e.g. because it has landed).
+// Recharge and repair this ship (e.g. because it has landed temporarily).
 void Ship::Recharge(bool atSpaceport)
 {
 	if(IsDestroyed())

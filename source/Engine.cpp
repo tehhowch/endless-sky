@@ -972,12 +972,11 @@ void Engine::CalculateStep()
 		// ion sparks, jump drive flashes, etc.
 		if(!(*it)->Move(effects, flotsam))
 		{
-			// If Move() returns false, it means the ship should be removed
-			// from play. That may be because it was destroyed or permanently
-			// landed, because it is an ordinary ship that has been out of
-			// system for long enough to be "forgotten," or because it is a
-			// fighter that just docked with its mothership. Report it
-			// destroyed or landed if that's really what happened:
+			// If Move() returns false, it means the ship should be removed from
+			// play. That may be because it was destroyed or permanently landed,
+			// because it is an ordinary ship that has been out of the system for
+			// long enough to be "forgotten," or because it is a fighter that just
+			// docked with its mothership. Report it destroyed or landed as needed.
 			if((*it)->IsDestroyed())
 				eventQueue.emplace_back(nullptr, *it, ShipEvent::DESTROY);
 			else if((*it)->HasLanded())

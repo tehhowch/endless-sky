@@ -299,6 +299,12 @@ void NPC::Do(const ShipEvent &event, PlayerInfo &player, UI *ui, bool isVisible)
 		else if(!dialogText.empty())
 			ui->Push(new Dialog(dialogText));
 	}
+	// Permanently landed NPCs should be removed from the class.
+	if(event.Type() & ShipEvent::LAND)
+	{
+		ship->Destroy();
+		ship.reset();
+	}
 }
 
 
@@ -369,7 +375,7 @@ bool NPC::HasFailed() const
 	
 		// If we still need to perform an action that requires the NPC ship be
 		// alive, then that ship being destroyed should cause the mission to fail.
-		if((~it.second & succeedIf & mustLiveFor) && (it.second & ShipEvent::DESTROY))
+		if((~it.second & succeedIf & mustLiveFor) && (it.second & (ShipEvent::DESTROY | ShipEvent::LAND)))
 			return true;
 	}
 	
