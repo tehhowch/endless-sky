@@ -326,7 +326,7 @@ public:
 	const StellarObject *GetTargetStellar() const;
 	const System *GetTargetSystem() const;
 	// Targets for persistent ships (e.g. mission NPCs).
-	const Planet *GetTravelDestination() const;
+	std::map<const Planet *, bool> GetTravelDestination() const;
 	const System *GetDestinationSystem() const;
 	
 	// Mining target.
@@ -339,7 +339,7 @@ public:
 	void SetTargetStellar(const StellarObject *object);
 	void SetTargetSystem(const System *system);
 	// Persistent ship targets.
-	void SetTravelDestination(const Planet *planet);
+	void SetTravelDestination(std::vector<const Planet *> planets, bool doVisit);
 	void SetDestinationSystem(std::vector<const System *> systems, bool doPatrol);
 	void NextDestinationSystem();
 	// Mining target.
@@ -478,12 +478,14 @@ private:
 	std::weak_ptr<Ship> shipToAssist;
 	const StellarObject *targetPlanet = nullptr;
 	const System *targetSystem = nullptr;
-	std::vector<const System *> targetSystems; // CHECK: NEEDED?
+	std::vector<const System *> targetSystems;
 	size_t destinationQueue = 0;
 	bool doPatrol = false;
+	bool doVisit = false;
 	const Planet *travelDestination = nullptr;
 	const System *destinationSystem = nullptr;
 	std::vector<const System *> destinationSystems;
+	std::map<const Planet *, bool> travelDestinations;
 	std::weak_ptr<Minable> targetAsteroid;
 	std::weak_ptr<Flotsam> targetFlotsam;
 	

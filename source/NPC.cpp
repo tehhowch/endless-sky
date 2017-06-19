@@ -78,20 +78,20 @@ void NPC::Load(const DataNode &node)
 		else if(child.Token(0) == "destination" || (child.Token(0) == "patrol" && child.Size() >= 3))
 		{
 			doPatrol = child.Token(0) == "patrol" ? true : false;
-			if(doPatrol)
-				needsTravelTarget = false;
 			if(child.Size() == 1)
 				needsTravelTarget = true;
 			else
 				for(int i = 1; i < child.Size(); ++i)
 					targetSystems.push_back(GameData::Systems().Get(child.Token(i)));
 		}
-		else if(child.Token(0) == "land")
+		else if(child.Token(0) == "land" || child.Token(0) == "visit")
 		{
-			if(child.Size() >= 2)
-				landingTarget = GameData::Planets().Get(child.Token(1));
-			else
+			doVisit = child.Token(0) == "visit" ? true : false;
+			if(child.Size() == 1)
 				needsLandingTarget = true;
+			else
+				for(int i = 1; i < child.Size(); ++i)
+					landingTargets.push_back(GameData::Planets().Get(child.Token(i)));
 		}
 		else if(child.Token(0) == "succeed" && child.Size() >= 2)
 			succeedIf = child.Value(1);
@@ -162,8 +162,8 @@ void NPC::Load(const DataNode &node)
 		ship->SetIsSpecial();
 		if(!targetSystems.empty())
 			ship->SetDestinationSystem(targetSystems, doPatrol);
-		if(landingTarget)
-			ship->SetTravelDestination(landingTarget);
+		if(!landingTargets.empty())
+			ship->SetTravelDestination(landingTargets, doVisit);
 	}
 }
 
@@ -192,8 +192,8 @@ void NPC::Save(DataWriter &out) const
 		for(size_t i = 0; i < targetSystems.size() ; ++i)
 			out.Write(doPatrol ? "patrol" : "destination", targetSystems[i]->Name());
 
-		if(landingTarget)
-			out.Write("land", landingTarget->Name());
+		for(size_t i = 0; i < landingTargets.size() ; ++i)
+			out.Write(doVisit ? "visit" : "land", landingTargets[i]->Name());
 		
 		if(!dialogText.empty())
 		{
@@ -383,12 +383,14 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	result.mustEvade = mustEvade;
 	result.mustAccompany = mustAccompany;
 	result.targetSystems = targetSystems;
-	result.destinationQueue = destinationQueue;
-	result.landingTarget = needsLandingTarget ? destinationPlanet : landingTarget;
+	result.landingTargets = landingTargets;
 	result.doPatrol = doPatrol;
+	result.doVisit = doVisit;
 	
 	if(needsTravelTarget)
 		result.targetSystems.push_back(result.destination);
+	if(needsLandingTarget)
+		result.landingTargets.push_back(destinationPlanet);
 	
 	// Pick the system for this NPC to start out in.
 	result.system = system;
@@ -434,7 +436,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
 		if(result.landingTarget)
-			ship->SetTravelDestination(result.landingTarget);
+			ship->SetTravelDestination(result.landingTargets, result.doVisit);
 		if(!targetSystems.empty())
 			ship->SetDestinationSystem(result.targetSystems, result.doPatrol);
 		
