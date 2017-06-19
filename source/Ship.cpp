@@ -208,8 +208,8 @@ void Ship::Load(const DataNode &node)
 		}
 		else if(key == "destination system" && child.Size() >= 2)
 			targetSystem = GameData::Systems().Get(child.Token(1));
-		else if(key == "destination queue" && child.Size() >= 2)
-			destinationQueue = child.Value(1);
+		else if(key == "waypoint index" && child.Size() >= 2)
+			waypoint = child.Value(1);
 		else if(key == "parked")
 			isParked = true;
 		else if(key == "description" && child.Size() >= 2)
@@ -472,8 +472,8 @@ void Ship::Save(DataWriter &out) const
 			out.Write("planet", landingPlanet->Name());
 		if(targetSystem && !targetSystem->Name().empty())
 			out.Write("destination system", targetSystem->Name());
-		if(destinationQueue > 0)
-			out.Write("destination queue", destinationQueue);
+		if(waypoint > 0)
+			out.Write("waypoint index", waypoint);
 		if(isParked)
 			out.Write("parked");
 	}
@@ -1040,12 +1040,25 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 					SetTargetStellar(nullptr);
 					landingPlanet = nullptr;
 				}
-				else if(!isSpecial || personality.IsFleeing())
+				// NPCs which are "fleeing" delete themselves on landing, unless they have an
+				// incomplete travel directive.
+				else if(!isSpecial || (personality.IsFleeing() && !HasTravelDirective()))
 					return false;
-				else if(isSpecial && !isYours && travelDestination && travelDestination == landingPlanet)
+				else if(isSpecial && !isYours && !travelDestinations.empty())
 				{
-					hasLanded = true;
-					return false;
+					// This mission NPC has a directive to land on at least one specific planet.
+					// If this is one of them, this ship may 'land' (permanently), or 'visit'.
+					auto it = travelDestinations.find(landingPlanet);
+					if(it != travelDestinations.end())
+					{
+						if(doVisit)
+							it->second = true;
+						else
+						{
+							hasLanded = true;
+							return false;
+						}
+					}
 				}
 				
 				zoom = 0.;
@@ -1877,8 +1890,9 @@ void Ship::WasCaptured(const shared_ptr<Ship> &capturer)
 	isDisabled = false;
 	hyperspaceSystem = nullptr;
 	landingPlanet = nullptr;
-	travelDestination = nullptr;
 	destinationSystem = nullptr;
+	travelDestinations.clear();
+	waypoints.clear();
 	
 	isSpecial = capturer->isSpecial;
 	personality = capturer->personality;
@@ -2496,6 +2510,7 @@ const bool Ship::HasTravelDirective() const
 
 
 
+// The bool may get updated, so this should not return as const.
 std::map<const Planet *, bool> Ship::GetTravelDestinations() const
 {
 	return travelDestinations;
@@ -2505,6 +2520,20 @@ std::map<const Planet *, bool> Ship::GetTravelDestinations() const
 
 const System *Ship::GetDestinationSystem() const
 {
+	return destinationSystem;
+}
+
+
+
+const System *Ship::GetNextSystem()
+{
+	++waypoint;
+	// If the NPC should patrol and we've reached the end of the
+	// patrol list, reset the waypoint index.
+	if(doPatrol && waypoint == waypoints.size() && waypoints.size() > 1)
+		waypoint = 0;
+	
+	destinationSystem = (waypoint < waypoints.size()) ? waypoints[waypoint] : nullptr;
 	return destinationSystem;
 }
 
@@ -2561,44 +2590,29 @@ void Ship::SetTargetSystem(const System *system)
 
 
 // Persistent targets for mission NPCs.
-void Ship::SetTravelDestinations(std::vector<const Planet *> planets, bool doVisit)
+void Ship::SetTravelDestinations(const std::vector<const Planet *> planets, const bool shouldRelaunch)
 {
-	this->doVisit = doVisit;
+	doVisit = shouldRelaunch;
 	
-	for(size_t i = 0; i < planets.size(); ++i)
-		travelDestinations[planets[i]] = false;
+	// Mark each planet as not visited.
+	for(const auto &it : planets)
+		travelDestinations[it] = false;
 }
 
 
 
-void Ship::SetDestinationSystems(std::vector<const System *> systems, bool doPatrol)
+void Ship::SetDestinationSystems(const std::vector<const System *> systems, const bool repeatTravel)
 {
-	
-	if(destinationQueue < systems.size())
+	// Ships loaded from save files may have an existing waypoint that
+	// indicates which systems have already been visited.
+	if(waypoint < systems.size())
 	{
-		this->doPatrol = doPatrol;
-		destinationSystems = systems;
-		destinationSystem = systems[destinationQueue];		
+		doPatrol = repeatTravel;
+		waypoints = systems;
+		destinationSystem = systems[waypoint];
 	}
 	else
 		destinationSystem = nullptr;
-}
-
-
-
-void Ship::NextDestinationSystem()
-{
-	++destinationQueue;
-	if(destinationQueue < destinationSystems.size())
-		destinationSystem = destinationSystems[destinationQueue];
-	// If the NPC should patrol, reset the destination queue.
-	else if(doPatrol && destinationSystems.size() >= 2)
-	{
-		destinationQueue = 0;
-		destinationSystem = destinationSystems[destinationQueue];
-	}
-	else
-		destinationSystem = nullptr;	
 }
 
 

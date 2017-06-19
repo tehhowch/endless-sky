@@ -329,6 +329,7 @@ public:
 	const bool HasTravelDirective() const;
 	std::map<const Planet *, bool> GetTravelDestinations() const;
 	const System *GetDestinationSystem() const;
+	const System *GetNextSystem();
 	
 	// Mining target.
 	std::shared_ptr<Minable> GetTargetAsteroid() const;
@@ -340,9 +341,8 @@ public:
 	void SetTargetStellar(const StellarObject *object);
 	void SetTargetSystem(const System *system);
 	// Persistent targets associated with mission NPCs.
-	void SetTravelDestinations(std::vector<const Planet *> planets, bool doVisit);
-	void SetDestinationSystems(std::vector<const System *> systems, bool doPatrol);
-	void NextDestinationSystem();
+	void SetTravelDestinations(const std::vector<const Planet *> planets, const bool shouldRelaunch);
+	void SetDestinationSystems(const std::vector<const System *> systems, const bool repeatTravel);
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
 	void SetTargetFlotsam(const std::shared_ptr<Flotsam> &flotsam);
@@ -479,23 +479,22 @@ private:
 	std::weak_ptr<Ship> shipToAssist;
 	const StellarObject *targetPlanet = nullptr;
 	const System *targetSystem = nullptr;
+	std::weak_ptr<Minable> targetAsteroid;
+	std::weak_ptr<Flotsam> targetFlotsam;
+	
 	// NPC travel directives
-	std::vector<const System *> targetSystems;
-	size_t destinationQueue = 0;
-	// NPCs may patrol the set of destination systems, in order A B C A.
-	bool doPatrol = false;
-	// NPCs with a landing directive may only visit the destination
-	// planet, or they may permanently land.
-	bool doVisit = false;
-	const Planet *travelDestination = nullptr;
 	const System *destinationSystem = nullptr;
 	// The list of consecutive NPC destination systems (or a patrol sequence).
-	std::vector<const System *> destinationSystems;
+	std::vector<const System *> waypoints;
+	size_t waypoint = 0;
+	// NPCs may patrol the set of destination systems, in order A B C A.
+	bool doPatrol = false;
 	// The list of planets this NPC may land on, and if they have already
 	// been landed on in this sequence.
 	std::map<const Planet *, bool> travelDestinations;
-	std::weak_ptr<Minable> targetAsteroid;
-	std::weak_ptr<Flotsam> targetFlotsam;
+	// NPCs with a landing directive may only visit the destination
+	// planet, or they may permanently land.
+	bool doVisit = false;
 	
 	// Links between escorts and parents.
 	std::vector<std::weak_ptr<Ship>> escorts;

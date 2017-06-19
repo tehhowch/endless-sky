@@ -75,7 +75,7 @@ void NPC::Load(const DataNode &node)
 			else
 				location.Load(child);
 		}
-		else if(child.Token(0) == "destination" || (child.Token(0) == "patrol" && child.Size() >= 3))
+		else if(child.Token(0) == "waypoint" || (child.Token(0) == "patrol" && child.Size() >= 3))
 		{
 			doPatrol = child.Token(0) == "patrol" ? true : false;
 			if(child.Size() == 1)
@@ -189,11 +189,21 @@ void NPC::Save(DataWriter &out) const
 			out.Write("government", government->GetName());
 		personality.Save(out);
 		
-		for(size_t i = 0; i < targetSystems.size() ; ++i)
-			out.Write(doPatrol ? "patrol" : "destination", targetSystems[i]->Name());
-
-		for(size_t i = 0; i < targetPlanets.size() ; ++i)
-			out.Write(doVisit ? "visit" : "land", targetPlanets[i]->Name());
+		if(!targetSystems.empty())
+		{
+			out.WriteToken(doPatrol ? "patrol" : "waypoint");
+			for(const auto &waypoint : targetSystems)
+				out.WriteToken(waypoint->Name());
+			out.Write();
+		}
+		
+		if(!targetPlanets.empty())
+		{
+			out.WriteToken(doVisit ? "visit" : "land");
+			for(const auto &stopover : targetPlanets)
+				out.WriteToken(stopover->Name());
+			out.Write();
+		}
 		
 		if(!dialogText.empty())
 		{
@@ -237,7 +247,7 @@ const list<shared_ptr<Ship>> NPC::Ships() const
 
 
 
-// Handle the given ShipEvent.
+// Handle the given ShipEvent. (may need updating for ShipEvent::LAND to not re-spawn ships)
 void NPC::Do(const ShipEvent &event, PlayerInfo &player, UI *ui, bool isVisible)
 {
 	// First, check if this ship is part of this NPC. If not, do nothing. If it

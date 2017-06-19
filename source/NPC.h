@@ -70,14 +70,14 @@ private:
 	const System *destination;
 	bool isAtDestination = false;
 	
-	// NPCs may have been given a destination system or planet.
+	// NPCs may have been given a waypoint or stopover.
 	std::vector<const System *> targetSystems;
 	std::vector<const Planet *> targetPlanets;
 	bool needsSystemTarget = false;
 	bool needsPlanetTarget = false;
-	// Default behavior is to travel once through the systems.
+	// Default behavior is to travel once through the waypoints.
 	bool doPatrol = false;
-	// Default behavior is to permanently land on the destination.
+	// Default behavior is to permanently land on the destination planet.
 	bool doVisit = false;
 	size_t destinationQueue = 0;
 	

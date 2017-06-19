@@ -84,27 +84,34 @@ AI::AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsa
 
 	
 // NPC commands from npc mission directives 'destination' and 'land'
-void AI::IssueNPCTravelOrders(Ship &npcShip, const System *moveToSystem, std::map<const Planet *, bool> targetPlanets)
+void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<const Planet *, bool> stopovers)
 {
 	Orders newOrders;
-	if(moveToSystem)
+	if(waypoint)
 	{
-		if(npcShip.GetSystem() != moveToSystem)
+		if(npcShip.GetSystem() != waypoint)
 		{
 			newOrders.type = Orders::TRAVEL_TO;
-			newOrders.targetSystem = moveToSystem;
+			newOrders.targetSystem = waypoint;
 		}
-		// The NPC has arrived in its destination system and should get the
-		// next destination, if there is one.
 		else
-			npcShip.NextDestinationSystem();
+		{
+			// The NPC has reached its current target system. Get the next destination in the travel
+			// directive, and issue a travel order if it exists.
+			const System *nextSystem = npcShip.GetNextSystem();
+			if(nextSystem)
+			{
+				newOrders.type = Orders::TRAVEL_TO;
+				newOrders.targetSystem = nextSystem;
+			}
+		}
 	}
 	// Determine if there is a directive to visit or land on planet in this system.
 	// This directive supercedes the directive to travel to a new system if the
 	// planet has not already been visited as a part of the NPC's travel directives.
-	if(!targetPlanets.empty())
+	if(!stopovers.empty())
 	{
-		for(const auto &it : targetPlanets)
+		for(const auto &it : stopovers)
 			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second)
 			{
 				newOrders.type = Orders::LAND_ON;
