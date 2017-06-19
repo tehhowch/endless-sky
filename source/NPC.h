@@ -72,11 +72,12 @@ private:
 	
 	// NPCs may have been given a destination system or planet.
 	std::vector<const System *> targetSystems;
-	const Planet *landingTarget = nullptr;
-	std::vector<const Planet *> landingTargets;
-	bool needsTravelTarget = false;
-	bool needsLandingTarget = false;
+	std::vector<const Planet *> targetPlanets;
+	bool needsSystemTarget = false;
+	bool needsPlanetTarget = false;
+	// Default behavior is to travel once through the systems.
 	bool doPatrol = false;
+	// Default behavior is to permanently land on the destination.
 	bool doVisit = false;
 	size_t destinationQueue = 0;
 	
