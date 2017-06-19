@@ -2489,7 +2489,7 @@ const System *Ship::GetTargetSystem() const
 
 
 // Persistent targets for mission NPCs.
-std::map<const Planet *, bool> Ship::GetTravelDestination() const
+std::map<const Planet *, bool> Ship::GetTravelDestinations() const
 {
 	return travelDestinations;
 }

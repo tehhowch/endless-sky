@@ -93,21 +93,25 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *moveToSystem, std::ma
 		{
 			newOrders.type = Orders::TRAVEL_TO;
 			newOrders.targetSystem = moveToSystem;
-			if(!targetPlanets.empty())
-				newOrders.targetPlanets = targetPlanets;
 		}
 		// The NPC has arrived in its destination system and should get the
 		// next destination, if there is one.
 		else
 			npcShip.NextDestinationSystem();
 	}
-	
-	for(auto it = targetPlanets.begin(); it == targetPlanets.end(); ++it)
-		if(it->first->IsInSystem(npcShip.GetSystem))
-		{
-			newOrders.type = Orders::LAND_ON;
-			newOrders.targetPlanets = targetPlanets;		
-		}
+	// Determine if there is a directive to visit or land on planet in this system.
+	// This directive supercedes the directive to travel to a new system if the
+	// planet has not already been visited as a part of the NPC's travel directives.
+	if(!targetPlanets.empty())
+	{
+		for(const auto &it : targetPlanets)
+			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second)
+			{
+				newOrders.type = Orders::LAND_ON;
+				newOrders.targetPlanet = it.first;
+				break;
+			}
+	}
 	
 	// Replace the NPC's existing orders with these updated orders.
 	Orders &existing = orders[&npcShip];
@@ -337,8 +341,8 @@ void AI::Step(const PlayerInfo &player)
 		}
 		
 		// Update any orders NPCs may have
-		if(it->IsSpecial() && !it->IsYours() && (it->GetDestinationSystem() || !it->GetTravelDestination().empty()))
-			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetTravelDestination());
+		if(it->IsSpecial() && !it->IsYours() && (it->GetDestinationSystem() || !it->GetTravelDestinations().empty()))
+			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetTravelDestinations());
 		
 		const Government *gov = it->GetGovernment();
 		double health = .5 * it->Shields() + it->Hull();
@@ -1082,13 +1086,13 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	{
 		MoveToPlanet(ship, command);
 		// Ships should land on their destination planet if they are free to move about.
-		if(!(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestination().empty()))
+		if(!(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestinations().empty()))
 				&& ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestination().empty()) 
+	else if(shouldStay && !(ship.GetDestinationSystem() || !ship.GetTravelDestinations().empty()) 
 			&& ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());

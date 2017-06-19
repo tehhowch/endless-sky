@@ -139,7 +139,7 @@ private:
 		std::weak_ptr<Ship> target;
 		Point point;
 		const System * targetSystem;
-		std::map<const Planet *, bool> targetPlanets;
+		const Planet * targetPlanet;
 	};
 
 

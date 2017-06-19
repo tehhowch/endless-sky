@@ -326,7 +326,7 @@ public:
 	const StellarObject *GetTargetStellar() const;
 	const System *GetTargetSystem() const;
 	// Targets for persistent ships (e.g. mission NPCs).
-	std::map<const Planet *, bool> GetTravelDestination() const;
+	std::map<const Planet *, bool> GetTravelDestinations() const;
 	const System *GetDestinationSystem() const;
 	
 	// Mining target.
