@@ -120,7 +120,7 @@ void AI::IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &
 	Orders newOrders;
 	bool isEnemy = target->GetGovernment()->IsEnemy();
 	newOrders.type = (!isEnemy ? Orders::GATHER
-		: target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK); 
+		: target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK);
 	newOrders.target = target;
 	string description = (isEnemy ? "focusing fire on" : "following") + (" \"" + target->Name() + "\".");
 	IssueOrders(player, newOrders, description);
@@ -835,7 +835,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	}
 	
 	// Run away if your target is not disabled and you are badly damaged.
-	if(!isDisabled && target && (person.IsFleeing() || 
+	if(!isDisabled && target && (person.IsFleeing() ||
 			(.5 * ship.Shields() + ship.Hull() < 1.
 				&& !person.IsHeroic() && !person.IsStaying() && !parentIsEnemy)))
 	{
@@ -979,9 +979,12 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		return;
 	}
 	
-	const bool shouldStay = ship.GetPersonality().IsStaying() || (ship.GetParent() 
-							&& ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !(shouldStay && !ship.GetDestinationSystem()))
+	// A ship has restricted movement options if it has 'staying' or is hostile to its parent.
+	const bool shouldStay = ship.GetPersonality().IsStaying()
+			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
+	// Ships should choose a random system to jump to or a random planet to land on if they
+	// do not already have a system or planet in mind, and also are free to move about.
+	if(!(ship.GetTargetSystem() || ship.GetTargetStellar()) && !shouldStay)
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
@@ -1074,13 +1077,14 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
+		// Ships should land on their destination planet if they are free to move about.
 		if(!(shouldStay && !(ship.GetDestinationSystem() || ship.GetTravelDestination()))
-			&& ship.Attributes().Get("fuel capacity"))
+				&& ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(shouldStay && !(ship.GetDestinationSystem() || ship.GetTravelDestination()) 
+	else if(shouldStay && !(ship.GetDestinationSystem() || ship.GetTravelDestination())
 			&& ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
@@ -1124,7 +1128,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 			if(!ship.GetDestinationSystem())
 				ship.SetTargetSystem(to);
 			// Check if we need to refuel. Wormhole travel does not require fuel.
-			if(!ship.GetTargetStellar() && (!to || 
+			if(!ship.GetTargetStellar() && (!to ||
 					(from->HasFuelFor(ship) && !to->HasFuelFor(ship) && ship.JumpsRemaining() == 1)))
 				Refuel(ship, command);
 		}
