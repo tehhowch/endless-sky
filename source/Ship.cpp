@@ -2628,9 +2628,26 @@ void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool 
 
 
 
-void Ship::SetSurveyTargets(const std::vector<const StellarObject *> objects)
+// Return a pointer to stellar object to scan
+const StellarObject *Ship::StartSurveying(const std::vector<StellarObject> &objects)
 {
-	surveyTargets = objects;
+	if(!objects.empty())
+	{
+		didPatrolSurvey = false;
+		for(const auto it : objects)
+			surveyTargets.push_back(&it);
+		const StellarObject *surveyTarget = surveyTargets.back();
+		surveyTargets.pop_back();
+		return surveyTarget;
+	}
+	return nullptr;
+}
+
+
+
+const bool Ship::IsSurveying() const
+{
+	return !surveyTargets.empty() && didPatrolSurvey;
 }
 
 

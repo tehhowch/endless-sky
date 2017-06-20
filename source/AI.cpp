@@ -89,15 +89,27 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<co
 	Orders newOrders;
 	if(waypoint)
 	{
-		if(npcShip.GetSystem() != waypoint)
+		// check if we should survey (when ready, this should be !isSurveying and there should be
+		// another else if for the waypoint && issurveying, where the next object is targeted)
+		if(npcShip.GetSystem() == waypoint && npcShip.IsSurveying()) // && npcShip.ShouldSurvey()
+		{
+			// if so, assign PATROL_SYSTEM order type.
+			// if done surveying or should not survey,
+			// then fall down to previous travel code.
+			// const StellarObject *surveyTarget = npcShip.StartSurveying(nextSystem->Objects());
+			// newOrders.type = Orders::PATROL_SYSTEM;
+			// newOrders.targetSystem = nextSystem;
+			// The NPC has completed its survey of this system, and should travel.
+		}
+		else if(npcShip.GetSystem() != waypoint)
 		{
 			newOrders.type = Orders::TRAVEL_TO;
 			newOrders.targetSystem = waypoint;
 		}
 		else
 		{
-			// The NPC has reached its current target system. Get the next destination in the travel
-			// directive, and issue a travel order if it exists.
+			// The NPC has reached its current targeted system and should not survey
+			// Get the next destination in the travel directive, if it exists.
 			const System *nextSystem = npcShip.GetNextWaypoint();
 			if(nextSystem)
 			{
@@ -106,6 +118,7 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<co
 			}
 		}
 	}
+	
 	// Determine if there is a directive to visit or land on planet in this system.
 	// This directive supercedes the directive to travel to a new system if the
 	// planet has not already been visited as a part of the NPC's travel directives.

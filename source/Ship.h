@@ -331,6 +331,7 @@ public:
 	const System *GetDestinationSystem() const;
 	const System *GetNextWaypoint();
 	std::vector<const StellarObject *> GetSurveyTargets() const;
+	const bool IsSurveying() const;
 	
 	// Mining target.
 	std::shared_ptr<Minable> GetTargetAsteroid() const;
@@ -344,7 +345,7 @@ public:
 	// Persistent targets associated with mission NPCs.
 	void SetStopovers(const std::vector<const Planet *> planets, const bool shouldRelaunch);
 	void SetWaypoints(const std::vector<const System *> waypoints, const bool repeatTravel);
-	void SetSurveyTargets(const std::vector<const StellarObject *> objects);
+	const StellarObject *StartSurveying(const std::vector<StellarObject> &objects);
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
 	void SetTargetFlotsam(const std::shared_ptr<Flotsam> &flotsam);
@@ -501,6 +502,7 @@ private:
 	// NPCs with a landing directive may only visit the destination
 	// planet, or they may permanently land.
 	bool doVisit = false;
+	bool didPatrolSurvey = false;
 	
 	// Links between escorts and parents.
 	std::vector<std::weak_ptr<Ship>> escorts;
