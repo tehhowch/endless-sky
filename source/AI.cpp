@@ -98,7 +98,7 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<co
 		{
 			// The NPC has reached its current target system. Get the next destination in the travel
 			// directive, and issue a travel order if it exists.
-			const System *nextSystem = npcShip.GetNextSystem();
+			const System *nextSystem = npcShip.GetNextWaypoint();
 			if(nextSystem)
 			{
 				newOrders.type = Orders::TRAVEL_TO;
@@ -349,7 +349,7 @@ void AI::Step(const PlayerInfo &player)
 		
 		// Update any orders NPCs may have
 		if(it->IsSpecial() && !it->IsYours() && it->HasTravelDirective())
-			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetTravelDestinations());
+			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetStopovers());
 		
 		const Government *gov = it->GetGovernment();
 		double health = .5 * it->Shields() + it->Hull();

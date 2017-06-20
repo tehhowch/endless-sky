@@ -327,9 +327,10 @@ public:
 	const System *GetTargetSystem() const;
 	// Targets for persistent ships (e.g. mission NPCs).
 	const bool HasTravelDirective() const;
-	std::map<const Planet *, bool> GetTravelDestinations() const;
+	std::map<const Planet *, bool> GetStopovers() const;
 	const System *GetDestinationSystem() const;
-	const System *GetNextSystem();
+	const System *GetNextWaypoint();
+	std::vector<const StellarObject *> GetSurveyTargets() const;
 	
 	// Mining target.
 	std::shared_ptr<Minable> GetTargetAsteroid() const;
@@ -341,8 +342,9 @@ public:
 	void SetTargetStellar(const StellarObject *object);
 	void SetTargetSystem(const System *system);
 	// Persistent targets associated with mission NPCs.
-	void SetTravelDestinations(const std::vector<const Planet *> planets, const bool shouldRelaunch);
-	void SetDestinationSystems(const std::vector<const System *> systems, const bool repeatTravel);
+	void SetStopovers(const std::vector<const Planet *> planets, const bool shouldRelaunch);
+	void SetWaypoints(const std::vector<const System *> waypoints, const bool repeatTravel);
+	void SetSurveyTargets(const std::vector<const StellarObject *> objects);
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
 	void SetTargetFlotsam(const std::shared_ptr<Flotsam> &flotsam);
@@ -396,7 +398,8 @@ private:
 	int forget = 0;
 	bool isInSystem = true;
 	// "Special" ships cannot be forgotten, and if they land on a planet, they
-	// continue to exist and refuel instead of being deleted.
+	// continue to exist and refuel instead of being deleted, unless explicitly
+	// designed to do so by a mission's NPC specification.
 	bool isSpecial = false;
 	bool isYours = false;
 	bool isParked = false;
@@ -492,6 +495,9 @@ private:
 	// The list of planets this NPC may land on, and if they have already
 	// been landed on in this sequence.
 	std::map<const Planet *, bool> travelDestinations;
+	// The list of StellarObjects in a patrolled system, which the NPC will
+	//  investigate before departing for the next system.
+	std::vector<const StellarObject *> surveyTargets;
 	// NPCs with a landing directive may only visit the destination
 	// planet, or they may permanently land.
 	bool doVisit = false;

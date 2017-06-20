@@ -2515,7 +2515,7 @@ const bool Ship::HasTravelDirective() const
 
 
 // The bool may get updated, so this should not return as const.
-std::map<const Planet *, bool> Ship::GetTravelDestinations() const
+std::map<const Planet *, bool> Ship::GetStopovers() const
 {
 	return travelDestinations;
 }
@@ -2529,7 +2529,7 @@ const System *Ship::GetDestinationSystem() const
 
 
 
-const System *Ship::GetNextSystem()
+const System *Ship::GetNextWaypoint()
 {
 	++waypoint;
 	// If the NPC should patrol and we've reached the end of the
@@ -2539,6 +2539,13 @@ const System *Ship::GetNextSystem()
 	
 	destinationSystem = (waypoint < waypoints.size()) ? waypoints[waypoint] : nullptr;
 	return destinationSystem;
+}
+
+
+
+std::vector<const StellarObject *> Ship::GetSurveyTargets() const
+{
+	return surveyTargets;
 }
 
 
@@ -2594,7 +2601,7 @@ void Ship::SetTargetSystem(const System *system)
 
 
 // Persistent targets for mission NPCs.
-void Ship::SetTravelDestinations(const std::vector<const Planet *> planets, const bool shouldRelaunch)
+void Ship::SetStopovers(const std::vector<const Planet *> planets, const bool shouldRelaunch)
 {
 	doVisit = shouldRelaunch;
 	
@@ -2605,18 +2612,25 @@ void Ship::SetTravelDestinations(const std::vector<const Planet *> planets, cons
 
 
 
-void Ship::SetDestinationSystems(const std::vector<const System *> systems, const bool repeatTravel)
+void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool repeatTravel)
 {
 	// Ships loaded from save files may have an existing waypoint that
 	// indicates which systems have already been visited.
-	if(waypoint < systems.size())
+	if(waypoint < waypoints.size())
 	{
 		doPatrol = repeatTravel;
-		waypoints = systems;
-		destinationSystem = systems[waypoint];
+		this->waypoints = waypoints;
+		destinationSystem = waypoints[waypoint];
 	}
 	else
 		destinationSystem = nullptr;
+}
+
+
+
+void Ship::SetSurveyTargets(const std::vector<const StellarObject *> objects)
+{
+	surveyTargets = objects;
 }
 
 

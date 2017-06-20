@@ -161,9 +161,9 @@ void NPC::Load(const DataNode &node)
 		ship->SetPersonality(personality);
 		ship->SetIsSpecial();
 		if(!targetSystems.empty())
-			ship->SetDestinationSystems(targetSystems, doPatrol);
+			ship->SetWaypoints(targetSystems, doPatrol);
 		if(!targetPlanets.empty())
-			ship->SetTravelDestinations(targetPlanets, doVisit);
+			ship->SetStopovers(targetPlanets, doVisit);
 	}
 }
 
@@ -453,9 +453,9 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetPersonality(result.personality);
 		// Use the destinations stored in the NPC copy, in case they were auto-generated.
 		if(!result.targetPlanets.empty())
-			ship->SetTravelDestinations(result.targetPlanets, result.doVisit);
+			ship->SetStopovers(result.targetPlanets, result.doVisit);
 		if(!result.targetSystems.empty())
-			ship->SetDestinationSystems(result.targetSystems, result.doPatrol);
+			ship->SetWaypoints(result.targetSystems, result.doPatrol);
 		
 		if(personality.IsEntering())
 			Fleet::Enter(*result.system, *ship);
