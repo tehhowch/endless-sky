@@ -1043,7 +1043,10 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 				// NPCs which are "fleeing" delete themselves on landing, unless they have an
 				// incomplete travel directive.
 				else if(!isSpecial || (personality.IsFleeing() && !HasTravelDirective()))
+				{
+					hasLanded = true;
 					return false;
+				}
 				else if(isSpecial && !isYours && !travelDestinations.empty())
 				{
 					// This mission NPC has a directive to land on at least one specific planet.
