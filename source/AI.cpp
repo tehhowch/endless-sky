@@ -536,6 +536,7 @@ void AI::Step(const PlayerInfo &player)
 		// Special actions when a ship is near death:
 		if(health < 1.)
 		{
+			it->AbortSurvey();
 			if(parent && personality.IsCoward())
 			{
 				// Cowards abandon their fleets.
@@ -648,6 +649,7 @@ void AI::Step(const PlayerInfo &player)
 		// the behavior depends on what the parent is doing, whether there
 		// are hostile targets nearby, and whether the escort has any
 		// immediate needs (like refueling).
+		// If an NPC has no parent (e.g. coward or uninterested), it **cannot** use MoveEscort
 		else if(!parent)
 			MoveIndependent(*it, command);
 		else if(parent->GetSystem() != it->GetSystem())
@@ -666,7 +668,8 @@ void AI::Step(const PlayerInfo &player)
 		{
 			// If your parent is your enemy, move toward them until you have
 			// selected a target to fight. Then, fight it.
-			if(target || !parent->IsTargetable())
+			// attacked fleeing ships would get MoveEscort even if surveying, as they do not target
+			if(target || !parent->IsTargetable() || it->IsSurveying())
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -924,7 +927,19 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		// The desired position is in a different system.
 		DistanceMap distance(ship, it->second.targetSystem);
 		const System *to = distance.Route(ship.GetSystem());
-		ship.SetTargetSystem(to);
+		// This system may be behind an accessible wormhole.
+		if(to->Neighbors().count(ship.GetSystem()) == 0)
+		{
+			for(const StellarObject &object : ship.GetSystem()->Objects())
+				if(object.GetPlanet() && object.GetPlanet()->WormholeDestination(ship.GetSystem()) == to)
+				{
+					ship.SetTargetStellar(&object);
+					ship.SetTargetSystem(nullptr);
+					break;
+				}
+		}
+		else
+			ship.SetTargetSystem(to);
 		return false;
 	}
 	else if(type == Orders::MOVE_TO && ship.Position().Distance(it->second.point) > 20.)

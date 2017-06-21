@@ -2654,6 +2654,11 @@ void Ship::DoSurvey()
 
 
 
+void Ship::AbortSurvey()
+{
+	stayingTime = 0;
+}
+
 // Mining target.
 void Ship::SetTargetAsteroid(const shared_ptr<Minable> &asteroid)
 {

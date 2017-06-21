@@ -346,6 +346,7 @@ public:
 	const System *NextWaypoint();
 	void PrepareSurvey(const int surveyDuration = 120);
 	void DoSurvey();
+	void AbortSurvey();
 	
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
