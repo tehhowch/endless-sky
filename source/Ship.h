@@ -376,6 +376,7 @@ private:
 	void CreateExplosion(std::list<Effect> &effects, bool spread = false);
 	// Place a "spark" effect, like ionization or disruption.
 	void CreateSparks(std::list<Effect> &effects, const std::string &name, double amount);
+	void ResetStopovers();
 	
 	
 private:

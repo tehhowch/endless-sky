@@ -2619,10 +2619,14 @@ void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool 
 const System *Ship::NextWaypoint()
 {
 	++waypoint;
-	// If the NPC should patrol and we've reached the end of the
-	// patrol list, reset the waypoint index.
+	// If the NPC should patrol and we've reached the end of the patrol
+	// list, reset the waypoint index and perhaps the visit history.
 	if(doPatrol && waypoint == waypoints.size() && waypoints.size() > 1)
+	{
 		waypoint = 0;
+		if(doVisit)
+			ResetStopovers();
+	}
 	
 	destinationSystem = (waypoint < waypoints.size()) ? waypoints[waypoint] : nullptr;
 	return destinationSystem;
@@ -2869,4 +2873,15 @@ void Ship::CreateSparks(list<Effect> &effects, const string &name, double amount
 			effects.back().Place(angle.Rotate(point) + position, velocity, angle);
 		}
 	}
+}
+
+
+
+void Ship::ResetStopovers()
+{
+	if(travelDestinations.empty())
+		return;
+	
+	for(auto &stopover : travelDestinations)
+		stopover.second = false;
 }
