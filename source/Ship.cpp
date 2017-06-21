@@ -2529,23 +2529,11 @@ const System *Ship::GetDestinationSystem() const
 
 
 
-const System *Ship::GetNextWaypoint()
+// Returns true for a mission NPC given a travel directive, when it has arrived
+// in one of its specified destination systems.
+const bool Ship::IsSurveying() const
 {
-	++waypoint;
-	// If the NPC should patrol and we've reached the end of the
-	// patrol list, reset the waypoint index.
-	if(doPatrol && waypoint == waypoints.size() && waypoints.size() > 1)
-		waypoint = 0;
-	
-	destinationSystem = (waypoint < waypoints.size()) ? waypoints[waypoint] : nullptr;
-	return destinationSystem;
-}
-
-
-
-std::vector<const StellarObject *> Ship::GetSurveyTargets() const
-{
-	return surveyTargets;
+	return stayingTime > 0 && currentSystem && currentSystem == destinationSystem;
 }
 
 
@@ -2628,26 +2616,36 @@ void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool 
 
 
 
-// Return a pointer to stellar object to scan
-const StellarObject *Ship::StartSurveying(const std::vector<StellarObject> &objects)
+const System *Ship::NextWaypoint()
 {
-	if(!objects.empty())
-	{
-		didPatrolSurvey = false;
-		for(const auto it : objects)
-			surveyTargets.push_back(&it);
-		const StellarObject *surveyTarget = surveyTargets.back();
-		surveyTargets.pop_back();
-		return surveyTarget;
-	}
-	return nullptr;
+	++waypoint;
+	// If the NPC should patrol and we've reached the end of the
+	// patrol list, reset the waypoint index.
+	if(doPatrol && waypoint == waypoints.size() && waypoints.size() > 1)
+		waypoint = 0;
+	
+	destinationSystem = (waypoint < waypoints.size()) ? waypoints[waypoint] : nullptr;
+	return destinationSystem;
 }
 
 
 
-const bool Ship::IsSurveying() const
+// Instruct the ship to stay in this system for a set amount of time before obeying its
+// next jump instruction. Default to 2 seconds per StellarObject in the system (6 if patrol).
+void Ship::PrepareSurvey(const int surveyDuration)
 {
-	return !surveyTargets.empty() && didPatrolSurvey;
+	int surveyTargets = 1;
+	if(destinationSystem)
+		surveyTargets += destinationSystem->Objects().size();
+	
+	stayingTime = (doPatrol ? 3 : 1) * surveyDuration * surveyTargets;
+}
+
+
+
+void Ship::DoSurvey()
+{
+	--stayingTime;
 }
 
 

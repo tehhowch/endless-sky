@@ -89,33 +89,29 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<co
 	Orders newOrders;
 	if(waypoint)
 	{
-		// check if we should survey (when ready, this should be !isSurveying and there should be
-		// another else if for the waypoint && issurveying, where the next object is targeted)
-		if(npcShip.GetSystem() == waypoint && npcShip.IsSurveying()) // && npcShip.ShouldSurvey()
+		// Issue a travel order if a system was specified.
+		newOrders.type = Orders::TRAVEL_TO;
+		newOrders.targetSystem = waypoint;
+		if(npcShip.GetSystem() == waypoint && npcShip.IsSurveying())
 		{
-			// if so, assign PATROL_SYSTEM order type.
-			// if done surveying or should not survey,
-			// then fall down to previous travel code.
-			// const StellarObject *surveyTarget = npcShip.StartSurveying(nextSystem->Objects());
-			// newOrders.type = Orders::PATROL_SYSTEM;
-			// newOrders.targetSystem = nextSystem;
-			// The NPC has completed its survey of this system, and should travel.
+			// If already in this system, remain in it for some varied time.
+			// This time is longer if we are on `patrol`, and depends on how
+			// many StellarObjects are in this system.
+			npcShip.DoSurvey();
 		}
-		else if(npcShip.GetSystem() != waypoint)
+		else if(npcShip.GetSystem() == waypoint)
 		{
-			newOrders.type = Orders::TRAVEL_TO;
-			newOrders.targetSystem = waypoint;
-		}
-		else
-		{
-			// The NPC has reached its current targeted system and should not survey
+			// The NPC has completed its survey of this system, and can travel.
 			// Get the next destination in the travel directive, if it exists.
-			const System *nextSystem = npcShip.GetNextWaypoint();
+			npcShip.SetTargetStellar(nullptr);
+			const System *nextSystem = npcShip.NextWaypoint();
 			if(nextSystem)
 			{
-				newOrders.type = Orders::TRAVEL_TO;
 				newOrders.targetSystem = nextSystem;
+				npcShip.PrepareSurvey();
 			}
+			else
+				newOrders.type = 0;
 		}
 	}
 	
@@ -360,7 +356,7 @@ void AI::Step(const PlayerInfo &player)
 			continue;
 		}
 		
-		// Update any orders NPCs may have
+		// Update any orders NPCs may have been given in their mission definition.
 		if(it->IsSpecial() && !it->IsYours() && it->HasTravelDirective())
 			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetStopovers());
 		
@@ -656,7 +652,10 @@ void AI::Step(const PlayerInfo &player)
 			MoveIndependent(*it, command);
 		else if(parent->GetSystem() != it->GetSystem())
 		{
-			if(personality.IsStaying() || !it->Attributes().Get("fuel capacity"))
+			// Mission NPCs needing to do complex travel should use the MoveEscort routine,
+			// which offers refueling and wormhole routing.
+			if(it->IsSurveying() || (personality.IsStaying() && !it->GetDestinationSystem())
+					|| !it->Attributes().Get("fuel capacity"))
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -681,7 +680,7 @@ void AI::Step(const PlayerInfo &player)
 			else
 				it->SetShipToAssist(parent);
 		}
-		else if(personality.IsStaying())
+		else if(personality.IsStaying() || it->IsSurveying())
 			MoveIndependent(*it, command);
 		// This is a friendly escort. If the parent is getting ready to
 		// jump, always follow.
@@ -1088,7 +1087,7 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		}
 	}
 	
-	if(ship.GetTargetSystem())
+	if(ship.GetTargetSystem() && !ship.IsSurveying())
 	{
 		PrepareForHyperspace(ship, command);
 		bool mustWait = false;
@@ -1106,14 +1105,15 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	{
 		MoveToPlanet(ship, command);
 		// Ships should land on their destination planet if they are free to move about, or have
-		// a travel directive indicating they should land. Fighers and drones should not land.
-		if((!shouldStay || ship.HasTravelDirective()) && !ship.CanBeCarried())
+		// a travel directive indicating they should land.
+		if(!ship.IsSurveying() && (!shouldStay || ship.HasTravelDirective()) && ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
 	// Ships which are not free to move about should patrol this system (e.g. seek a target ship).
-	else if(shouldStay && ship.GetSystem()->Objects().size())
+	// This behavior is also exhibited by mission NPCs that are performing a survey in a waypoint.
+	else if((shouldStay || ship.IsSurveying()) && ship.GetSystem()->Objects().size())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
 		ship.SetTargetStellar(&ship.GetSystem()->Objects()[i]);
@@ -1152,7 +1152,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 					ship.SetTargetStellar(&object);
 					break;
 				}
-			// If the npc/escort had already been given a destination, do not overwrite it.
+			// If the NPC/escort had already been given a destination, do not overwrite it.
 			if(!ship.GetDestinationSystem())
 				ship.SetTargetSystem(to);
 			// Check if we need to refuel. Wormhole travel does not require fuel.

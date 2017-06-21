@@ -127,7 +127,6 @@ private:
 		static const int MOVE_TO = 0x001;
 		static const int TRAVEL_TO = 0x002;
 		static const int LAND_ON = 0x003;
-		static const int PATROL_SYSTEM = 0x004;
 		static const int KEEP_STATION = 0x100;
 		static const int GATHER = 0x101;
 		static const int ATTACK = 0x102;
@@ -141,7 +140,6 @@ private:
 		Point point;
 		const System *targetSystem;
 		const Planet *targetPlanet;
-		const StellarObject *targetStellar;
 	};
 
 

@@ -329,8 +329,6 @@ public:
 	const bool HasTravelDirective() const;
 	std::map<const Planet *, bool> GetStopovers() const;
 	const System *GetDestinationSystem() const;
-	const System *GetNextWaypoint();
-	std::vector<const StellarObject *> GetSurveyTargets() const;
 	const bool IsSurveying() const;
 	
 	// Mining target.
@@ -345,7 +343,10 @@ public:
 	// Persistent targets associated with mission NPCs.
 	void SetStopovers(const std::vector<const Planet *> planets, const bool shouldRelaunch);
 	void SetWaypoints(const std::vector<const System *> waypoints, const bool repeatTravel);
-	const StellarObject *StartSurveying(const std::vector<StellarObject> &objects);
+	const System *NextWaypoint();
+	void PrepareSurvey(const int surveyDuration = 120);
+	void DoSurvey();
+	
 	// Mining target.
 	void SetTargetAsteroid(const std::shared_ptr<Minable> &asteroid);
 	void SetTargetFlotsam(const std::shared_ptr<Flotsam> &flotsam);
@@ -493,16 +494,13 @@ private:
 	size_t waypoint = 0;
 	// NPCs may patrol the set of destination systems, in order A B C A.
 	bool doPatrol = false;
+	int stayingTime = 0;
 	// The list of planets this NPC may land on, and if they have already
 	// been landed on in this sequence.
 	std::map<const Planet *, bool> travelDestinations;
-	// The list of StellarObjects in a patrolled system, which the NPC will
-	//  investigate before departing for the next system.
-	std::vector<const StellarObject *> surveyTargets;
 	// NPCs with a landing directive may only visit the destination
 	// planet, or they may permanently land.
 	bool doVisit = false;
-	bool didPatrolSurvey = false;
 	
 	// Links between escorts and parents.
 	std::vector<std::weak_ptr<Ship>> escorts;
