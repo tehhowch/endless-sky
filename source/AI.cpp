@@ -87,12 +87,13 @@ AI::AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsa
 void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<const Planet *, bool> stopovers)
 {
 	Orders newOrders;
+	const bool isSurveying = npcShip.IsSurveying();
 	if(waypoint)
 	{
 		// Issue a travel order if a system was specified.
 		newOrders.type = Orders::TRAVEL_TO;
 		newOrders.targetSystem = waypoint;
-		if(npcShip.GetSystem() == waypoint && npcShip.IsSurveying())
+		if(npcShip.GetSystem() == waypoint && isSurveying)
 		{
 			// If already in this system, remain in it for some varied time.
 			// This time is longer if we are on `patrol`, and depends on how
@@ -121,7 +122,7 @@ void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<co
 	if(!stopovers.empty())
 	{
 		for(const auto &it : stopovers)
-			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second)
+			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second && !isSurveying)
 			{
 				newOrders.type = Orders::LAND_ON;
 				newOrders.targetPlanet = it.first;
@@ -1104,17 +1105,25 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	
 	if(ship.GetTargetSystem() && !ship.IsSurveying())
 	{
-		PrepareForHyperspace(ship, command);
-		bool mustWait = false;
-		if(ship.BaysFree(false) || ship.BaysFree(true))
-			for(const weak_ptr<const Ship> &escort : ship.GetEscorts())
-			{
-				shared_ptr<const Ship> locked = escort.lock();
-				mustWait |= locked && locked->CanBeCarried() && !locked->IsDisabled();
-			}
-		
-		if(!mustWait)
-			command |= Command::JUMP;
+		// Refuel if able to now, but unable to in the destination system. ship.GetSystem()->HasFuelFor may be
+		// unnecessary since if this system did not have fuel, AI ships would request assistance from other ships.
+		if(!ship.JumpsRemaining() || (ship.JumpsRemaining() == 1 && ship.GetSystem()->HasFuelFor(ship)
+				&& !ship.GetTargetSystem()->HasFuelFor(ship)))
+			Refuel(ship, command);
+		else
+		{
+			PrepareForHyperspace(ship, command);
+			bool mustWait = false;
+			if(ship.BaysFree(false) || ship.BaysFree(true))
+				for(const weak_ptr<const Ship> &escort : ship.GetEscorts())
+				{
+					shared_ptr<const Ship> locked = escort.lock();
+					mustWait |= locked && locked->CanBeCarried() && !locked->IsDisabled();
+				}
+			
+			if(!mustWait)
+				command |= Command::JUMP;
+		}
 	}
 	else if(ship.GetTargetStellar())
 	{
