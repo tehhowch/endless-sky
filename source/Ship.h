@@ -327,7 +327,7 @@ public:
 	const System *GetTargetSystem() const;
 	// Targets for persistent ships (e.g. mission NPCs).
 	const bool HasTravelDirective() const;
-	std::map<const Planet *, bool> GetStopovers() const;
+	const std::map<const Planet *, bool> GetStopovers() const;
 	const System *GetDestinationSystem() const;
 	const bool IsSurveying() const;
 	

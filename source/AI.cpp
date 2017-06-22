@@ -83,62 +83,6 @@ AI::AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsa
 
 
 	
-// NPC commands from npc mission directives 'destination' and 'land'
-void AI::IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<const Planet *, bool> stopovers)
-{
-	Orders newOrders;
-	const bool isSurveying = npcShip.IsSurveying();
-	if(waypoint)
-	{
-		// Issue a travel order if a system was specified.
-		newOrders.type = Orders::TRAVEL_TO;
-		newOrders.targetSystem = waypoint;
-		if(npcShip.GetSystem() == waypoint && isSurveying)
-		{
-			// If already in this system, remain in it for some varied time.
-			// This time is longer if we are on `patrol`, and depends on how
-			// many StellarObjects are in this system.
-			npcShip.DoSurvey();
-		}
-		else if(npcShip.GetSystem() == waypoint)
-		{
-			// The NPC has completed its survey of this system, and can travel.
-			// Get the next destination in the travel directive, if it exists.
-			npcShip.SetTargetStellar(nullptr);
-			const System *nextSystem = npcShip.NextWaypoint();
-			if(nextSystem)
-			{
-				newOrders.targetSystem = nextSystem;
-				npcShip.PrepareSurvey();
-			}
-			else
-				newOrders.type = 0;
-		}
-	}
-	
-	// Determine if there is a directive to visit or land on planet in this system.
-	// This directive supercedes the directive to travel to a new system if the
-	// planet has not already been visited as a part of the NPC's travel directives.
-	if(!stopovers.empty())
-	{
-		for(const auto &it : stopovers)
-			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second && !isSurveying)
-			{
-				newOrders.type = Orders::LAND_ON;
-				newOrders.targetPlanet = it.first;
-				break;
-			}
-	}
-	
-	// Replace the NPC's existing orders with these updated orders.
-	Orders &existing = orders[&npcShip];
-	existing = newOrders;
-	if(existing.type == 0)
-		orders.erase(&npcShip);
-}
-
-
-
 // Fleet commands from the player.
 void AI::IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &target)
 {
@@ -359,7 +303,7 @@ void AI::Step(const PlayerInfo &player)
 		
 		// Update any orders NPCs may have been given in their mission definition.
 		if(it->IsSpecial() && !it->IsYours() && it->HasTravelDirective())
-			IssueNPCTravelOrders(*it, it->GetDestinationSystem(), it->GetStopovers());
+			IssueNPCOrders(*it, it->GetDestinationSystem(), it->GetStopovers());
 		
 		const Government *gov = it->GetGovernment();
 		double health = .5 * it->Shields() + it->Hull();
@@ -2953,4 +2897,60 @@ void AI::IssueOrders(const PlayerInfo &player, const Orders &newOrders, const st
 		for(const Ship *ship : ships)
 			orders.erase(ship);
 	}
+}
+
+
+
+// NPC commands from npc mission directives 'destination' and 'land'
+void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<const Planet *, bool> stopovers)
+{
+	Orders newOrders;
+	const bool isSurveying = npcShip.IsSurveying();
+	if(waypoint)
+	{
+		// Issue a travel order if a system was specified.
+		newOrders.type = Orders::TRAVEL_TO;
+		newOrders.targetSystem = waypoint;
+		if(npcShip.GetSystem() == waypoint && isSurveying)
+		{
+			// If already in this system, remain in it for some varied time.
+			// This time is longer if we are on `patrol`, and depends on how
+			// many StellarObjects are in this system.
+			npcShip.DoSurvey();
+		}
+		else if(npcShip.GetSystem() == waypoint)
+		{
+			// The NPC has completed its survey of this system, and can travel.
+			// Get the next destination in the travel directive, if it exists.
+			npcShip.SetTargetStellar(nullptr);
+			const System *nextSystem = npcShip.NextWaypoint();
+			if(nextSystem)
+			{
+				newOrders.targetSystem = nextSystem;
+				npcShip.PrepareSurvey();
+			}
+			else
+				newOrders.type = 0;
+		}
+	}
+	
+	// Determine if there is a directive to visit or land on planet in this system.
+	// This directive supercedes the directive to travel to a new system if the
+	// planet has not already been visited as a part of the NPC's travel directives.
+	if(!stopovers.empty())
+	{
+		for(const auto &it : stopovers)
+			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second && !isSurveying)
+			{
+				newOrders.type = Orders::LAND_ON;
+				newOrders.targetPlanet = it.first;
+				break;
+			}
+	}
+	
+	// Replace the NPC's existing orders with these updated orders.
+	Orders &existing = orders[&npcShip];
+	existing = newOrders;
+	if(existing.type == 0)
+		orders.erase(&npcShip);
 }

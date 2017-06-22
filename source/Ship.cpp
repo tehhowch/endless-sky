@@ -2514,8 +2514,7 @@ const bool Ship::HasTravelDirective() const
 
 
 
-// The bool may get updated, so this should not return as const.
-std::map<const Planet *, bool> Ship::GetStopovers() const
+const std::map<const Planet *, bool> Ship::GetStopovers() const
 {
 	return travelDestinations;
 }

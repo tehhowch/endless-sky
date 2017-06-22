@@ -50,9 +50,6 @@ template <class Type>
 	// Constructor, giving the AI access to various object lists.
 	AI(const List<Ship> &ships, const List<Minable> &minables, const List<Flotsam> &flotsam);
 	
-	// NPC commands from mission events.
-	void IssueNPCTravelOrders(Ship &npcShip, const System *waypoint, std::map<const Planet *, bool> stopovers);
-	
 	// Fleet commands from the player.
 	void IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &target);
 	void IssueMoveTarget(const PlayerInfo &player, const Point &target, const System *moveToSystem);
@@ -145,6 +142,8 @@ private:
 
 private:
 	void IssueOrders(const PlayerInfo &player, const Orders &newOrders, const std::string &description);
+	// NPC commands from mission events.
+	void IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<const Planet *, bool> stopovers);
 	
 	
 private:
