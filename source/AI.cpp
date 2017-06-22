@@ -599,10 +599,9 @@ void AI::Step(const PlayerInfo &player)
 			MoveIndependent(*it, command);
 		else if(parent->GetSystem() != it->GetSystem())
 		{
-			// Mission NPCs needing to do complex travel should use the MoveEscort routine,
-			// which offers refueling and wormhole routing.
-			if(it->IsSurveying() || (personality.IsStaying() && !it->GetDestinationSystem())
-					|| !it->Attributes().Get("fuel capacity"))
+			// Mission NPCs needing to perform StellarObject flybys (surveying) need to use MoveIndependent.
+			// Both Move___ allow NPCs with a destination system to travel to it.
+			if(it->IsSurveying() || personality.IsStaying() || !it->Attributes().Get("fuel capacity"))
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -971,7 +970,7 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
 	// Ships should choose a random system to jump to or a random planet to land on if they
 	// do not already have a system or planet in mind, and also are free to move about.
-	if(!(ship.GetTargetSystem() || ship.GetTargetStellar()) && !shouldStay)
+	if(!(ship.GetTargetSystem() || ship.GetTargetStellar()) && !shouldStay && !ship.IsSurveying())
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
@@ -1074,7 +1073,8 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		MoveToPlanet(ship, command);
 		// Ships should land on their destination planet if they are free to move about, or have
 		// a travel directive indicating they should land.
-		if(!ship.IsSurveying() && (!shouldStay || ship.HasTravelDirective()) && ship.Attributes().Get("fuel capacity"))
+		const bool doLanding = ship.HasTravelDirective() && ship.GetTargetStellar()->GetPlanet() && ship.GetTargetStellar()->GetPlanet()->CanLand(ship);
+		if(!ship.IsSurveying() && (!shouldStay || doLanding ) && ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
@@ -2937,10 +2937,10 @@ void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<co
 	// Determine if there is a directive to visit or land on planet in this system.
 	// This directive supercedes the directive to travel to a new system if the
 	// planet has not already been visited as a part of the NPC's travel directives.
-	if(!stopovers.empty())
+	if(!stopovers.empty() && !isSurveying)
 	{
 		for(const auto &it : stopovers)
-			if(it.first->IsInSystem(npcShip.GetSystem()) && !it.second && !isSurveying)
+			if(!it.second && it.first->IsInSystem(npcShip.GetSystem()))
 			{
 				newOrders.type = Orders::LAND_ON;
 				newOrders.targetPlanet = it.first;
