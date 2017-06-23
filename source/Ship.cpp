@@ -1170,16 +1170,28 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 				zoom = 0.;
 			}
 		}
-		// Only refuel if this planet has a spaceport.
-		else if(fuel >= attributes.Get("fuel capacity")
-				|| !landingPlanet || !landingPlanet->HasSpaceport())
+		// Only refuel/repair if this planet has a spaceport.
+		else if(!landingPlanet || !landingPlanet->HasSpaceport() || (fuel >= attributes.Get("fuel capacity")
+				&& hull >= attributes.Get("hull") && shields >= attributes.Get("shields")))
 		{
 			zoom = min(1., zoom + .02);
 			SetTargetStellar(nullptr);
 			landingPlanet = nullptr;
 		}
 		else
+		{
 			fuel = min(fuel + 1., attributes.Get("fuel capacity"));
+			AddCrew(RequiredCrew() - Crew());
+			
+			// In addition to the natural repair & generation functions, a landed
+			// ship restores health more quickly. Smaller craft are repaired more quickly.
+			double mass = Mass();
+			double landedHullRate = 1. + attributes.Get("hull") / mass;
+			DoRepair(hull, landedHullRate, attributes.Get("hull"));
+			
+			double landedShieldsRate = 1. + attributes.Get("shields") / mass;
+			DoRepair(shields, landedShieldsRate, attributes.Get("shields"));
+		}
 		
 		// Move the ship at the velocity it had when it began landing, but
 		// scaled based on how small it is now.
