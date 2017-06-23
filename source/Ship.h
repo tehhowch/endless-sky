@@ -344,6 +344,7 @@ public:
 	void SetStopovers(const std::vector<const Planet *> planets, const bool shouldRelaunch);
 	void SetWaypoints(const std::vector<const System *> waypoints, const bool repeatTravel);
 	const System *NextWaypoint();
+	void EraseWaypoint(const System *system);
 	void PrepareSurvey(const int surveyDuration = 120);
 	void DoSurvey();
 	void AbortSurvey();

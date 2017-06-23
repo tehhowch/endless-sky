@@ -75,23 +75,66 @@ void NPC::Load(const DataNode &node)
 			else
 				location.Load(child);
 		}
-		else if(child.Token(0) == "waypoint" || (child.Token(0) == "patrol" && child.Size() >= 3))
+		else if(child.Token(0) == "waypoint" || child.Token(0) == "patrol")
 		{
-			doPatrol = child.Token(0) == "patrol" ? true : false;
-			if(child.Size() == 1)
-				needsSystemTarget = true;
+			doPatrol |= child.Token(0) == "patrol";
+			if(!child.HasChildren())
+			{
+				// Given "waypoint/patrol" or "waypoint/patrol <system 1> .... <system N>"
+				if(child.Size() == 1)
+					needsWaypoint = true;
+				else if(doPatrol && child.Size() == 2)
+					child.PrintTrace("Skipping invalid use of 'patrol': list 0 or 2+ systems to patrol between:");
+				else
+					for(int i = 1; i < child.Size(); ++i)
+						waypoints.push_back(GameData::Systems().Get(child.Token(i)));
+			}
 			else
-				for(int i = 1; i < child.Size(); ++i)
-					targetSystems.push_back(GameData::Systems().Get(child.Token(i)));
+			{
+				// Given "waypoint/patrol" and child nodes. These get processed during NPC instantiation.
+				for(const DataNode &grand : child)
+				{
+					if(!grand.HasChildren())
+						grand.PrintTrace("Skipping invalid patrol waypoint specification:");
+					else
+					{
+						waypointFilters.emplace_back();
+						waypointFilters.back().Load(grand);
+					}
+				}
+				if(doPatrol && waypointFilters.size() == 1)
+				{
+					child.PrintTrace("Skipping invalid use of 'patrol': list 0 or 2+ systems to patrol between:");
+					waypointFilters.clear();
+				}
+			}
 		}
 		else if(child.Token(0) == "land" || child.Token(0) == "visit")
 		{
-			doVisit = child.Token(0) == "visit" ? true : false;
-			if(child.Size() == 1)
-				needsPlanetTarget = true;
+			doVisit |= child.Token(0) == "visit";
+			if(!child.HasChildren())
+			{
+				// Given "land/visit" or "land/visit <planet 1> ... <planet N>".
+				if(child.Size() == 1)
+					needsStopover = true;
+				else
+					for(int i = 1; i < child.Size(); ++i)
+						stopovers.push_back(GameData::Planets().Get(child.Token(i)));
+			}
 			else
-				for(int i = 1; i < child.Size(); ++i)
-					targetPlanets.push_back(GameData::Planets().Get(child.Token(i)));
+			{
+				// Given "land/visit" and child nodes. These get processed during NPC instantiation.
+				for(const DataNode &grand : child)
+				{
+					if(!grand.HasChildren())
+						grand.PrintTrace("Skipping invalid stopover specification:");
+					else
+					{
+						stopoverFilters.emplace_back();
+						stopoverFilters.back().Load(grand);
+					}
+				}
+			}
 		}
 		else if(child.Token(0) == "succeed" && child.Size() >= 2)
 			succeedIf = child.Value(1);
@@ -160,10 +203,10 @@ void NPC::Load(const DataNode &node)
 		ship->SetGovernment(government);
 		ship->SetPersonality(personality);
 		ship->SetIsSpecial();
-		if(!targetSystems.empty())
-			ship->SetWaypoints(targetSystems, doPatrol);
-		if(!targetPlanets.empty())
-			ship->SetStopovers(targetPlanets, doVisit);
+		if(!waypoints.empty())
+			ship->SetWaypoints(waypoints, doPatrol);
+		if(!stopovers.empty())
+			ship->SetStopovers(stopovers, doVisit);
 	}
 }
 
@@ -189,18 +232,18 @@ void NPC::Save(DataWriter &out) const
 			out.Write("government", government->GetName());
 		personality.Save(out);
 		
-		if(!targetSystems.empty())
+		if(!waypoints.empty())
 		{
 			out.WriteToken(doPatrol ? "patrol" : "waypoint");
-			for(const auto &waypoint : targetSystems)
+			for(const auto &waypoint : waypoints)
 				out.WriteToken(waypoint->Name());
 			out.Write();
 		}
 		
-		if(!targetPlanets.empty())
+		if(!stopovers.empty())
 		{
 			out.WriteToken(doVisit ? "visit" : "land");
-			for(const auto &stopover : targetPlanets)
+			for(const auto &stopover : stopovers)
 				out.WriteToken(stopover->Name());
 			out.Write();
 		}
@@ -398,15 +441,10 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	result.failIf = failIf;
 	result.mustEvade = mustEvade;
 	result.mustAccompany = mustAccompany;
-	result.targetSystems = targetSystems;
-	result.targetPlanets = targetPlanets;
+	result.waypoints = waypoints;
+	result.stopovers = stopovers;
 	result.doPatrol = doPatrol;
 	result.doVisit = doVisit;
-	
-	if(needsSystemTarget)
-		result.targetSystems.push_back(result.destination);
-	if(needsPlanetTarget)
-		result.targetPlanets.push_back(destinationPlanet);
 	
 	// Pick the system for this NPC to start out in.
 	result.system = system;
@@ -427,6 +465,69 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	}
 	if(!result.system)
 		result.system = (isAtDestination && destination) ? destination : origin;
+	
+	if(needsWaypoint && doPatrol)
+	{
+		// Create a patrol between the mission's origin and destination.
+		result.waypoints.push_back(origin);
+		result.waypoints.push_back(result.destination);
+	}
+	else if(needsWaypoint)
+		result.waypoints.push_back(result.destination);
+	else if(waypointFilters.size())
+	{
+		// NPC waypoint filters are incremental, to provide some sense of direction to the pathing.
+		size_t index = result.waypoints.size();
+		for(const LocationFilter &filter : waypointFilters)
+		{
+			// Find a system that satisfies the filter.
+			vector<const System *> options;
+			for(const auto &it : GameData::Systems())
+			{
+				// Skip entries with incomplete data, or that are being visited already.
+				if(it.second.Name().empty() || std::find(result.waypoints.begin(), result.waypoints.end(),
+						&it.second) != result.waypoints.end())
+					continue;
+				if(filter.Matches(&it.second, index < result.waypoints.size() ? result.waypoints[index] : origin))
+					options.push_back(&it.second);
+			}
+			if(options.size())
+				result.waypoints.emplace_back(options[Random::Int(options.size())]);
+			else
+				// no matching systems.
+				continue;
+			++index;
+		}
+	}
+	
+	if(needsStopover)
+		result.stopovers.push_back(destinationPlanet);
+	else if(stopoverFilters.size())
+	{
+		// NPC stopover filters are incremental, to provide some sense of direction to the pathing.
+		size_t index = result.stopovers.size();
+		for(const LocationFilter &filter : stopoverFilters)
+		{
+			// Find a planet matching the filter.
+			vector<const Planet *> options;
+			for(const auto &it : GameData::Planets())
+			{
+				// Skip entries with incomplete data, that the player can't land on, or wormholes.
+				if(it.second.Name().empty() || !it.second.CanLand() || it.second.IsWormhole())
+					continue;
+				if(std::find(result.stopovers.begin(), result.stopovers.end(), &it.second) != result.stopovers.end())
+					continue;
+				if(filter.Matches(&it.second, index < result.stopovers.size() ? result.stopovers[index]->GetSystem() : origin))
+					options.push_back(&it.second);
+			}
+			if(options.size())
+				result.stopovers.emplace_back(options[Random::Int(options.size())]);
+			else
+				// no matching planets.
+				continue;
+			++index;
+		}
+	}
 	
 	// Convert fleets into instances of ships.
 	for(const shared_ptr<Ship> &ship : ships)
@@ -452,10 +553,10 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
 		// Use the destinations stored in the NPC copy, in case they were auto-generated.
-		if(!result.targetPlanets.empty())
-			ship->SetStopovers(result.targetPlanets, result.doVisit);
-		if(!result.targetSystems.empty())
-			ship->SetWaypoints(result.targetSystems, result.doPatrol);
+		if(!result.stopovers.empty())
+			ship->SetStopovers(result.stopovers, result.doVisit);
+		if(!result.waypoints.empty())
+			ship->SetWaypoints(result.waypoints, result.doPatrol);
 		
 		if(personality.IsEntering())
 			Fleet::Enter(*result.system, *ship);

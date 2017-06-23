@@ -71,10 +71,12 @@ private:
 	bool isAtDestination = false;
 	
 	// NPCs may have been given a waypoint or stopover.
-	std::vector<const System *> targetSystems;
-	std::vector<const Planet *> targetPlanets;
-	bool needsSystemTarget = false;
-	bool needsPlanetTarget = false;
+	std::vector<const System *> waypoints;
+	std::vector<const Planet *> stopovers;
+	bool needsWaypoint = false;
+	bool needsStopover = false;
+	std::list<LocationFilter> waypointFilters;
+	std::list<LocationFilter> stopoverFilters;
 	// Default behavior is to travel once through the waypoints.
 	bool doPatrol = false;
 	// Default behavior is to permanently land on the destination planet.

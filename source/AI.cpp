@@ -871,8 +871,8 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		// The desired position is in a different system.
 		DistanceMap distance(ship, it->second.targetSystem);
 		const System *to = distance.Route(ship.GetSystem());
-		// This system may be behind an accessible wormhole.
-		if(to->Neighbors().count(ship.GetSystem()) == 0)
+		// This system may be entirely inaccessible, or behind an accessible wormhole.
+		if(to && to->Neighbors().count(ship.GetSystem()) == 0)
 		{
 			for(const StellarObject &object : ship.GetSystem()->Objects())
 				if(object.GetPlanet() && object.GetPlanet()->WormholeDestination(ship.GetSystem()) == to)
@@ -2906,31 +2906,39 @@ void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<co
 {
 	Orders newOrders;
 	const bool isSurveying = npcShip.IsSurveying();
+	const System *from = npcShip.GetSystem();
 	if(waypoint)
 	{
-		// Issue a travel order if a system was specified.
-		newOrders.type = Orders::TRAVEL_TO;
-		newOrders.targetSystem = waypoint;
-		if(npcShip.GetSystem() == waypoint && isSurveying)
+		// Can this system be reached?
+		DistanceMap distance(npcShip, waypoint);
+		if(!distance.Route(from))
+			npcShip.EraseWaypoint(waypoint);
+		else
 		{
-			// If already in this system, remain in it for some varied time.
-			// This time is longer if we are on `patrol`, and depends on how
-			// many StellarObjects are in this system.
-			npcShip.DoSurvey();
-		}
-		else if(npcShip.GetSystem() == waypoint)
-		{
-			// The NPC has completed its survey of this system, and can travel.
-			// Get the next destination in the travel directive, if it exists.
-			npcShip.SetTargetStellar(nullptr);
-			const System *nextSystem = npcShip.NextWaypoint();
-			if(nextSystem)
+			// Issue a travel order if a reachable system was specified.
+			newOrders.type = Orders::TRAVEL_TO;
+			newOrders.targetSystem = waypoint;
+			if(from == waypoint && isSurveying)
 			{
-				newOrders.targetSystem = nextSystem;
-				npcShip.PrepareSurvey();
+				// If already in this system, remain in it for some varied time.
+				// This time is longer if we are on `patrol`, and depends on how
+				// many StellarObjects are in this system.
+				npcShip.DoSurvey();
 			}
-			else
-				newOrders.type = 0;
+			else if(from == waypoint)
+			{
+				// The NPC has completed its survey of this system, and can travel.
+				// Get the next destination in the travel directive, if it exists.
+				npcShip.SetTargetStellar(nullptr);
+				const System *nextSystem = npcShip.NextWaypoint();
+				if(nextSystem)
+				{
+					newOrders.targetSystem = nextSystem;
+					npcShip.PrepareSurvey();
+				}
+				else
+					newOrders.type = 0;
+			}
 		}
 	}
 	
@@ -2940,7 +2948,7 @@ void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<co
 	if(!stopovers.empty() && !isSurveying)
 	{
 		for(const auto &it : stopovers)
-			if(!it.second && it.first->IsInSystem(npcShip.GetSystem()))
+			if(!it.second && it.first->IsInSystem(from))
 			{
 				newOrders.type = Orders::LAND_ON;
 				newOrders.targetPlanet = it.first;
