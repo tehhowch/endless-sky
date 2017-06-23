@@ -447,6 +447,18 @@ void AI::Step(const PlayerInfo &player)
 		}
 		
 		// Special actions when a ship is near death:
+		const bool canRetreat = (it->GetSystem()->HasFuelFor(*it) || !personality.IsStaying());
+		bool shouldRetreat = false;
+		if(health < .75 && personality.IsRetreating() && canRetreat)
+		{
+			// If our forces are being overpowered, run away to heal.
+			if(allyStrength[it->GetGovernment()] < enemyStrength[it->GetGovernment()])
+			{
+				it->SetTargetShip(nullptr);
+				it->SetShipToAssist(nullptr);
+				shouldRetreat = true;
+			}
+		}
 		if(health < 1.)
 		{
 			// Cowards abandon their fleets.
@@ -673,7 +685,7 @@ void AI::Step(const PlayerInfo &player)
 		// the behavior depends on what the parent is doing, whether there
 		// are hostile targets nearby, and whether the escort has any
 		// immediate needs (like refueling).
-		else if(!parent)
+		else if(!parent || shouldRetreat)
 			MoveIndependent(*it, command);
 		else if(parent->GetSystem() != it->GetSystem())
 		{
@@ -1146,18 +1158,19 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	
 	const bool shouldStay = ship.GetPersonality().IsStaying()
 			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !shouldStay)
+	const bool shouldRetreat = ship.GetPersonality().IsRetreating() && ship.Health() < RETREAT_HEALTH;
+	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && (!shouldStay || shouldRetreat))
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
-		// If you only have one jump left, landing should be high priority.
-		int planetWeight = jumps ? (1 + 40 / jumps) : 1;
+		// If you only have one jump left, or are badly damaged, landing should be high priority.
+		int planetWeight = (jumps ? (1 + 40 / jumps) : 1) + (shouldRetreat ? 20 : 0);
 		
 		vector<int> systemWeights;
 		int totalWeight = 0;
 		const set<const System *> &links = ship.Attributes().Get("jump drive")
 			? ship.GetSystem()->Neighbors() : ship.GetSystem()->Links();
-		if(jumps)
+		if(jumps && !ship.GetPersonality().IsStaying())
 		{
 			for(const System *link : links)
 			{
@@ -1236,10 +1249,11 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
-		if(!shouldStay && ship.Attributes().Get("fuel capacity")
-				&& ship.GetTargetStellar()->GetPlanet() && ship.GetTargetStellar()->GetPlanet()->CanLand(ship))
+		const StellarObject &target = *ship.GetTargetStellar();
+		if((!shouldStay || shouldRetreat) && ship.Attributes().Get("fuel capacity")
+				&& target.GetPlanet() && target.GetPlanet()->CanLand(ship))
 			command |= Command::LAND;
-		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
+		else if(ship.Position().Distance(target.Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
 	else if(shouldStay && !ship.GetSystem()->Objects().empty())
