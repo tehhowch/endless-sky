@@ -409,8 +409,6 @@ bool NPC::IsLeftBehind(const System *playerSystem) const
 
 bool NPC::HasFailed() const
 {
-	static const int mustLiveFor = ShipEvent::SCAN_CARGO | ShipEvent::SCAN_OUTFITS | ShipEvent::BOARD;
-	
 	for(const auto &it : actions)
 	{
 		if(it.second & failIf)
@@ -418,7 +416,7 @@ bool NPC::HasFailed() const
 	
 		// If we still need to perform an action that requires the NPC ship be
 		// alive, then that ship being destroyed should cause the mission to fail.
-		if((~it.second & succeedIf & mustLiveFor) && (it.second & (ShipEvent::DESTROY | ShipEvent::LAND)))
+		if((~it.second & succeedIf) && (it.second & (ShipEvent::DESTROY | ShipEvent::LAND)))
 			return true;
 	}
 	

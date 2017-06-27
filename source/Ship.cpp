@@ -1802,7 +1802,7 @@ void Ship::Restore()
 // Check if this ship has been destroyed.
 bool Ship::IsDestroyed() const
 {
-	return (hull < 0.);
+	return (hull < 0.) && !hasLanded;
 }
 
 
