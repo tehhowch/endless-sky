@@ -458,7 +458,7 @@ void AI::Step(const PlayerInfo &player)
 			// Each ship only switches targets twice a second, so that it can
 			// focus on damaging one particular ship.
 			targetTurn = (targetTurn + 1) & 31;
-			if(targetTurn == step || !target || !target->IsTargetable() || target->IsDestroyed()
+			if(targetTurn == step || !target || !target->IsTargetable()
 					|| (target->IsDisabled() && personality.Disables()))
 				it->SetTargetShip(FindTarget(*it));
 			
@@ -2911,7 +2911,7 @@ void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<co
 	{
 		// Can this system be reached?
 		DistanceMap distance(npcShip, waypoint);
-		if(!distance.Route(from))
+		if(!distance.HasRoute(waypoint))
 			npcShip.EraseWaypoint(waypoint);
 		else
 		{
