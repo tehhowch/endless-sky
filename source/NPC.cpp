@@ -345,7 +345,7 @@ void NPC::Do(const ShipEvent &event, PlayerInfo &player, UI *ui, bool isVisible)
 	// Permanently landed NPCs should be removed from the class.
 	if(event.Type() & ShipEvent::LAND)
 	{
-		ship->Destroy();
+		// ship->Destroy();
 		ship.reset();
 	}
 }

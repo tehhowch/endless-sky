@@ -169,7 +169,7 @@ void Engine::Place()
 			for(const shared_ptr<Ship> &ship : npc.Ships())
 			{
 				// Skip ships that have been destroyed.
-				if(ship->IsDestroyed() || ship->IsDisabled())
+				if(ship->IsDestroyed() || ship->IsDisabled() || ship->HasLanded())
 					continue;
 				
 				if(ship->BaysFree(false))
@@ -182,8 +182,8 @@ void Engine::Place()
 			
 			for(const shared_ptr<Ship> &ship : npc.Ships())
 			{
-				// Skip ships that have been destroyed.
-				if(ship->IsDestroyed())
+				// Skip ships that have been destroyed or permanently landed.
+				if(ship->IsDestroyed() || ship->HasLanded())
 					continue;
 				// Avoid the exploit where the player can wear down an NPC's
 				// crew by attrition over the course of many days.
@@ -412,8 +412,8 @@ void Engine::Step(bool isActive)
 		{
 			if(!it->GetGovernment() || it->GetSystem() != currentSystem || it->Cloaking() == 1.)
 				continue;
-			// Don't show status for dead ships.
-			if(it->IsDestroyed())
+			// Don't show status for dead or permanently landed ships.
+			if(it->IsDestroyed() || it->HasLanded())
 				continue;
 			
 			bool isEnemy = it->GetGovernment()->IsEnemy();
@@ -602,7 +602,7 @@ void Engine::Step(bool isActive)
 		}
 	}
 	
-	// Draw crosshairs on all the selected ships.
+	// Draw crosshairs on all the selected ships. check if this needs haslanded.
 	for(const weak_ptr<Ship> &selected : player.SelectedShips())
 	{
 		shared_ptr<Ship> ship = selected.lock();
