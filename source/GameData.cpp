@@ -163,6 +163,7 @@ bool GameData::BeginLoad(const char * const *argv)
 	bool printTests = false;
 	bool printWeapons = false;
 	bool printFleets = false;
+	bool printSystems = false;
 	bool debugMode = false;
 	for(const char * const *it = argv + 1; *it; ++it)
 	{
@@ -179,6 +180,8 @@ bool GameData::BeginLoad(const char * const *argv)
 				debugMode = true;
 			if(arg == "-f" || arg == "--fleet")
 				printFleets = true;
+			if(arg == "--systems=false")
+				printSystems = true;
 			continue;
 		}
 	}
@@ -261,6 +264,8 @@ bool GameData::BeginLoad(const char * const *argv)
 		PrintWeaponTable();
 	if(printFleets)
 		PrintFleetList();
+	if(printSystems)
+		PrintSystemTable();
 	return !(printShips || printWeapons || printTests);
 }
 
@@ -1342,5 +1347,32 @@ void GameData::PrintFleetList()
 	{
 		it.second.PrintShipList();
 	}
+	cout.flush();
+}
+
+
+
+// Write out a table of the systems by total objects, landables,shipyard, outfitter, count of minables by type, 
+void GameData::PrintSystemTable()
+{
+	cout << "Name" << '\t'
+		<< "Government" << '\t'
+		<< "X" << '\t'
+		<< "Y" << '\t'
+		<< "Neighbors" << '\t'
+		<< "Links" << '\t'
+		<< "Stellar Objects" << '\t'
+		<< "Planets" << '\t'
+		<< "Diff. Asteroids" << '\t'
+		<< "Asteroid Density" << '\t'
+		<< "Minable Types" << '\t'
+		<< "Has Shipyard" << '\t'
+		<< "Has Outfitter" << '\t'
+		<< "Danger Rating" << '\t'
+		<< "Num. Fleets" << '\t'
+		<< "Avg. Fleet Period" << '\t'
+		<< "Avg. Hostile Period" << '\n';
+	for (auto &it : systems)
+		cout << it.second.PrintContents() << "\n";
 	cout.flush();
 }

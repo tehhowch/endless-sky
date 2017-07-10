@@ -170,7 +170,7 @@ public:
 	// Check how dangerous this system is (credits worth of enemy ships jumping
 	// in per frame).
 	double Danger() const;
-	
+	std::string PrintContents() const;
 	
 private:
 	void LoadObject(const DataNode &node, Set<Planet> &planets, int parent = -1);

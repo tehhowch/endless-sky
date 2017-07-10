@@ -147,6 +147,7 @@ public:
 	
 	static const std::map<std::string, std::string> &PluginAboutText();
 	static void PrintFleetList();
+	static void PrintSystemTable();
 	
 private:
 	static void LoadSources();

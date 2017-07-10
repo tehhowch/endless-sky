@@ -26,6 +26,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <algorithm>
 #include <cmath>
+#include <string>
 
 using namespace std;
 
@@ -799,6 +800,60 @@ double System::Danger() const
 		if(fleet.Get()->GetGovernment()->IsEnemy())
 			danger += static_cast<double>(fleet.Get()->Strength()) / fleet.Period();
 	return danger;
+}
+
+
+
+// return a string of the system's contents.
+std::string System::PrintContents() const
+{
+	std::string line = "";
+	line += name + "\t";
+	line += (government ? government->GetName() : "not owned") + "\t";
+	line += to_string(position.X()) + "\t" + to_string(position.Y()) + "\t";
+	line += static_cast<std::string>(to_string(neighbors.size())) + "\t";
+	line += static_cast<std::string>(to_string(links.size())) + "\t";
+	line += static_cast<std::string>(to_string(objects.size())) + "\t";
+	
+	// Count number of landable planets
+	size_t landableCount = 0;
+	for(auto &object : objects)
+		if(object.GetPlanet())
+			++landableCount;
+	line += to_string(landableCount) + "\t";
+	line += static_cast<std::string>(to_string(asteroids.size())) + "\t";
+	
+	// Calculate density and number of minable types
+	size_t minableCount = 0;
+	double asteroidDensity = 0.;
+	for(const Asteroid &a : Asteroids())
+	{
+		// Check whether this is a minable or an ordinary asteroid.
+		if(a.Type())
+			++minableCount;
+		else
+			asteroidDensity += static_cast<double>(a.Count()) / 40.96;
+	}
+	line += to_string(asteroidDensity) + "\t";
+	line += to_string(minableCount) + "\t";
+	line += static_cast<std::string>(HasShipyard() ? "true" : "false") + "\t";
+	line += static_cast<std::string>(HasOutfitter() ? "true" : "false") + "\t";
+	
+	// Calculate time between fleet entrances into this system.
+	double meanFleetFrequency = 0.;
+	double meanHostileFrequency = 0.;
+	for(const auto &fleet : fleets)
+	{
+		meanFleetFrequency += 1. / fleet.Period();
+		if(fleet.Get()->GetGovernment()->IsEnemy())
+			meanHostileFrequency += 1. / fleet.Period();
+	}
+	line += to_string(Danger()) + "\t";
+	line += static_cast<std::string>(to_string(fleets.size())) + "\t";
+	line += (meanFleetFrequency ? to_string(1. / meanFleetFrequency) : "No fleets") + "\t";
+	line += (meanHostileFrequency ? to_string(1. / meanHostileFrequency) : "N/A");
+	
+	return line;
 }
 
 

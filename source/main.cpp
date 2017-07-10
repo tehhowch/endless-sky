@@ -70,6 +70,7 @@ int main(int argc, char *argv[])
 	bool loadOnly = false;
 	string testToRunName = "";
 	bool printFleets = false;
+	bool printSystems = false;
 	
 	for(const char *const *it = argv + 1; *it; ++it)
 	{
@@ -94,6 +95,8 @@ int main(int argc, char *argv[])
 			testToRunName = *it;
 		else if(arg == "--player-fleets")
 			printFleets = true;
+		else if(arg == "-y" || arg == "--systems" || arg == "--systems=true")
+			printSystems = true;
 	}
 	
 	try {
@@ -120,6 +123,11 @@ int main(int argc, char *argv[])
 		else if(printFleets)
 		{
 			GameData::PrintFleetList();
+			return 0;
+		}
+		else if(printSystems)
+		{
+			GameData::PrintSystemTable();
 			return 0;
 		}
 		
@@ -350,6 +358,7 @@ void PrintHelp()
 	cerr << "    --test <name>: run given test from resources directory" << endl;
 	cerr << "    -f, --fleets: print list of fleets from the game, before loading a save." << endl;
 	cerr << "    --player-fleets: print list of fleets from the default saved game." << endl;
+	cerr << "    -y, --systems (=false): print table of system contents. Default is after loading a save, use '--systems=false' to print the table before loading the player's save." << endl;
 	cerr << endl;
 	cerr << "Report bugs to: <https://github.com/endless-sky/endless-sky/issues>" << endl;
 	cerr << "Home page: <https://endless-sky.github.io>" << endl;
