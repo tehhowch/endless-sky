@@ -228,12 +228,11 @@ event "wanderers: kaliptari battle begins"
 
 event "wanderers: kaliptari battle ends"
 	system Kaliptari
-		fleet "Large Quarg" 2000
-		fleet "Small Kor Mereti" 8000
-		fleet "Large Kor Mereti" 3600
-		fleet "Wanderer Defense" 1000
-		fleet "Wanderer Drones" 500
-		fleet "Wanderer Flycatchers" 500
+		add fleet "Large Quarg" 2000
+		add fleet "Small Kor Mereti" 8000
+		add fleet "Large Kor Mereti" 3600
+		add fleet "Wanderer Defense" 1000
+		add fleet "Wanderer Drones" 500
 
 mission "Wanderers: First Mereti Attack"
 	landing
@@ -1083,8 +1082,8 @@ mission "Wanderers: Mind 6"
 
 event "wanderers: kor mereti transformation"
 	system Chimitarp
-		fleet "Small Kor Mereti" 200
-		fleet "Large Kor Mereti" 400
+		add fleet "Small Kor Mereti" 250
+		add fleet "Large Kor Mereti" 450
 	planet "Korbatri Eska"
 		description `The cities on this world have been hit by an astonishing variety of weapons. Some were leveled by massive explosions, while others show signs of strafing by low-flying ships or of orbital bombardment. Outside the cities, the land is fruitful and varied: forests, mountains, oceans, desert, and tundra.`
 		description `	Far from the ruined cities, the Kor Mereti have begun building a sort of village of their own: a sprawling complex of greenhouses containing a wide variety of plant samples.`
@@ -1522,6 +1521,7 @@ event "wanderers: battle in solifar ends"
 		fleet "Wanderer Defense" 1800
 		fleet "Wanderer Drones" 700
 		fleet "Wanderer Flycatchers" 800
+		fleet "Wanderer Miners" 4000
 
 mission "Wanderers: Sestor Attack"
 	landing
@@ -1651,25 +1651,15 @@ event "wanderers: kor sestor are aimless"
 		fleet "Large Kor Mereti" 900
 		fleet "Large Kor Sestor" 5000
 	system Eshkoshtar
-		fleet "Small Kor Mereti" 800
-		fleet "Large Kor Mereti" 1600
-		fleet "Kor Mereti Miners" 3000
+		remove fleet "Large Kor Sestor"
 	system Salipastart
-		fleet "Small Kor Mereti" 800
-		fleet "Large Kor Mereti" 1600
-		fleet "Kor Mereti Miners" 3000
+		remove fleet "Large Kor Sestor"
 	system Mekislepti
-		fleet "Small Kor Mereti" 1000
-		fleet "Large Kor Mereti" 3000
-		fleet "Kor Mereti Miners" 2000
+		remove fleet "Large Kor Sestor"
 	system Similisti
-		fleet "Large Kor Mereti" 1600
-		fleet "Small Kor Mereti" 600
-		fleet "Kor Mereti Miners" 1600
+		remove fleet "Large Kor Sestor"
 	system Faronektu
-		fleet "Small Kor Mereti" 1200
-		fleet "Large Kor Mereti" 2000
-		fleet "Kor Mereti Miners" 2000
+		remove fleet "Large Kor Sestor"
 	planet "Varu K'prai"
 		attributes wanderer oil
 		landscape land/beach1
@@ -3028,8 +3018,8 @@ event "wanderers: sestor shutdown"
 		fleet "Small Kor Sestor" 3200
 		fleet "Large Kor Sestor" 4800
 	system "Mesuket"
-		fleet "Large Kor Mereti" 900
-		fleet "Large Kor Sestor" 10000
+		remove fleet "Large Kor Sestor"
+		add fleet "Large Kor Sestor" 10000
 
 mission "Wanderers: Sestor: Factory 3"
 	landing
@@ -3113,6 +3103,22 @@ event "wanderers: exiles have drones"
 		add variant 4
 			"Model 32"
 			"Model 16" 5
+	fleet "Korath Miners"
+		add variant 40
+			"Model 8"
+		add variant 20
+			"Model 8" 2
+		add variant 10
+			"Model 8" 3
+		add variant 10
+			"Korath Raider"
+			"Korath Chaser" 2
+			"Model 8 (Jump)"
+		add variant 3
+			"Model 16 (Jump Miner)"
+			"Model 8 (Jump)" 2
+		add variant
+			"Model 8 (Jump)" 3
 
 event "wanderers: sestor eliminated"
 	system "Celeborim"
@@ -3137,7 +3143,7 @@ event "wanderers: sestor eliminated"
 		government "Uninhabited"
 		fleet "Large Kor Mereti" 2000
 	system "Mesuket"
-		fleet "Large Kor Mereti" 900
+		remove fleet "Large Kor Sestor"
 
 event "wanderers: sabira eseskrai colony"
 	system "Skeruto"
@@ -3147,8 +3153,7 @@ event "wanderers: sabira eseskrai colony"
 		fleet "Wanderer Drones" 800
 		fleet "Kor Efret Home" 800
 	system "Furmeliki"
-		fleet "Large Quarg" 1000
-		fleet "Kor Efret Home" 800
+		add fleet "Kor Efret Home" 800
 	planet "Sabira Eseskrai"
 		description `Long ago, this planet was home to several Korath oil mining settlements, but now all that remains visible are the tops of a few dozen of the tallest buildings. Everything else has been buried by sandstorms.`
 		description `	Due to a recent shift in climate the deserts have begun shrinking once more, with local vegetation growing to cover more and more land each year. The Wanderers, working together with the Kor Efreti, have founded a settlement here and begun working to accelerate the process of rejuvenating the wastelands.`

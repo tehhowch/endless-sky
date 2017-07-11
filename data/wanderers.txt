@@ -125,6 +125,18 @@ fleet "Wanderer Flycatchers"
 		"Flycatcher" 2
 
 
+fleet "Wanderer Miners"
+	government "Wanderer"
+	names "wanderer"
+	cargo 0
+	personality
+		heroic mining harvests
+	variant 10
+		"Summer Leaf"
+	variant 5
+		"Summer Leaf" 2
+
+
 shipyard "Wanderer Basics"
 	"Earth Shaper"
 	"Summer Leaf"
@@ -594,39 +606,19 @@ phrase "hostile disabled wanderer"
 
 event "wanderers: first tech increase"
 	system "Ik'kara'ka"
-		fleet "Wanderer Freight" 600
-		fleet "Wanderer Drones" 700
-		fleet "Wanderer Defense" 600
-		fleet "Wanderer Flycatchers" 400
+		add fleet "Wanderer Flycatchers" 400
 	system "Chy'chra"
-		fleet "Wanderer Freight" 1500
-		fleet "Wanderer Drones" 1000
-		fleet "Wanderer Defense" 300
-		fleet "Wanderer Flycatchers" 300
+		add fleet "Wanderer Flycatchers" 300
 	system "Prakacha'a"
-		fleet "Wanderer Freight" 400
-		fleet "Wanderer Drones" 400
-		fleet "Wanderer Defense" 400
+		remove fleet "Unfettered Tribute"
 	system "Sich'ka'ara"
-		fleet "Wanderer Freight" 600
-		fleet "Wanderer Drones" 3000
-		fleet "Wanderer Defense" 2000
-		fleet "Wanderer Flycatchers" 600
+		add fleet "Wanderer Flycatchers" 600
 	system "Chirr'ay'akai"
-		fleet "Wanderer Freight" 800
-		fleet "Wanderer Drones" 600
-		fleet "Wanderer Defense" 2000
-		fleet "Wanderer Flycatchers" 800
+		add fleet "Wanderer Flycatchers" 800
 	system "Kiro'ku"
-		fleet "Wanderer Freight" 800
-		fleet "Wanderer Drones" 3000
-		fleet "Wanderer Defense" 7000
-		fleet "Wanderer Flycatchers" 1000
+		add fleet "Wanderer Flycatchers" 1000
 	system "Ap'arak"
-		fleet "Wanderer Freight" 500
-		fleet "Wanderer Drones" 2000
-		fleet "Wanderer Defense" 3000
-		fleet "Wanderer Flycatchers" 1200
+		add fleet "Wanderer Flycatchers" 1200
 	fleet "Wanderer Defense"
 		add variant 2
 			"Autumn Leaf" 2
@@ -640,6 +632,12 @@ event "wanderers: first tech increase"
 		add variant
 			"Autumn Leaf"
 			"Summer Leaf" 2
+		add variant 2
+			"Autumn Leaf"
+			"Summer Leaf"
+	fleet "Wanderer Miners"
+		add variant 3
+			"Autumn Leaf"
 		add variant 2
 			"Autumn Leaf"
 			"Summer Leaf"
@@ -661,6 +659,7 @@ event "wanderers: unfettered invasion starts"
 		fleet "Wanderer Drones" 900
 		fleet "Wanderer Defense" 200
 		fleet "Wanderer Flycatchers" 200
+		fleet "Wanderer Miners" 3000
 		fleet "Small Unfettered" 1200
 		fleet "Large Unfettered" 500
 	system "Chy'chra"
@@ -673,29 +672,23 @@ event "wanderers: unfettered invasion starts"
 		fleet "Wanderer Freight" 900
 		fleet "Wanderer Drones" 800
 		fleet "Wanderer Defense" 200
+		fleet "Wanderer Miners" 2000
 		fleet "Small Unfettered" 1800
 		fleet "Large Unfettered" 800
 	system "Ehma Ti"
-		fleet "Small Unfettered" 500
-		fleet "Large Unfettered" 500
+		remove fleet "Unfettered Tribute"
 	system "Sich'ka'ara"
-		fleet "Wanderer Freight" 600
-		fleet "Wanderer Drones" 3000
-		fleet "Wanderer Defense" 400
-		fleet "Wanderer Flycatchers" 300
-		fleet "Large Unfettered" 1200
+		add fleet "Wanderer Defense" 500
+		add fleet "Wanderer Flycatchers" 600
+		add fleet "Large Unfettered" 1200
 	system "Chirr'ay'akai"
-		fleet "Wanderer Freight" 800
-		fleet "Wanderer Drones" 600
-		fleet "Wanderer Defense" 400
-		fleet "Wanderer Flycatchers" 300
-		fleet "Large Unfettered" 1200
+		add fleet "Wanderer Defense" 500
+		add fleet "Wanderer Flycatchers" 480
+		add fleet "Large Unfettered" 1200
 	"reputation: Hai (Unfettered)" <?= -100
 	government "Hai (Unfettered)"
 		"attitude toward"
 			"Wanderer" -.01
-	outfitter "Wanderer Advanced"
-		"Wanderer Anti-Missile"
 	planet "Varu K'est"
 		attributes unfettered
 		description `Varu K'est is a spare, ancient planet of arid plateaus and deep, meandering canyons, with too little rainfall to support any but the hardiest of shrubs. Before the Unfettered invaded, the only Wanderer settlements remaining here were the military bases they had set up to defend their frontier. Now, it is home to an ever-growing number of Unfettered settlements, including many civilians who have come here just for the chance to live on a world that is not overcrowded and polluted.`
@@ -744,6 +737,9 @@ event "wanderers: tempest mass production"
 		remove variant
 			"Autumn Leaf"
 			"Summer Leaf"
+	fleet "Wanderer Miners"
+		add variant
+			"Tempest"
 	shipyard "Wanderer Advanced"
 		"Tempest"
 	outfitter "Wanderer Advanced"
@@ -758,6 +754,7 @@ event "wanderers: more systems lost"
 		government "Hai (Unfettered)"
 		fleet "Large Unfettered" 1200
 		fleet "Small Unfettered" 800
+		fleet "Unfettered Miners" 3000
 	system "Sich'ka'ara"
 		government "Hai (Unfettered)"
 		fleet "Large Unfettered" 400
@@ -786,34 +783,7 @@ planet "The Eye"
 event "wanderers: the eye begins to open"
 	system Sko'karak
 		fleet "Wanderer Defense" 500
-		object
-			sprite star/m0
-			period 10
-		object
-			sprite planet/rock8
-			distance 154.36
-			period 42.8832
-		object
-			sprite planet/rock18
-			distance 384.05
-			period 168.293
-		object
-			sprite planet/desert1
-			distance 617.3
-			period 342.949
-		object
-			sprite planet/gas4
-			distance 1227.46
-			period 961.603
-			object
-				sprite planet/callisto
-				distance 272
-				period 15.8216
-			object
-				sprite planet/rock3
-				distance 406
-				period 28.8527
-		object
+		add object
 			sprite planet/wisp
 			distance 2331.95
 			period 2518.05
@@ -821,44 +791,16 @@ event "wanderers: the eye begins to open"
 event "wanderers: the eye opens"
 	unvisit Sabriset
 	system Sabriset
-		fleet "Large Quarg" 4000
-		fleet "Wanderer Defense" 1200
-		fleet "Wanderer Drones" 600
-		fleet "Wanderer Freight" 4000
-		object
-			sprite star/g0
-			distance 35.1028
-			period 12.1391
-		object
-			sprite star/k0
-			distance 77.8972
-			period 12.1391
-			offset 180
-		object
-			sprite planet/desert1
-			distance 279.387
-			period 47.1932
-		object
-			sprite planet/lava7
-			distance 738.015
-			period 202.613
-			offset 212.423
-		object
-			sprite planet/desert2
-			distance 1012.78
-			period 325.718
-		object
-			sprite planet/rock5
-			distance 1367.84
-			period 511.237
-		object "The Eye"
+		add fleet "Wanderer Defense" 1200
+		add fleet "Wanderer Drones" 600
+		add fleet "Wanderer Freight" 4000
+		add object "The Eye"
 			sprite planet/wormhole
 			distance 2022.87
 			period 919.438
 	system Sepriaptu
-		fleet "Large Quarg" 4000
-		fleet "Wanderer Defense" 1600
-		fleet "Wanderer Drones" 800
+		add fleet "Wanderer Defense" 1600
+		add fleet "Wanderer Drones" 800
 	system Kaliptari
 		fleet "Large Quarg" 2000
 		fleet "Small Kor Mereti" 8000
@@ -876,15 +818,13 @@ event "wanderers: the eye opens"
 	system Skeruto
 		fleet "Large Quarg" 1000
 	system Mekislepti
-		fleet "Small Kor Mereti" 800
-		fleet "Large Kor Mereti" 2400
-		fleet "Large Kor Sestor" 8000
-		fleet "Wanderer Drones" 2000
+		add fleet "Small Kor Mereti" 4000
+		add fleet "Large Kor Mereti" 12000
+		add fleet "Wanderer Drones" 2000
 	unvisit Sko'karak
 	system Sko'karak
-		fleet "Wanderer Defense" 500
-		fleet "Wanderer Drones" 400
-		fleet "Wanderer Freight" 2000
+		add fleet "Wanderer Drones" 400
+		add fleet "Wanderer Freight" 2000
 		object
 			sprite star/m0
 			period 10
@@ -947,11 +887,8 @@ event "wanderers: derecho mass production"
 
 event "wanderers: spera anatrusk colony"
 	system Ap'arak
-		fleet "Wanderer Freight" 2000
-		fleet "Wanderer Drones" 4000
-		fleet "Wanderer Defense" 600
-		fleet "Wanderer Flycatchers" 400
-		fleet "Large Unfettered" 8000
+		remove fleet "Large Unfettered"
+		add fleet "Large Unfettered" 8000
 	system Kaliptari
 		government "Wanderer"
 	planet "Spera Anatrusk"
@@ -989,6 +926,7 @@ event "wanderers: hurricane mass production"
 event "wanderers: desi seledrak"
 	system "Solifar"
 		government "Wanderer"
+		add fleet "Wanderer Miners" 4000
 	planet "Desi Seledrak"
 		attributes wanderer
 		description `Plumes of soot and ash rise from a cluster of several dozen volcanoes on this planet's main continent, shrouding the planet in a thick layer of clouds and choking out the sunlight. The ruins of several Korath cities and the geometric grids of cleared land surrounding them show that this was once a farming world, but now few plants are able to survive and kilometer-high glaciers have begun creeping down from the poles.`
