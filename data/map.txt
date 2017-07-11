@@ -3079,6 +3079,7 @@ system Almach
 	trade Plastic 266
 	fleet "Small Core Pirates" 500
 	fleet "Large Core Pirates" 1400
+	fleet "Core Pirate Miners" 3000
 	fleet "Large Syndicate" 6000
 	fleet "Korath Raid" 20000
 	object
@@ -3268,6 +3269,7 @@ system Alnilam
 	trade Plastic 334
 	fleet "Small Northern Pirates" 500
 	fleet "Large Northern Pirates" 700
+	fleet "Northern Pirate Miners" 3000
 	fleet "Large Republic" 10000
 	object
 		sprite star/f5
@@ -3658,9 +3660,9 @@ system Alphard
 	fleet "Large Northern Merchants" 900
 	fleet "Paradise Merchants" 1500
 	fleet "Small Deep Merchants" 2000
+	fleet "Deep Miners" 3000
 	fleet "Small Republic" 2400
 	fleet "Large Republic" 6000
-	fleet "Human Miners" 2000
 	object
 		sprite star/g5
 		distance 41.5307
@@ -3896,7 +3898,7 @@ system Aludra
 	fleet "Large Deep Merchants" 1000
 	fleet "Small Northern Merchants" 500
 	fleet "Large Northern Merchants" 1200
-	fleet "Human Miners" 5000
+	fleet "Deep Miners" 5000
 	object
 		sprite star/k0
 		period 10
@@ -4809,6 +4811,7 @@ system Aya'k'k
 	fleet "Wanderer Freight" 900
 	fleet "Wanderer Drones" 2000
 	fleet "Wanderer Defense" 800
+	fleet "Wanderer Miners" 5000
 	object
 		sprite star/k0
 		period 10
@@ -5571,6 +5574,7 @@ system "Bore Fah"
 	trade Plastic 322
 	fleet "Small Hai" 1000
 	fleet "Large Hai" 1000
+	fleet "Hai Miners" 3000
 	fleet "Small Human Merchants (Hai)" 12000
 	fleet "Large Human Merchants (Hai)" 18000
 	object
@@ -5630,6 +5634,7 @@ system "Bote Asu"
 	trade Plastic 362
 	fleet "Small Hai" 900
 	fleet "Large Hai" 600
+	fleet "Hai Miners" 4000
 	fleet "Small Human Merchants (Hai)" 8000
 	fleet "Large Human Merchants (Hai)" 12000
 	object
@@ -7004,6 +7009,7 @@ system "Da Ent"
 	trade Plastic 532
 	fleet "Small Hai" 500
 	fleet "Large Hai" 1200
+	fleet "Hai Miners" 2000
 	fleet "Small Human Merchants (Hai)" 9000
 	fleet "Large Human Merchants (Hai)" 10000
 	object
@@ -7065,6 +7071,7 @@ system "Da Lest"
 	trade Plastic 452
 	fleet "Small Hai" 600
 	fleet "Large Hai" 1400
+	fleet "Hai Miners" 3000
 	fleet "Small Human Merchants (Hai)" 7000
 	fleet "Large Human Merchants (Hai)" 8000
 	object
@@ -8266,6 +8273,7 @@ system "Ehma Ti"
 	fleet "Small Unfettered" 500
 	fleet "Large Unfettered" 500
 	fleet "Unfettered Raid" 2500
+	fleet "Unfettered Miners" 5000
 	object
 		sprite star/k0
 		period 10
@@ -8336,6 +8344,7 @@ system Ek'kek'ru
 	fleet "Wanderer Freight" 500
 	fleet "Wanderer Drones" 400
 	fleet "Wanderer Defense" 6000
+	fleet "Wanderer Miners" 3000
 	object
 		sprite star/m0
 		period 10
@@ -8946,6 +8955,7 @@ system Es'sprak'ai
 	fleet "Wanderer Freight" 800
 	fleet "Wanderer Drones" 4000
 	fleet "Wanderer Defense" 2000
+	fleet "Wanderer Miners" 4000
 	object
 		sprite star/k0
 		period 10
@@ -9142,6 +9152,7 @@ system "Fah Root"
 	trade Plastic 332
 	fleet "Small Hai" 2000
 	fleet "Large Hai" 4000
+	fleet "Hai Miners" 8000
 	fleet "Small Human Merchants (Hai)" 15000
 	fleet "Large Human Merchants (Hai)" 25000
 	fleet Quarg 2000
@@ -10450,6 +10461,7 @@ system Gienah
 	trade Plastic 460
 	fleet "Small Core Pirates" 500
 	fleet "Large Core Pirates" 800
+	fleet "Core Pirate Miners" 2000
 	fleet "Large Syndicate" 5000
 	object
 		sprite star/k5-old
@@ -11190,6 +11202,7 @@ system Hatysa
 	trade Plastic 330
 	fleet "Small Northern Pirates" 600
 	fleet "Large Northern Pirates" 1000
+	fleet "Northern Pirate Miners" 3000
 	fleet "Large Republic" 15000
 	object
 		sprite star/k0
@@ -11250,6 +11263,7 @@ system "Heia Due"
 	trade Plastic 362
 	fleet "Small Hai" 600
 	fleet "Large Hai" 2000
+	fleet "Hai Miners" 4000
 	fleet "Small Human Merchants (Hai)" 2000
 	fleet "Large Human Merchants (Hai)" 5000
 	object
@@ -11499,6 +11513,7 @@ system "Hi Yahr"
 	trade Plastic 372
 	fleet "Small Unfettered" 500
 	fleet "Large Unfettered" 500
+	fleet "Unfettered Miners" 4000
 	object
 		sprite star/g5
 		period 10
@@ -11837,6 +11852,7 @@ system Ik'kara'ka
 	fleet "Wanderer Freight" 600
 	fleet "Wanderer Drones" 700
 	fleet "Wanderer Defense" 600
+	fleet "Wanderer Miners" 3000
 	object
 		sprite star/g5
 		period 10
@@ -11948,6 +11964,7 @@ system "Imo Dep"
 	trade Plastic 532
 	fleet "Small Hai" 1000
 	fleet "Large Hai" 2000
+	fleet "Hai Miners" 4000
 	fleet "Small Human Merchants (Hai)" 10000
 	fleet "Large Human Merchants (Hai)" 14000
 	object
@@ -12071,6 +12088,7 @@ system "Io Lowe"
 	trade Plastic 262
 	fleet "Small Hai" 600
 	fleet "Large Hai" 1200
+	fleet "Hai Miners" 2000
 	fleet "Small Human Merchants (Hai)" 4000
 	fleet "Large Human Merchants (Hai)" 7000
 	object
@@ -12266,6 +12284,7 @@ system Iyech'yek
 	fleet "Wanderer Freight" 600
 	fleet "Wanderer Drones" 2000
 	fleet "Wanderer Defense" 5000
+	fleet "Wanderer Miners" 4000
 	object
 		sprite star/m0
 		period 10
@@ -13039,6 +13058,7 @@ system Kiro'ku
 	fleet "Wanderer Freight" 800
 	fleet "Wanderer Drones" 3000
 	fleet "Wanderer Defense" 7000
+	fleet "Wanderer Miners" 3000
 	object
 		sprite star/g5
 		distance 50.3456
@@ -13205,6 +13225,7 @@ system "Kor Ak'Mari"
 	trade Medical 726
 	trade Metal 217
 	trade Plastic 524
+	fleet "Korath Miners" 10000
 	fleet "Korath Raid" 2800
 	object
 		sprite star/wr
@@ -13260,8 +13281,9 @@ system "Kor En'lakfar"
 	trade Medical 840
 	trade Metal 236
 	trade Plastic 488
-	fleet "Korath Raid" 600
 	fleet "Korath Home" 1800
+	fleet "Korath Miners" 4000
+	fleet "Korath Raid" 600
 	object
 		sprite star/g0
 		period 10
@@ -13320,8 +13342,9 @@ system "Kor Fel'tar"
 	trade Medical 841
 	trade Metal 256
 	trade Plastic 478
-	fleet "Korath Raid" 1600
 	fleet "Korath Home" 900
+	fleet "Korath Miners" 3000
+	fleet "Korath Raid" 1600
 	object
 		sprite star/k0
 		period 10
@@ -13507,8 +13530,9 @@ system "Kor Tar'bei"
 	trade Medical 817
 	trade Metal 498
 	trade Plastic 402
-	fleet "Korath Raid" 1200
 	fleet "Korath Home" 600
+	fleet "Korath Raid" 1200
+	fleet "Korath Miners" 3000
 	object
 		sprite star/m0
 		period 10
@@ -14128,7 +14152,8 @@ system Limen
 	fleet "Small Southern Merchants" 4000
 	fleet "Small Southern Pirates" 1000
 	fleet "Large Southern Pirates" 2000
-	fleet "Human Miners" 1000
+	fleet "Deep Miners" 3000
+	fleet "Human Miners" 2000
 	object
 		sprite star/f5
 		period 10
@@ -14645,6 +14670,7 @@ system Markeb
 	fleet "Small Deep Merchants" 2000
 	fleet "Large Deep Security" 8000
 	fleet "Large Deep Merchants" 4000
+	fleet "Deep Miners" 5000
 	fleet "Large Northern Pirates" 5000
 	object
 		sprite star/k0
@@ -15142,6 +15168,7 @@ system Men
 	fleet "Large Southern Pirates" 600
 	fleet "Small Northern Pirates" 2000
 	fleet "Large Northern Pirates" 4000
+	fleet "Southern Pirate Miners" 4000
 	object
 		sprite star/k5-old
 		period 10
@@ -16324,7 +16351,7 @@ system Naos
 	fleet "Small Deep Merchants" 1200
 	fleet "Large Deep Security" 5000
 	fleet "Large Deep Merchants" 2800
-	fleet "Human Miners" 2000
+	fleet "Deep Miners" 3000
 	object
 		sprite star/g5
 		period 10
@@ -16667,6 +16694,7 @@ system Nunki
 	trade Plastic 321
 	fleet "Small Southern Pirates" 1200
 	fleet "Large Southern Pirates" 2000
+	fleet "Southern Pirate Miners" 3000
 	fleet "Small Southern Merchants" 1600
 	fleet "Small Militia" 2000
 	object
@@ -16793,7 +16821,8 @@ system Orbona
 	trade Plastic 466
 	fleet "Small Southern Pirates" 1200
 	fleet "Large Southern Pirates" 3200
-	fleet "Human Miners" 1500
+	fleet "Human Miners" 3000
+	fleet "Deep Miners" 4000
 	object
 		sprite star/giant
 		distance 20.2539
@@ -17359,6 +17388,7 @@ system Perfica
 	fleet "Large Remnant" 10000
 	fleet "Small Remnant" 7500
 	fleet "Remnant Transport" 7500
+	fleet "Remnant Miners" 20000
 	fleet "Korath Ember Waste Raid" 30000
 	object
 		sprite star/g0-old
@@ -18030,6 +18060,7 @@ system Prakacha'a
 	fleet "Wanderer Freight" 400
 	fleet "Wanderer Drones" 400
 	fleet "Wanderer Defense" 400
+	fleet "Wanderer Miners" 2000
 	fleet "Unfettered Raid" 5000
 	object
 		sprite star/g0
@@ -18108,6 +18139,7 @@ system Procyon
 	fleet "Paradise Merchants" 900
 	fleet "Small Republic" 1500
 	fleet "Large Republic" 3000
+	fleet "Human Miners" 2000
 	object
 		sprite star/k0
 		period 10
@@ -19243,6 +19275,7 @@ system Sadalmelik
 	trade Plastic 454
 	fleet "Small Southern Merchants" 800
 	fleet "Large Southern Merchants" 1200
+	fleet "Human Miners" 3000
 	fleet Quarg 2000
 	object
 		sprite star/f5
@@ -20166,6 +20199,7 @@ system Shaula
 	fleet "Large Core Pirates" 7000
 	fleet "Small Northern Pirates" 5000
 	fleet "Large Northern Pirates" 9000
+	fleet "Southern Pirate Miners" 6000
 	fleet "Large Militia" 9000
 	object
 		sprite star/g5
@@ -20290,6 +20324,7 @@ system Si'yak'ku
 	fleet "Wanderer Freight" 1300
 	fleet "Wanderer Drones" 700
 	fleet "Wanderer Defense" 9000
+	fleet "Wanderer Miners" 3000
 	object
 		sprite star/g0
 		distance 19.5395
@@ -22996,6 +23031,7 @@ system "Wah Oh"
 	trade Plastic 432
 	fleet "Small Hai" 500
 	fleet "Large Hai" 1500
+	fleet "Hai Miners" 3000
 	fleet "Small Human Merchants (Hai)" 6000
 	fleet "Large Human Merchants (Hai)" 9000
 	object
@@ -23070,6 +23106,7 @@ system "Wah Yoot"
 	trade Plastic 472
 	fleet "Small Unfettered" 1000
 	fleet "Large Unfettered" 500
+	fleet "Unfettered Miners" 3000
 	object
 		sprite star/g0
 		period 10
@@ -27324,4 +27361,3 @@ planet Zug
 	tribute 1200
 		threshold 3000
 		fleet "Large Militia" 18
-

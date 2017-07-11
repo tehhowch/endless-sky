@@ -201,6 +201,17 @@ fleet "Korath Raid"
 		"Korath Raider"
 		"Korath Chaser" 2
 
+fleet "Korath Miners"
+	government "Korath"
+	names "korath"
+	fighters "korath"
+	cargo 0
+	personality
+		disables plunders mining harvests
+	variant
+		"Korath Raider"
+		"Korath Chaser" 2
+
 fleet "Korath Ember Waste Raid"
 	government "Korath"
 	names "korath"
