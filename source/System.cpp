@@ -805,39 +805,56 @@ double System::Danger() const
 
 
 // return a string of the system's contents.
-std::string System::PrintContents() const
+string System::PrintContents() const
 {
-	std::string line = "";
+	string line = "";
 	line += name + "\t";
 	line += (government ? government->GetName() : "not owned") + "\t";
 	line += to_string(position.X()) + "\t" + to_string(position.Y()) + "\t";
-	line += static_cast<std::string>(to_string(neighbors.size())) + "\t";
-	line += static_cast<std::string>(to_string(links.size())) + "\t";
-	line += static_cast<std::string>(to_string(objects.size())) + "\t";
+	line += static_cast<string>(to_string(neighbors.size())) + "\t";
+	line += static_cast<string>(to_string(links.size())) + "\t";
+	line += static_cast<string>(to_string(objects.size())) + "\t";
 	
-	// Count number of landable planets
+	// Count number and type of StellarObjects.
 	size_t landableCount = 0;
-	for(auto &object : objects)
+	size_t moons = 0;
+	size_t stars = 0;
+	size_t stations = 0;
+	size_t planets = 0;
+	for(const StellarObject &object : objects)
+	{
 		if(object.GetPlanet())
 			++landableCount;
-	line += to_string(landableCount) + "\t";
-	line += static_cast<std::string>(to_string(asteroids.size())) + "\t";
+		
+		if(object.IsStar())
+			++stars;
+		else if(object.IsStation())
+			++stations;
+		else if(object.IsMoon())
+			++moons;
+		else
+			++planets;
+	}
+	for(int i : {stars, moons, stations, planets, landableCount})
+		line += to_string(i) + "\t";
+	line += planets ? to_string(static_cast<double>(moons) / planets) : "inf";
+	line += static_cast<string>(to_string(asteroids.size())) + "\t";
 	
 	// Calculate density and number of minable types
-	size_t minableCount = 0;
-	double asteroidDensity = 0.;
+	double minableDensity = 0.;
+	double asteroidFlux = 0.;
 	for(const Asteroid &a : Asteroids())
 	{
 		// Check whether this is a minable or an ordinary asteroid.
 		if(a.Type())
-			++minableCount;
+			minableDensity += static_cast<double>(a.Count()) / 4.096;
 		else
-			asteroidDensity += static_cast<double>(a.Count()) / 40.96;
+			asteroidFlux += static_cast<double>(a.Count() * a.Energy()) / 409.6;
 	}
-	line += to_string(asteroidDensity) + "\t";
-	line += to_string(minableCount) + "\t";
-	line += static_cast<std::string>(HasShipyard() ? "true" : "false") + "\t";
-	line += static_cast<std::string>(HasOutfitter() ? "true" : "false") + "\t";
+	line += to_string(asteroidFlux) + "\t";
+	line += to_string(minableDensity) + "\t";
+	line += static_cast<string>(HasShipyard() ? "true" : "false") + "\t";
+	line += static_cast<string>(HasOutfitter() ? "true" : "false") + "\t";
 	
 	// Calculate time between fleet entrances into this system.
 	double meanFleetFrequency = 0.;
@@ -849,7 +866,7 @@ std::string System::PrintContents() const
 			meanHostileFrequency += 1. / fleet.Period();
 	}
 	line += to_string(Danger()) + "\t";
-	line += static_cast<std::string>(to_string(fleets.size())) + "\t";
+	line += static_cast<string>(to_string(fleets.size())) + "\t";
 	line += (meanFleetFrequency ? to_string(1. / meanFleetFrequency) : "No fleets") + "\t";
 	line += (meanHostileFrequency ? to_string(1. / meanHostileFrequency) : "N/A");
 	
