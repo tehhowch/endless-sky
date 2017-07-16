@@ -713,17 +713,17 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 	// Handle ionization effects, etc.
 	if(ionization)
 	{
-		ionization *= .99;
+		ionization = max(0., .99 * ionization - attributes.Get("ion resistance"));
 		CreateSparks(effects, "ion spark", ionization * .1);
 	}
 	if(disruption)
 	{
-		disruption *= .99;
+		disruption = max(0., .99 * disruption - attributes.Get("disruption resistance"));
 		CreateSparks(effects, "disruption spark", disruption * .1);
 	}
 	if(slowness)
 	{
-		slowness *= .99;
+		slowness = max(0., .99 * slowness - attributes.Get("slowing resistance"));
 		CreateSparks(effects, "slowing spark", slowness * .1);
 	}
 	double slowMultiplier = 1. / (1. + slowness * .05);
