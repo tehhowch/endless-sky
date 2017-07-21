@@ -231,6 +231,7 @@ void AI::Clean()
 {
 	actions.clear();
 	governmentActions.clear();
+	governmentRosters.clear();
 	playerActions.clear();
 	shipStrength.clear();
 	swarmCount.clear();
@@ -246,8 +247,13 @@ void AI::Step(const PlayerInfo &player)
 	// First, figure out the comparative strengths of the present governments.
 	map<const Government *, int64_t> strength;
 	for(const auto &it : ships)
-		if(it->GetGovernment() && it->GetSystem() == player.GetSystem() && !it->IsDisabled())
-			strength[it->GetGovernment()] += it->Cost();
+		if(it->GetGovernment() && it->GetSystem() == player.GetSystem())
+		{
+			// Only non-disabled ships contribute to the government's strength.
+			strength[it->GetGovernment()] += it->Cost() * !it->IsDisabled();
+			// Add/update the known position of this ship in the system.
+			governmentRosters[it->GetGovernment()][it] = it->Position();
+		}
 	enemyStrength.clear();
 	allyStrength.clear();
 	for(const auto &it : strength)
@@ -731,7 +737,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 		parentTarget = ship.GetParent()->GetTargetShip();
 	if(parentTarget && !parentTarget->IsTargetable())
 		parentTarget.reset();
-
+	
 	// Find the closest enemy ship (if there is one). If this ship is "heroic,"
 	// it will attack any ship in system. Otherwise, if all its weapons have a
 	// range higher than 2000, it will engage ships up to 50% beyond its range.
@@ -747,56 +753,66 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	auto strengthIt = shipStrength.find(&ship);
 	if(!person.IsHeroic() && strengthIt != shipStrength.end())
 		maxStrength = 2 * strengthIt->second;
-	for(const auto &it : ships)
-		if(it->GetSystem() == system && it->IsTargetable() && gov->IsEnemy(it->GetGovernment()))
+	for(const auto &govt : governmentRosters)
+	{
+		if(!gov->IsEnemy(govt.first))
+			continue;
+		
+		// Only ships once in the player's system are on the government rosters,
+		// or calling FindTarget. However, ships may leave the system afterwards.
+		for(const auto &sit : governmentRosters.at(govt.first))
 		{
+			std::shared_ptr<Ship> foe = sit.first.lock();
+			if(!foe || foe->GetSystem() != ship.GetSystem() || !foe->IsTargetable())
+				continue;
+			
 			// If this is a "nemesis" ship and it has found one of the player's
 			// ships to target, it will only consider the player's owned fleet,
 			// or NPCs allied with the player.
 			const bool isPotentialNemesis = person.IsNemesis()
-					&& (it->GetGovernment()->IsPlayer() || it->GetPersonality().IsEscort());
+					&& (foe->GetGovernment()->IsPlayer() || foe->GetPersonality().IsEscort());
 			if(hasNemesis && !isPotentialNemesis)
 				continue;
-			if(!ship.IsYours() && it->GetPersonality().IsMarked())
+			if(!ship.IsYours() && foe->GetPersonality().IsMarked())
 				continue;
-			if(!it->IsYours() && ship.GetPersonality().IsMarked())
+			if(!foe->IsYours() && ship.GetPersonality().IsMarked())
 				continue;
 			
 			// Calculate what the range will be a second from now, so that ships
 			// will prefer targets that they are headed toward.
-			double range = (it->Position() + 60. * it->Velocity()).Distance(
+			double range = (sit.second + 60. * foe->Velocity()).Distance(
 				ship.Position() + 60. * ship.Velocity());
 			// Preferentially focus on your previous target or your parent ship's
 			// target if they are nearby.
-			if(it == oldTarget || it == parentTarget)
+			if(foe == oldTarget || foe == parentTarget)
 				range -= 500.;
 			
 			// Unless this ship is heroic, it will not chase much stronger ships
 			// unless it has strong allies nearby.
-			if(maxStrength && range > 1000. && !it->IsDisabled())
+			if(maxStrength && range > 1000. && !foe->IsDisabled())
 			{
-				auto otherStrengthIt = shipStrength.find(it.get());
+				auto otherStrengthIt = shipStrength.find(foe.get());
 				if(otherStrengthIt != shipStrength.end() && otherStrengthIt->second > maxStrength)
 					continue;
 			}
 			
 			// If your personality it to disable ships rather than destroy them,
 			// never target disabled ships.
-			if(it->IsDisabled() && !person.Plunders()
-					&& (person.Disables() || (!person.IsNemesis() && it != oldTarget)))
+			if(foe->IsDisabled() && !person.Plunders()
+					&& (person.Disables() || (!person.IsNemesis() && foe != oldTarget)))
 				continue;
 			
 			if(!person.Plunders())
-				range += 5000. * it->IsDisabled();
+				range += 5000. * foe->IsDisabled();
 			else
 			{
-				bool hasBoarded = Has(ship, it, ShipEvent::BOARD);
+				bool hasBoarded = Has(ship, foe, ShipEvent::BOARD);
 				// Don't plunder unless there are no "live" enemies nearby.
-				range += 2000. * (2 * it->IsDisabled() - !hasBoarded);
+				range += 2000. * (2 * foe->IsDisabled() - !hasBoarded);
 			}
 			// Check if this target has any weapons (not counting anti-missiles).
 			bool isArmed = false;
-			for(const auto &ait : it->Weapons())
+			for(const auto &ait : foe->Weapons())
 				if(ait.GetOutfit() && !ait.GetOutfit()->AntiMissile())
 				{
 					isArmed = true;
@@ -805,15 +821,16 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 			// Prefer to go after armed targets, expecially if you're not a pirate.
 			range += 1000. * (!isArmed * (1 + !person.Plunders()));
 			// Focus on nearly dead ships.
-			range += 500. * (it->Shields() + it->Hull());
+			range += 500. * (foe->Shields() + foe->Hull());
 			if((isPotentialNemesis && !hasNemesis) || range < closest)
 			{
 				closest = range;
-				target = it;
-				isDisabled = it->IsDisabled();
+				target = foe;
+				isDisabled = foe->IsDisabled();
 				hasNemesis = isPotentialNemesis;
 			}
 		}
+	}
 	
 	bool cargoScan = ship.Attributes().Get("cargo scan") || ship.Attributes().Get("cargo scan power");
 	bool outfitScan = ship.Attributes().Get("outfit scan") || ship.Attributes().Get("outfit scan power");

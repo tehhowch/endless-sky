@@ -180,6 +180,7 @@ private:
 	
 	std::map<const Government *, int64_t> enemyStrength;
 	std::map<const Government *, int64_t> allyStrength;
+	std::map<const Government *, std::map<std::weak_ptr<Ship>, Point, Comp>> governmentRosters;
 };
 
 
