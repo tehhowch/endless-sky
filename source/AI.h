@@ -67,7 +67,7 @@ template <class Type>
 private:
 	// Pick a new target for the given ship.
 	std::shared_ptr<Ship> FindTarget(const Ship &ship) const;
-	std::vector<std::shared_ptr<Ship>> GetEnemyList(const Ship &ship, double maxRange = -1.) const;
+	std::vector<std::shared_ptr<Ship>> GetShipsList(const Ship &ship, const bool ifEnemy, double maxRange = -1.) const;
 	
 	bool FollowOrders(Ship &ship, Command &command) const;
 	void MoveIndependent(Ship &ship, Command &command) const;

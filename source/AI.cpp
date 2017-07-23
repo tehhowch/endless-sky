@@ -427,15 +427,14 @@ void AI::Step(const PlayerInfo &player)
 					it->SetTargetShip(shared_ptr<Ship>());
 				}
 				int lowestCount = 7;
-				for(const shared_ptr<Ship> &other : ships)
-					if(!other->GetPersonality().IsSwarming() && !other->GetGovernment()->IsEnemy(gov)
-							&& other->GetSystem() == it->GetSystem() && other->IsTargetable()
-							&& !other->IsHyperspacing())
+				const vector<shared_ptr<Ship>> allies = GetShipsList(*it, false);
+				for(const shared_ptr<Ship> ally : allies)
+					if(!ally->GetPersonality().IsSwarming())
 					{
-						int count = swarmCount[other.get()] + Random::Int(4);
+						int count = swarmCount[ally.get()] + Random::Int(4);
 						if(count < lowestCount)
 						{
-							it->SetTargetShip(other);
+							it->SetTargetShip(ally);
 							lowestCount = count;
 						}
 					}
@@ -745,7 +744,6 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	// ship that is within 3000 of it.
 	double closest = person.IsHeroic() ? numeric_limits<double>::infinity() :
 		(minRange > 1000.) ? maxRange * 1.5 : 4000.;
-	const System *system = ship.GetSystem();
 	bool isDisabled = false;
 	bool hasNemesis = false;
 	// Figure out how strong this ship is.
@@ -754,8 +752,8 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	if(!person.IsHeroic() && strengthIt != shipStrength.end())
 		maxStrength = 2 * strengthIt->second;
 	
-	// Get list of possible targets in this system.
-	vector<shared_ptr<Ship>> enemies = GetEnemyList(ship, closest);
+	// Get list of all other hostile targets in this system.
+	vector<shared_ptr<Ship>> enemies = GetShipsList(ship, true);
 	for(const shared_ptr<Ship> foe : enemies)
 	{
 		// If this is a "nemesis" ship and it has found one of the player's
@@ -826,8 +824,9 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	if(!target && (cargoScan || outfitScan) && !isPlayerEscort)
 	{
 		closest = numeric_limits<double>::infinity();
-		for(const auto &it : ships)
-			if(it->GetSystem() == system && it->GetGovernment() != gov && it->IsTargetable())
+		vector<shared_ptr<Ship>> allies = GetShipsList(ship, false, closest);
+		for(const shared_ptr<Ship> it : allies)
+			if(it->GetGovernment() != gov)
 			{
 				if((cargoScan && !Has(ship.GetGovernment(), it, ShipEvent::SCAN_CARGO))
 						|| (outfitScan && !Has(ship.GetGovernment(), it, ShipEvent::SCAN_OUTFITS)))
@@ -872,44 +871,51 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 
 
 
-// Return a list of all hostile ships in the same system as the referenced ship, within the
-// specified range. If the specified range is negative or omitted, then all hostile ships
-// are returned. If a ship is being targeted, it will also be returned (friendly or not).
-vector<shared_ptr<Ship>> AI::GetEnemyList(const Ship &ship, double maxRange) const
+// Return a list of all targetable ships in the same system as the referenced
+// ship, within the specified range, with the specified relationship. If the
+// specified range is negative or omitted, all matching ships are returned.
+vector<shared_ptr<Ship>> AI::GetShipsList(const Ship &ship, const bool ifEnemy, double maxRange) const
 {
 	if(maxRange < 0)
 		maxRange = numeric_limits<double>::infinity();
 	
-	vector<shared_ptr<Ship>> enemies;
-	enemies.reserve(ships.size() >> 1);
+	vector<shared_ptr<Ship>> targets;
+	targets.reserve(ships.size() >> 1);
 	
-	// If the ship has a target selected, that ship is always in the running as
-	// something to aim at, even if it is too far away, and even if it is friendly.
+	// If the ship has a target selected, that ship should only be returned if it matches
+	// the requested allegiance, or is a ship the player has requested to be destroyed.
 	shared_ptr<Ship> currentTarget = ship.GetTargetShip();
-	if(currentTarget && currentTarget->IsTargetable())
-		enemies.push_back(currentTarget);
-	
+	bool friendlyOverride = false;
+	if(ship.IsYours())
+	{
+		auto it = orders.find(&ship);
+		if(it != orders.end() && it->second.target.lock() == currentTarget)
+			friendlyOverride |= (it->second.type == Orders::ATTACK || it->second.type == Orders::FINISH_OFF);
+	}
 	const Government *gov = ship.GetGovernment();
+	if(currentTarget && !(gov->IsEnemy(currentTarget->GetGovernment()) == ifEnemy || friendlyOverride))
+		currentTarget.reset();
+	
 	for(const auto &govt : governmentRosters)
 	{
-		if(!gov->IsEnemy(govt.first))
+		if(gov->IsEnemy(govt.first) != ifEnemy)
 			continue;
 		// TODO: This could perhaps use CollisionSet::Circle() for increased efficiency.
 		for(const auto &sit : governmentRosters.at(govt.first))
 		{
-			const shared_ptr<Ship> foe = sit.first.lock();
-			if(foe && foe->IsTargetable() && foe->GetSystem() == ship.GetSystem()
-					&& !(foe->IsHyperspacing() && foe->Velocity().Length() > 10.)
+			const shared_ptr<Ship> target = sit.first.lock();
+			if(target && target->IsTargetable() && target->GetSystem() == ship.GetSystem()
+					&& !(target->IsHyperspacing() && target->Velocity().Length() > 10.)
 					&& ship.Position().Distance(sit.second) < maxRange
-					&& foe.get() != currentTarget.get()
-					&& !foe->IsDisabled()
-					&& (ship.IsYours() || !foe->GetPersonality().IsMarked())
-					&& (foe->IsYours() || !ship.GetPersonality().IsMarked()))
-				enemies.push_back(foe);
+					&& (ship.IsYours() || !target->GetPersonality().IsMarked())
+					&& (target->IsYours() || !ship.GetPersonality().IsMarked()))
+				targets.push_back(target);
 		}
 	}
+	if(currentTarget && find(targets.cbegin(), targets.cend(), currentTarget) == targets.cend())
+		targets.push_back(currentTarget);
 	
-	return enemies;
+	return targets;
 }
 
 
@@ -1707,15 +1713,22 @@ void AI::DoSurveillance(Ship &ship, Command &command) const
 		vector<const System *> targetSystems;
 		
 		if(cargoScan || outfitScan)
-			for(const auto &it : ships)
-				if(it->GetGovernment() != ship.GetGovernment() && it->IsTargetable()
-						&& it->GetSystem() == ship.GetSystem())
+			for(const auto &govt : governmentRosters)
+			{
+				if(ship.GetGovernment() == govt.first)
+					continue;
+				for(const auto &sit : governmentRosters.at(govt.first))
 				{
-					if(Has(ship, it, ShipEvent::SCAN_CARGO) && Has(ship, it, ShipEvent::SCAN_OUTFITS))
+					const shared_ptr<Ship> it = sit.first.lock();
+					if(!it || !it->IsTargetable()
+							|| (Has(ship, it, ShipEvent::SCAN_CARGO) && Has(ship, it, ShipEvent::SCAN_OUTFITS))
+							|| (!outfitScan && Has(ship, it, ShipEvent::SCAN_CARGO))
+							|| (!cargoScan && Has(ship, it, ShipEvent::SCAN_OUTFITS)))
 						continue;
-				
+					
 					targetShips.push_back(it);
 				}
+			}
 		
 		if(atmosphereScan)
 			for(const StellarObject &object : ship.GetSystem()->Objects())
@@ -1894,7 +1907,7 @@ void AI::DoScatter(Ship &ship, Command &command)
 	double acceleration = ship.Acceleration();
 	for(const shared_ptr<Ship> &other : ships)
 	{
-		if(other.get() == &ship)
+		if(other.get() == &ship || other->GetSystem() != ship.GetSystem())
 			continue;
 		
 		// Check for any ships that have nearly the same movement profile as
@@ -2016,8 +2029,10 @@ void AI::AimTurrets(const Ship &ship, Command &command, bool opportunistic) cons
 		// Extend the weapon range slightly to account for velocity differences.
 		maxRange *= 1.5;
 		
-		// Now, get all enemy ships within that radius, in addition to the targeted ship.
-		enemies = GetEnemyList(ship, maxRange);
+		// Now, get all enemy ships within that radius.
+		enemies = GetShipsList(ship, true, maxRange);
+		if(currentTarget)
+			enemies.push_back(currentTarget);
 	}
 	else
 		enemies.push_back(currentTarget);
@@ -2077,6 +2092,10 @@ void AI::AimTurrets(const Ship &ship, Command &command, bool opportunistic) cons
 			double bestAngle = 0.;
 			for(shared_ptr<const Ship> target : enemies)
 			{
+				// Only aim turrets at a disabled enemy if it is the only choice.
+				if(target->IsDisabled() && enemies.size() > 1)
+					continue;
+				
 				Point p = target->Position() - start;
 				Point v = target->Velocity();
 				// Only take the ship's velocity into account if this weapon
@@ -2138,9 +2157,8 @@ void AI::AutoFire(const Ship &ship, Command &command, bool secondary) const
 	}
 	
 	// Special case: your target is not your enemy. Do not fire, because you do
-	// not want to risk damaging that target. The only time a ship other than
-	// the player will target a friendly ship is if the player has asked a ship
-	// for assistance.
+	// not want to risk damaging that target. Ships will target friendly ships
+	// while assisting, surveilling, or boarding.
 	shared_ptr<Ship> currentTarget = ship.GetTargetShip();
 	const Government *gov = ship.GetGovernment();
 	bool friendlyOverride = false;
@@ -2175,9 +2193,9 @@ void AI::AutoFire(const Ship &ship, Command &command, bool secondary) const
 	// Extend the weapon range slightly to account for velocity differences.
 	maxRange *= 1.5;
 	
-	// Find all enemy ships within range of at least one weapon (and the targeted
-	// ship, no matter its distance or allegiance).
-	vector<shared_ptr<Ship>> enemies = GetEnemyList(ship, maxRange);
+	// Find all enemy ships within range of at least one weapon. If the targeted ship
+	// is beyond maxRange, it is still included.
+	vector<shared_ptr<Ship>> enemies = GetShipsList(ship, true, maxRange);
 	
 	for(const Hardpoint &weapon : ship.Weapons())
 	{
