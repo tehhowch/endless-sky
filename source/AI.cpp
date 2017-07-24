@@ -253,6 +253,17 @@ void AI::Step(const PlayerInfo &player)
 			strength[it->GetGovernment()] += it->Cost() * !it->IsDisabled();
 			// Add/update the known position of this ship in the system.
 			governmentRosters[it->GetGovernment()][it] = it->Position();
+			// If the ship was captured, it must be removed from the other rosters.
+			// Only the player captures ships, so only escorts need to be inspected.
+			if(it->GetGovernment()->IsPlayer())
+				for(auto &govt : governmentRosters)
+				{
+					if(govt.first->IsPlayer() || govt.second.find(it) == govt.second.end())
+						continue;
+					
+					govt.second.erase(it);
+					break;
+				}
 		}
 	enemyStrength.clear();
 	allyStrength.clear();
@@ -782,7 +793,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 				continue;
 		}
 		
-		// If your personality it to disable ships rather than destroy them,
+		// If your personality is to disable ships rather than destroy them,
 		// never target disabled ships.
 		if(foe->IsDisabled() && !person.Plunders()
 				&& (person.Disables() || (!person.IsNemesis() && foe != oldTarget)))
@@ -901,7 +912,7 @@ vector<shared_ptr<Ship>> AI::GetShipsList(const Ship &ship, const bool ifEnemy, 
 		if(gov->IsEnemy(govt.first) != ifEnemy)
 			continue;
 		// TODO: This could perhaps use CollisionSet::Circle() for increased efficiency.
-		for(const auto &sit : governmentRosters.at(govt.first))
+		for(const auto &sit : govt.second)
 		{
 			const shared_ptr<Ship> target = sit.first.lock();
 			if(target && target->IsTargetable() && target->GetSystem() == ship.GetSystem()
@@ -912,7 +923,8 @@ vector<shared_ptr<Ship>> AI::GetShipsList(const Ship &ship, const bool ifEnemy, 
 				targets.push_back(target);
 		}
 	}
-	if(currentTarget && find(targets.cbegin(), targets.cend(), currentTarget) == targets.cend())
+	if(currentTarget && currentTarget->IsTargetable()
+			&& find(targets.cbegin(), targets.cend(), currentTarget) == targets.cend())
 		targets.push_back(currentTarget);
 	
 	return targets;
@@ -1717,7 +1729,7 @@ void AI::DoSurveillance(Ship &ship, Command &command) const
 			{
 				if(ship.GetGovernment() == govt.first)
 					continue;
-				for(const auto &sit : governmentRosters.at(govt.first))
+				for(const auto &sit : govt.second)
 				{
 					const shared_ptr<Ship> it = sit.first.lock();
 					if(!it || !it->IsTargetable()
