@@ -195,6 +195,8 @@ mission "Remnant: Defense 3"
 	landing
 	name "Remnant surveillance"
 	description "Travel to the Parca system, destroy any Korath ships you find there, then deploy a Remnant surveillance satellite to give them advance warning of Korath raids in the future. Return to <planet> when you are done."
+	source
+		government "Remnant"
 	to offer
 		"Remnant: Bounty: done" >= 3
 	cargo "surveillance equipment" 13
@@ -260,7 +262,7 @@ mission "Remnant: Key Stones"
 				goto more
 
 			label hai
-			`	"Intriguing," he sings. "Are they aware of how valuable these stones are?" You tell him about the Hai: that they once had a vast empire that included part of human space, but that was almost a hundred thousand years ago. And, you tell him that to them the Key Stones are just good luck charms. "Perhaps they have forgotten the true use of the Stones," says the man. "This may give us an opportunity for a mutually profitable endeavor."`
+			`	"Intriguing," he sings. "Are they aware of how valuable these stones are?" You tell him about the Hai, that they are an old species and that to them the Key Stones are just good luck charms. "Perhaps they have forgotten the true use of the Stones," says the man. "This may give us an opportunity for a mutually profitable endeavor."`
 
 			label more
 			`	"Tell me more," you say.`
@@ -404,6 +406,7 @@ mission "Remnant: Void Sprites 3"
 	stopover Nasqueron
 	stopover Slylandro
 	cargo "scanning equipment" 8
+	blocked "The Remnant researcher has another job for you, but you're going to have to free up some cargo space in order to take it on."
 	to offer
 		has "Remnant: Void Sprites 2: done"
 	on offer
@@ -453,7 +456,7 @@ mission "Remnant: Void Sprites 3"
 				`	"I'm glad I could help you out. I'll look forward to hearing from you."`
 					decline
 
-			`	He begins singing you a song about the Archons. The song says that the Archons are servants of the mysterious Drak, who no one has seen but who the Quarg claim to speak to and take orders from. "That's all our histories say," he sings, "but what interests me is the biological similarities between the Archons and the void sprites. We do not think the Archons are naturally evolved creatures. Perhaps their creators incorporated elements of void sprite biology into them when they were made. Or perhaps the Archons just feel an affinity with them because they are both space-faring organisms."`
+			`	He begins singing you a song about the Archons. The song says that the Archons are servants of the mysterious Drak, whom no one has seen but whom the Quarg claim to speak to and take orders from. "That's all our histories say," he sings, "but what interests me is the biological similarities between the Archons and the void sprites. We do not think the Archons are naturally evolved creatures. Perhaps their creators incorporated elements of void sprite biology into them when they were made. Or perhaps the Archons just feel an affinity with them because they are both space-faring organisms."`
 			choice
 				`	"Well, I'll look forward to hearing the results of your research when it is done."`
 					decline
