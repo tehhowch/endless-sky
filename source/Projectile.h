@@ -70,7 +70,11 @@ public:
 	// Find out which ship this projectile is targeting. Note: this pointer is
 	// not guaranteed to be dereferenceable, so only use it for comparing.
 	const Ship *Target() const;
-	void AcquireTarget(const CollisionSet &possibleTargets);
+	// This function is much more costly, so use it only if you need to get a
+	// non-const shared pointer to the target.
+	std::shared_ptr<Ship> TargetPtr() const;
+	// 
+	void AcquireTarget(const CollisionSet &targetList);
 	
 	
 private:
@@ -80,7 +84,7 @@ private:
 private:
 	const Outfit *weapon = nullptr;
 	
-	std::weak_ptr<const Ship> targetShip;
+	std::weak_ptr<Ship> targetShip;
 	const Ship *cachedTarget = nullptr;
 	const Government *targetGovernment = nullptr;
 	

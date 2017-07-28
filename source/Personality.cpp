@@ -46,6 +46,8 @@ namespace {
 	static const int APPEASING = (1 << 22);
 	static const int MUTE = (1 << 23);
 	static const int OPPORTUNISTIC = (1 << 24);
+	static const int TARGET = (1 << 25);
+	static const int MARKED = (1 << 26);
 	
 	static const map<string, int> TOKEN = {
 		{"pacifist", PACIFIST},
@@ -72,7 +74,9 @@ namespace {
 		{"harvests", HARVESTS},
 		{"appeasing", APPEASING},
 		{"mute", MUTE},
-		{"opportunistic", OPPORTUNISTIC}
+		{"opportunistic", OPPORTUNISTIC},
+		{"target", TARGET},
+		{"marked", MARKED}
 	};
 	
 	double DEFAULT_CONFUSION = 10.;
@@ -287,6 +291,20 @@ bool Personality::IsSwarming() const
 bool Personality::IsEscort() const
 {
 	return flags & ESCORT;
+}
+
+
+
+bool Personality::IsTarget() const
+{
+	return flags & TARGET;
+}
+
+
+
+bool Personality::IsMarked() const
+{
+	return flags & MARKED;
 }
 
 

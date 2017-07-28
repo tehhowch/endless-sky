@@ -239,17 +239,30 @@ void PlayerInfo::Load(const string &path)
 		else if(child.Token(0) == "logbook")
 		{
 			for(const DataNode &grand : child)
+			{
 				if(grand.Size() >= 3)
 				{
 					Date date(grand.Value(0), grand.Value(1), grand.Value(2));
 					string text;
 					for(const DataNode &great : grand)
 					{
+						if(!text.empty())
+							text += "\n\t";
 						text += great.Token(0);
-						text += '\n';
 					}
 					logbook.emplace(date, text);
 				}
+				else if(grand.Size() >= 2)
+				{
+					string &text = specialLogs[grand.Token(0)][grand.Token(1)];
+					for(const DataNode &great : grand)
+					{
+						if(!text.empty())
+							text += "\n\t";
+						text += great.Token(0);
+					}
+				}
+			}
 		}
 	}
 	// Based on the ships that were loaded, calculate the player's capacity for
@@ -325,7 +338,7 @@ void PlayerInfo::Save() const
 			};
 			for(int i = 0; i < 3; ++i)
 				if(Files::Exists(files[i + 1]))
-					Files::Copy(files[i + 1], files[i]);
+					Files::Move(files[i + 1], files[i]);
 		}
 	}
 		
@@ -578,11 +591,11 @@ void PlayerInfo::IncrementDate()
 	{
 		string message = "You receive ";
 		if(total[0])
-			message += to_string(total[0]) + " credits salary";
+			message += Format::Number(total[0]) + " credits salary";
 		if(total[0] && total[1])
 			message += " and ";
 		if(total[1])
-			message += to_string(total[1]) + " credits in tribute";
+			message += Format::Number(total[1]) + " credits in tribute";
 		message += ".";
 		Messages::Add(message);
 		accounts.AddCredits(total[0] + total[1]);
@@ -602,7 +615,7 @@ void PlayerInfo::IncrementDate()
 	
 	// Reset the reload counters for all your ships.
 	for(const shared_ptr<Ship> &ship : ships)
-		ship->GetArmament().FinishLoading();
+		ship->GetArmament().ReloadAll();
 }
 
 
@@ -879,6 +892,35 @@ void PlayerInfo::ReorderShip(int fromIndex, int toIndex)
 
 
 
+int PlayerInfo::ReorderShips(const set<int> &fromIndices, int toIndex)
+{
+	if(fromIndices.empty() || static_cast<unsigned>(toIndex) >= ships.size())
+		return -1;
+	
+	// Remove the ships from last to first, so that each removal leaves all the
+	// remaining indices in the set still valid.
+	vector<shared_ptr<Ship>> removed;
+	for(set<int>::const_iterator it = fromIndices.end(); it-- != fromIndices.begin(); )
+	{
+		// Bail out if any invalid indices are encountered.
+		if(static_cast<unsigned>(*it) >= ships.size())
+			return -1;
+		
+		removed.insert(removed.begin(), ships[*it]);
+		ships.erase(ships.begin() + *it);
+		// If this index is before the insertion point, removing it causes the
+		// insertion point to shift back one space.
+		if(*it < toIndex)
+			--toIndex;
+	}
+	ships.insert(ships.begin() + toIndex, removed.begin(), removed.end());
+	flagship.reset();
+	
+	return toIndex;
+}
+
+
+
 // Get cargo information.
 CargoHold &PlayerInfo::Cargo()
 {
@@ -1120,6 +1162,15 @@ bool PlayerInfo::TakeOff(UI *ui)
 		bool shouldHaveParent = (ship != flagship && !ship->IsParked() && !ship->CanBeCarried());
 		ship->SetParent(shouldHaveParent ? flagship : shared_ptr<Ship>());
 	}
+	// Make sure your flagship is not included in the escort selection.
+	for(auto it = selectedShips.begin(); it != selectedShips.end(); )
+	{
+		shared_ptr<Ship> ship = it->lock();
+		if(!ship || ship == flagship)
+			it = selectedShips.erase(it);
+		else
+			++it;
+	}
 	
 	// Recharge any ships that can be recharged.
 	bool hasSpaceport = planet->HasSpaceport() && planet->CanUseServices();
@@ -1320,6 +1371,30 @@ const multimap<Date, string> &PlayerInfo::Logbook() const
 void PlayerInfo::AddLogEntry(const std::string &text)
 {
 	logbook.emplace(date, text);
+}
+
+
+
+const map<string, map<string, string>> &PlayerInfo::SpecialLogs() const
+{
+	return specialLogs;
+}
+
+
+
+void PlayerInfo::AddSpecialLog(const string &type, const string &name, const string &text)
+{
+	string &entry = specialLogs[type][name];
+	if(!entry.empty())
+		entry += "\n\t";
+	entry += text;
+}
+
+
+
+bool PlayerInfo::HasLogs() const
+{
+	return !logbook.empty() || !specialLogs.empty();
 }
 
 
@@ -1931,7 +2006,7 @@ void PlayerInfo::SelectGroup(int group, bool hasShift)
 
 
 
-void PlayerInfo::SetGroup(int group)
+void PlayerInfo::SetGroup(int group, const set<Ship *> *newShips)
 {
 	int bit = (1 << group);
 	int mask = ~bit;
@@ -1939,12 +2014,36 @@ void PlayerInfo::SetGroup(int group)
 	for(const shared_ptr<Ship> &ship : ships)
 		groups[ship.get()] &= mask;
 	// Then, add all the currently selected ships to the group.
-	for(const weak_ptr<Ship> &ptr : selectedShips)
+	if(newShips)
 	{
-		shared_ptr<Ship> ship = ptr.lock();
-		if(ship)
-			groups[ship.get()] |= bit;
+		for(const Ship *ship : *newShips)
+			groups[ship] |= bit;
 	}
+	else
+	{
+		for(const weak_ptr<Ship> &ptr : selectedShips)
+		{
+			shared_ptr<Ship> ship = ptr.lock();
+			if(ship)
+				groups[ship.get()] |= bit;
+		}
+	}
+}
+
+
+
+set<Ship *> PlayerInfo::GetGroup(int group)
+{
+	int bit = (1 << group);
+	set<Ship *> result;
+	
+	for(const shared_ptr<Ship> &ship : ships)
+	{
+		auto it = groups.find(ship.get());
+		if(it != groups.end() && (it->second & bit))
+			result.insert(ship.get());
+	}
+	return result;
 }
 
 
@@ -2342,21 +2441,25 @@ void PlayerInfo::Save(const string &path) const
 	{
 		out.Write(it.first.Day(), it.first.Month(), it.first.Year());
 		out.BeginChild();
-		// Break the text up into paragraphs.
-		size_t begin = 0;
-		while(begin < it.second.length())
 		{
-			// Find the next line break.
-			size_t pos = it.second.find('\n', begin);
-			// Text should always end with a line break, but just in case:
-			if(pos == string::npos)
-				pos = it.second.length();
-			out.Write(it.second.substr(begin, pos - begin));
-			// Skip the actual newline character when writing the text out.
-			begin = pos + 1;
+			// Break the text up into paragraphs.
+			for(const string &line : Format::Split(it.second, "\n\t"))
+				out.Write(line);
 		}
 		out.EndChild();
 	}
+	for(const auto &it : specialLogs)
+		for(const auto &eit : it.second)
+		{
+			out.Write(it.first, eit.first);
+			out.BeginChild();
+			{
+				// Break the text up into paragraphs.
+				for(const string &line : Format::Split(eit.second, "\n\t"))
+					out.Write(line);
+			}
+			out.EndChild();
+		}
 	out.EndChild();
 }
 

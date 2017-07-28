@@ -302,6 +302,13 @@ const Ship *Projectile::Target() const
 
 
 
+shared_ptr<Ship> Projectile::TargetPtr() const
+{
+	return targetShip.lock();
+}
+
+
+
 // Inspect ships within the projectile's remaining range to see if any draw the target lock.
 void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 {
@@ -311,7 +318,7 @@ void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 		// Only missiles that have no current target, or have failed to lock their current
 		// target for a substantial portion of time, should try to retarget.
 		const Ship *target = cachedTarget;
-		std::weak_ptr<const Ship> newTargetShip;
+		std::weak_ptr<Ship> newTargetShip;
 		if(lockLifetime < 1 || !target)
 		{
 			// Target the "closest" hostile ship, as identified by the missile's tracking.
@@ -343,7 +350,7 @@ void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
 			}
 		}
 		
-		if(newTargetShip.lock().get())
+		if(!newTargetShip.expired())
 		{
 			targetShip.reset();
 			targetShip.swap(newTargetShip);
