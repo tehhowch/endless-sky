@@ -19,8 +19,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <list>
 #include <memory>
+#include <vector>
 
-class CollisionSet;
 class Effect;
 class Government;
 class Outfit;
@@ -66,6 +66,7 @@ public:
 	int MissileStrength() const;
 	// Get information on the weapon that fired this projectile.
 	const Outfit &GetWeapon() const;
+	double RemainingRange() const;
 	
 	// Find out which ship this projectile is targeting. Note: this pointer is
 	// not guaranteed to be dereferenceable, so only use it for comparing.
@@ -73,8 +74,9 @@ public:
 	// This function is much more costly, so use it only if you need to get a
 	// non-const shared pointer to the target.
 	std::shared_ptr<Ship> TargetPtr() const;
-	// 
-	void AcquireTarget(const CollisionSet &targetList);
+	// Homing missiles, if they have lost their target, can acquire a new one.
+	const bool CanRetarget() const;
+	void AcquireTarget(const std::vector<Body *> targetList);
 	
 	
 private:

@@ -1121,8 +1121,8 @@ void Engine::CalculateStep()
 		{
 			// Missiles have a chance to target nearby ships if they have no target,
 			// or have failed to lock onto their current target for multiple steps.
-			if(it->MissileStrength() && !Random::Int(10))
-				it->AcquireTarget(shipCollisions);
+			if(it->CanRetarget() && !Random::Int(30))
+				it->AcquireTarget(shipCollisions.Circle(it->Position(), it->RemainingRange()));
 			++it;
 		}
 	}

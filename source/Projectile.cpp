@@ -24,6 +24,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <algorithm>
 #include <cmath>
+#include <vector>
 
 using namespace std;
 
@@ -294,6 +295,13 @@ const Outfit &Projectile::GetWeapon() const
 
 
 	
+double Projectile::RemainingRange() const
+{
+	return lifetime * weapon->Velocity();
+}
+
+
+
 // Find out which ship this projectile is targeting.
 const Ship *Projectile::Target() const
 {
@@ -308,57 +316,55 @@ shared_ptr<Ship> Projectile::TargetPtr() const
 }
 
 
+// Only homing missiles that have no current target, or have failed to lock their current
+// target for a substantial portion of time, should try to retarget.
+const bool Projectile::CanRetarget() const
+{
+	return weapon->Homing() && weapon->MissileStrength() && lifetime > 30 && (lockLifetime < 1 || !cachedTarget);
+}
+
+
 
 // Inspect ships within the projectile's remaining range to see if any draw the target lock.
-void Projectile::AcquireTarget(const CollisionSet &possibleTargets)
+// Called only if CanRetarget() is true.
+void Projectile::AcquireTarget(const std::vector<Body *> targetList)
 {
-	// Retargeting only makes sense if this projectile is a missile with homing ability.
-	if(weapon->Homing() && weapon->MissileStrength() && lifetime > 30)
+	Ship *newTarget = nullptr;
+	
+	// Target the "closest" hostile ship, as identified by the missile's tracking.
+	double closest = RemainingRange() / 2;
+	for(Body *body : targetList)
 	{
-		// Only missiles that have no current target, or have failed to lock their current
-		// target for a substantial portion of time, should try to retarget.
-		const Ship *target = cachedTarget;
-		std::weak_ptr<Ship> newTargetShip;
-		if(lockLifetime < 1 || !target)
+		// Ships must already be hostile to be targeted.
+		Ship *ship = reinterpret_cast<Ship *>(body);
+		if(ship && this->GetGovernment()->IsEnemy(body->GetGovernment()))
 		{
-			// Target the "closest" hostile ship, as identified by the missile's tracking.
-			const double remainingRange = lifetime * weapon->Velocity();
-			double closest = remainingRange / 2;
-			for(Body *body : possibleTargets.Circle(position, remainingRange))
+			// Prefer targets in front of the missile, especially if the missile is slow-turning.
+			Point tv = body->Position() - position;
+			double range = tv.Length();
+			range -= 200. * tv.Dot(angle.Unit()) / (1. + weapon->Turn());
+			
+			// Prefer easily-locked targets (lockStrength ranges 0-3).
+			double lockStrength = LockStrength(*ship);
+			range -= 200. * lockStrength;
+			
+			if(range < closest)
 			{
-				// Ships must already be hostile to be targeted.
-				Ship *ship = reinterpret_cast<Ship *>(body);
-				if(ship && this->GetGovernment()->IsEnemy(body->GetGovernment()))
-				{
-					// Prefer targets in front of the missile, especially if the missile is slow-turning.
-					const Point tp = body->Position();
-					double range = position.Distance(tp);
-					// const bool isInFront = (tp - position).Dot(angle.Unit()) > .6;
-					// range -= 1000. * isInFront / (1. + weapon->Turn());
-					range -= 1000. * (tp - position).Dot(angle.Unit()) / (1. + weapon->Turn());
-					
-					// Prefer easily-locked targets (lockStrength ranges 0-3).
-					const double lockStrength = LockStrength(*ship);
-					range -= 100. * lockStrength;
-					
-					if(range < closest)
-					{
-						newTargetShip = ship->shared_from_this();
-						closest = range;
-					}
-				}
+				newTarget = ship;
+				closest = range;
 			}
 		}
-		
-		if(!newTargetShip.expired())
-		{
-			targetShip.reset();
-			targetShip.swap(newTargetShip);
-			cachedTarget = targetShip.lock().get();
-			targetGovernment = cachedTarget->GetGovernment();
-			hasLock = true;
-			lockLifetime = 10;
-		}
+	}
+	
+	if(newTarget)
+	{
+		weak_ptr<Ship> newTargetShip = newTarget->shared_from_this();
+		targetShip.reset();
+		targetShip.swap(newTargetShip);
+		cachedTarget = newTarget;
+		targetGovernment = cachedTarget->GetGovernment();
+		hasLock = true;
+		lockLifetime = 10;
 	}
 }
 
