@@ -116,6 +116,7 @@ private:
 	
 	bool Has(const Ship &ship, const std::weak_ptr<const Ship> &other, int type) const;
 	bool Has(const Government *government, const std::weak_ptr<const Ship> &other, int type) const;
+	void CleanRosters();
 	
 	
 private:

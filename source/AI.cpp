@@ -265,6 +265,9 @@ void AI::Step(const PlayerInfo &player)
 					break;
 				}
 		}
+	// Remove expired weak_ptr from the rosters.
+	if(!Random::Int(1200))
+		CleanRosters();
 	enemyStrength.clear();
 	allyStrength.clear();
 	for(const auto &it : strength)
@@ -2870,6 +2873,17 @@ bool AI::Has(const Government *government, const weak_ptr<const Ship> &other, in
 		return false;
 	
 	return (oit->second & type);
+}
+
+
+
+// Remove expired weak_ptrs from the ship rosters.
+void AI::CleanRosters()
+{
+	for(auto &govt : governmentRosters)
+		for(auto &sit : govt.second)
+			if(sit.first.expired())
+				govt.second.erase(sit.first);
 }
 
 
