@@ -763,7 +763,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	if(!person.IsHeroic() && strengthIt != shipStrength.end())
 		maxStrength = 2 * strengthIt->second;
 	
-	// Get list of all other hostile targets in this system.
+	// Get list of all hostile targets in this system.
 	vector<shared_ptr<Ship>> enemies = GetShipsList(ship, true);
 	for(const shared_ptr<Ship> foe : enemies)
 	{
@@ -835,7 +835,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	if(!target && (cargoScan || outfitScan) && !isPlayerEscort)
 	{
 		closest = numeric_limits<double>::infinity();
-		vector<shared_ptr<Ship>> allies = GetShipsList(ship, false, closest);
+		vector<shared_ptr<Ship>> allies = GetShipsList(ship, false);
 		for(const shared_ptr<Ship> it : allies)
 			if(it->GetGovernment() != gov)
 			{
@@ -2041,10 +2041,8 @@ void AI::AimTurrets(const Ship &ship, Command &command, bool opportunistic) cons
 		// Extend the weapon range slightly to account for velocity differences.
 		maxRange *= 1.5;
 		
-		// Now, get all enemy ships within that radius.
+		// Now, get all enemy ships within that radius, and the targeted ship (if able).
 		enemies = GetShipsList(ship, true, maxRange);
-		if(currentTarget)
-			enemies.push_back(currentTarget);
 	}
 	else
 		enemies.push_back(currentTarget);
@@ -2104,8 +2102,9 @@ void AI::AimTurrets(const Ship &ship, Command &command, bool opportunistic) cons
 			double bestAngle = 0.;
 			for(shared_ptr<const Ship> target : enemies)
 			{
-				// Only aim turrets at a disabled enemy if it is the only choice.
-				if(target->IsDisabled() && enemies.size() > 1)
+				// Only aim turrets at a disabled enemy if it is the only
+				// choice, or the ship's target.
+				if(target->IsDisabled() && (enemies.size() > 1 || target.get() != currentTarget.get()))
 					continue;
 				
 				Point p = target->Position() - start;
