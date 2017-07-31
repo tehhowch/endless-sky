@@ -318,7 +318,7 @@ mission "Deep: Remnant 0"
 	name `Fetching Keystones`
 	description `Buy 10 Quantum Keystones from Hai space and return them to <destination> so that Ivan may research them and their link to the spacial anomaly in Terminus.`
 	source
-		attributes Deep
+		attributes deep
 	to offer
 		"deep convoy" >= 2
 		has "Deep: Mystery Cubes: done"
