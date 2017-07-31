@@ -313,16 +313,12 @@ mission "Deep: Singularity"
 		conversation
 			``
 
-# The scientist from Terminus exploration are from the Deep and have caught word that you have been helping out; they call you in to help continue their research of the anomaly in Terminus
-# These scientists ask you if you know of the Hai, to which the player responds yes. They ask you to retrieve some Quantum Keystones from the Hai for them to study, as they believe there may be some link between them and the wormhole.
-# During the conversation, if the player has made contact with the Remnant already, they may mention this. Upon doing so, a condition is set which changes future conversations and situations slightly.
-
-# Gonna name the scientist with the thick glasses Ivan.
 mission "Deep: Remnant 0"
 	minor
-	name ``
-	description ``
-	source 
+	name `Fetching Keystones`
+	description `Buy 10 Quantum Keystones from Hai space and return them to <destination> so that Ivan may research them and their link to the spacial anomaly in Terminus.`
+	source
+		attributes Deep
 	to offer
 		"deep convoy" >= 2
 		has "Deep: Mystery Cubes: done"
@@ -330,67 +326,70 @@ mission "Deep: Remnant 0"
 		has "Terminus exploration: done"
 	on offer
 		conversation
-			`We need some stones`
+			`While wandering through the spaceport, you are approached by a man who you instantly recognize as the scientist whos drone you recovered data from in Terminus thanks to his comically thick glasses. He introduces himself to you as Ivan and mentions how he heard you have been assisting others within the Deep.`
+			`	"I was hoping you would be able to continue assisting us in our research on the spatial anomaly in Terminus. Thanks to the data that you retrieved, we have been able to deduce that the anomaly is in fact some sort of wormhole, but it is far too unstable for anything to travel through it."`
+			`	"I must ask you, do you know of the Hai?" You nod. "Splendid! Then you will be able to help. One of the scientists on my team grew up in Hai space, and suggested that the so called Quantum Keystones which the Hai sell might have something to do with the wormhole, for there are some stories told in Hai space of these stones being able to unlock previously impassible pathways. May you retrieve ten of them for us so that we may be able to discover what is on the other side of the wormhole?"`
 			branch remnant
 				has "First Contact: Remnant: offered"
 			choice
-				`Okay`
-					accept
-				`Sorry, no.`
+				`	"I would be glad to help."`
+				`	"Sorry, but Hai space is way too far away for me to travel to."`
 					decline
+					
+			`	"Thank you again, Captain!" he says very enthusiastically. "We are low on funds and will not be able to recieve more unless we prove that our research has lead to a discovery, but we should be able to pay for half the cost of the stones once you return."`
+				accept
 			
 			label remnant
 			choice
-				`I know what's on the other side of the wormhole and what the stones do`
-				`Sorry, no.`
+				`	"I already know what is on the other side of the wormhole. In fact, the Quantum Keystones do allow entry into the spacial anomaly."`
+				`	"Sorry, but Hai space is way too far away for me to travel to."`
 					decline
 			apply
 				set "knew of stones before scientists"
+			`	Ivan looks like he is about to fall over with joy after you mention having entered the wormhole. "Really? Please, tell me what you found!"`
 			branch friendly
 				has "event: ember waste label"
-			`They appeared human and attacked me when I ran from them.`
+			`	You tell Ivan all that you saw on the other side of the wormhole, and how you found human like beings who attacked you after you ran from them.`
 				goto end
 			
 			label friendly
-			`They are a friendly group of humans who fled during the Alpha Wars.`
+			` You tell Ivan about how the region of space that the wormhole leads to is known as the Ember Waste, and that it is inhabited by a group of friendly humans who fled human space during the Alpha Wars and have advanced independently of humanity for centuries.`
 			
 			label end
-			`Interesting. Please bring some keystones to us so we can try to understand why this is.`
+			`	"This is very interesting, and would turn out to be an amazing discovery if true. Please, bring us the Quantum Keystones so that we might try to understand why they allow entry into the wormhole, and later we may attempt to learn more about these beings that you describe."`
 			choice
-				`Okay`
+				`	"I would be glad to help."`
 					accept
-				`Sorry no`
+				`	"Sorry, I don't want to help with this."`
 					decline
 
 	on complete
 		outfit "Quantum Keystone" -10
-		event "keystone research" 27
-		payment
-		conversation
-			`Thank you for the stones. We'll get back to you once we've studied them more.`
+		event "deep: keystone research" 47
+		payment 60000
+		conversation # Maria will be introduced in Deep: TMBR
+			`Upon returning to <planet>, you learn that Ivan has left for his research lab on Valhalla, but Maria, who turns out to also be on the team working on the spacial anomaly, is here to retrieve the keystones. She hands you <payment>, enough to pay for half of the cost of the stones.`
+			`	"Thank you for buying these keystones for us. It may take us a month or two to fully study them. We will make sure to contact you when we are in need of your assistance again."`
 			
-event "keystone research"
+event "deep: keystone research"
 
 mission "Deep: Remnant: Keystone Research"
 	landing
+	name `Travel to <planet>`
+	description `Meet up with Ivan on <destination> to learn about how his research on the Quantum Keystones has revealed.`
 	source 
 		government Republic "Free Worlds" Syndicate Neutral Independent
 	destination Valhalla
 	to offer
-		has "event: keystone research"
+		has "event: deep: keystone research"
 	on offer
-		conversation
-			`Please see us on <destination>. We're done researching.`
-				accept
-		
-
-# [A] branch is where you haven't had contact with the Remnant before this string
-# [B] branch is where you have had contact with the Remnant before this string
+		dialog
+			`You recieve a message from Ivan, the scientists working on the spacial anomaly in Terminus. "Captain, we have finished studying the Quantum Keystones, and they do in fact allow access through the wormhole. Please contact me on <destination> if you wish to continue helping us with our research."`
 
 mission "Deep: Remnant 1A"
 	landing
-	name ``
-	description ``
+	name `Exploring the Unknown`
+	description `Explore the region of space beyond the wormhole in Terminus. Return to <destination> after exploring as much as you can.`
 	source Valhalla
 	waypoint Terminus
 	to offer
@@ -398,85 +397,183 @@ mission "Deep: Remnant 1A"
 		not "knew of stones before scientists"
 	on offer
 		conversation
-			`So it looks like these stones somehow allow entry into the wormhole. Please explore the entire region for us.`
+			`You contact Ivan after you land and he sends you directions to his research lab, which is located on the outskirts of the spaceport city. When you arrive you are greeted by Ivan, Maria, and a number of other scientists on the team. Ivan begins to inform you on what their research has revealed.`
+			`	"We've analyzed the Quantum Keystones, and surprisingly they do allow entry into the wormhole in Terminus. It would appear that the stones stabilize the wormhole as the ship passes through it, or maybe it is stabilizing the ship in some way and not the wormhole. We'll need much more time to fully understand the true mechanism that is at play here. Whatever the case is, one stone is required for each ship to pass through the wormhole."`
+			`	"We sent a single ship through the wormhole then returned immediately, as we have no idea what dangers may lurk in the region of space that this wormhole leads to. Would you be willing to explore the region for us? You may want to bring a ramscoop, as we are unsure if there will be anywhere to refuel."`
+			choice
+				`	"I'm always willing to go on an adventure."`
+				`	"This sounds too risky for me. You're going to need to find someone else to do the job."`
+					decline
+			
+			`	"Splendid! We will give you a single Quantum Keystone in order to travel through the wormhole. Return here once you have finished exploring."`
 				accept
+	
+	on accept
+		outfit "Quantum Keystone" 1
+	
+	on enter Arculus
+		dialog `This region of space appears to be inhabited. You should attempt to find out more about the beings living here so that you may tell Ivan.`
+	
+	on enter Nenia
+		set "discovered void sprites"
+		dialog `This system is full of strange space-dwelling creatures that appear to be eating asteroids orbiting the star. If this is so close to the wormhole then one can only wonder what can be founder deeper into this region of space.`
+	
+	on visit
+		dialog `You have landed on <planet>, but you have not explored enough of the space beyond the wormhole. Return to the wormhole and continue exploring the region for anything of interest.`
 	
 	to complete
 		has "First Contact: Remnant: offered"
-	
-	on visit
-		dialog `You haven't explored enough.`
+		has "discovered void sprites"
 	
 mission "Deep: Remnant 2A"
 	landing
-	name ``
-	description ``
-	destination ``
+	name `Scanning Remnant`
+	description `Scan the outfits of the Remnant ships in Arculus, then return to <destination> so that the scientists may analyze your scanner logs.`
+	source Valhalla
+	waypoint Arculus
 	to offer
 		has "Deep: Remnant 1A: done"
 	on offer
 		conversation
-			`Guess what, there's people there.`
+			`When you return, Ivan and the rest of the scientists wait eagerly for you to explain what you discovered.`
+			`	You start off by telling them about the strange space-dwelling creatures you found floating aroumd in the system of Nenia which fed on the asteroids in the system, and how they were flying off of the gas giants in the system, suggesting that they spend part of their life cycle in the atmosphere of a gas giant and part of it in space.`
+			
 			branch friendly
 				has "event: ember waste label"
-			`They appeared human and attacked me when I ran.`
-			`Do you think you could steal some of their tech for us to study?`
-			choice
-				`Okay`
-					accept
-				`Too risky`
-					decline
-			
+			`	You then tell them about the human beings that you discovered which attacked you when you tried to run from them after they requested a blood sample from you.`
+				goto next
+				
 			label friendly
-			`They are a friendly group of humans who fled during the Alpha Wars.`
-			`Could you try and get access to some of their technology and bring it to us?`
-				accept
-				
-	to complete
-		has "Deep: Remnant Engines: done"
-				
+			`	You then tell them about the Remnant, a group of friendly humans who fled human space during the Alpha Wars and have advanced independently of humanity for centuries, and how they call the region of space the "Ember Waste."`
+			
+			label next
+			`	The group of scientists looks captivated the entire time, almost like kindergarteners listening to a fairy tale. After you finish talking, they begin to chatter among themselves, seeming to be most interested in the human beings which inhabit the region. They seem to agree that they need to learn more about these humans, and more specifically about the technology which they have developed.`
+			`	They eventually come to the conclusion that you should return to this region of space and scan the ships of these humans so that they can learn more about them.`
+			choice
+				`	"Okay, I'm willing to do it."`
+					accept
+				`	"This seems too risky for me. You'll need to find someone else."`
+					decline
+					
+	on accept
+		event "clear arculus"
+	
+	npc "scan outfits"
+		government Remnant
+		personality staying uninterested
+		fleet
+			names remnant
+			variant
+				"Albatross"
+				"Starling"
+		dialog `You have finished scanning the Remnant ships in the system. You may now return to <destination> with the scanner logs.`
+	
+	on fail
+		event "reset arculus"
+	
+	on complete
+		event "reset arculus"
+		event "deep: scan log research" 21
+		payment 100000
+		dialog
+			`The team is visibly excited when you return with the scanner logs. "Give us a few weeks to look these over," Ivan says, "then we will contact you about what we want you to do next."`
+
 mission "Deep: Remnant 1B"
 	landing
-	name ``
-	description ``
+	name `Scanning Remnant`
+	description `Scan the outfits of the Remnant ships in Arculus, then return to <destination> so that the scientists may analyze your scanner logs.`
 	source Valhalla
+	waypoint Arculus
 	to offer
 		has "Deep: Remnant: Keystone Research: done"
 		has "knew of stones before scientists"
 	on offer
 		conversation
-			`These stones are interesting, and it does seem that they allow access to this strange region of space.`
-			branch friendly
-				has "event: ember waste label"
-			`So you said they attacked you? Could you steal some of their tech for us to study?`
+			`You contact Ivan after you land and he sends you directions to his research lab, which is located on the outskirts of the spaceport city. When you arrive you are greeted by Ivan, Maria, and a number of other scientists on the team. Ivan begins to inform you on what their research has revealed.`
+			`	"We've analyzed the Quantum Keystones, and they do allow entry into the wormhole in Terminus just as you said. It would appear that the stones stabilize the wormhole as the ship passes through it, or maybe it is stabilizing the ship in some way and not the wormhole. We'll need much more time to fully understand the true mechanism that is at play here. Whatever the case is, one stone is required for each ship to pass through the wormhole."`
+			`	Ivan then asks you to fill the rest of the scientists in on what you have found on the other side of the wormhole. After you finish talking, they begin to chatter among themselves, seeming to be most interested in the human beings which inhabit the region.`
+			`	They eventually come to the conclusion that you should return to this region of space and scan the ships of these humans so that they can learn more about them.`
 			choice
-				`Okay`
+				`	"Okay, I'm willing to do it."`
 					accept
-				`Too risky`
+				`	"This seems too risky for me. You'll need to find someone else."`
 					decline
-			
-			label friendly
-			`So you said they were friendly? Could you bring us some of their technology?`
-			branch license
-				has "license: Remnant"
-			`They won't sell me their tech`
-			`Maybe you can try to do some work for them and see if they will offer it to you.`
-			`Okay`
-				accept
-			
-			label license
-			`They allow me to buy their tech, so I shall bring some.`
-				accept
-				
-	to complete
-		has "Deep: Remnant Engines: done"
+					
+	on accept
+		event "clear arculus"
+	
+	npc "scan outfits"
+		government Remnant
+		personality staying uninterested
+		fleet
+			names remnant
+			variant
+				"Albatross"
+				"Starling"
+		dialog `You have finished scanning the Remnant ships in the system. You may now return to <destination> with the scanner logs.`
+	
+	on fail
+		event "reset arculus"
+	
+	on complete
+		event "reset arculus"
+		event "deep: scan log research" 21
+		payment 100000
+		dialog
+			`The team is visibly excited when you return with the scanner logs. "Give us a few weeks to look these over," Ivan says, "then we will contact you about what we want you to do next."`
+
+event "clear arculus"
+	system Arculus
+		remove fleet "Large Remnant"
+		remove fleet "Small Remnant"
+		
+event "reset arculus"
+	system Arculus
+		fleet "Large Remnant" 1500
+		fleet "Small Remnant" 1000
+
+event "deep: scan log research"
+
+mission "Deep: Remnant Technology"
+	landing
+	name `Travel to <planet>`
+	description `Meet up with Ivan on <destination> to learn what he wants you to do next.`
+	source 
+		government Republic "Free Worlds" Syndicate Neutral Independent
+	destination Valhalla
+	to offer
+		has "event: deep: scan log research"
+	on offer
+		payment 250000
+		dialog `You recieve a message from Ivan after you land. "Thanks for all the help so far. We brought our findings so far to the Deep government and they gave us more funding! We've transfered 250,000 credits to your account for your recent help. Please meet us on <destination> if you want to assist us more.`
 
 mission "Deep: Remnant: Engines"
 	landing
 	invisible
-	source Valhalla
+	destination Valhalla
 	to offer
-		has "Deep: Remnant: Keystone Research: done"
+		has "Deep: Remnant Technology: done"
+	on offer
+		conversation
+			`So, now we need you to get us some of their technology.`
+			branch friendly
+				has "ember waste label"
+			`If they're hostile, you'll need to steal it. We want some of their engines, mang.`
+				accept
+			
+			label friendly
+			`So if they're friendly, will they give you their stuff?`
+			branch license
+				has "license: Remnant"
+			`They won't sell me their stuff.`
+			`Maybe if you do work for them they will. Go try. Or you can steal it. We need engines.`
+				accept
+			
+			label license
+			`They let me buy their stuff. Tell me what you want.`
+			`Engines plz.`
+				accept
+				
 	on visit
 		dialog `You have landed on <planet>, but you do not have the two smallest Remnant engines.`
 	on complete
