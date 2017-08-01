@@ -319,7 +319,7 @@ mission "Deep: Remnant 0"
 		conversation
 			`While wandering through the spaceport, you are approached by a man who you instantly recognize as the scientist whos drone you recovered data from in Terminus thanks to his comically thick glasses. He introduces himself to you as Ivan and mentions how he heard you have been assisting others within the Deep.`
 			`	"I was hoping you would be able to continue assisting us in our research on the spatial anomaly in Terminus. Thanks to the data that you retrieved, we have been able to deduce that the anomaly is in fact some sort of wormhole, but it is far too unstable for anything to travel through it."`
-			`	"I must ask you, do you know of the Hai?" You nod. "Splendid! Then you will be able to help. One of the scientists on my team grew up in Hai space, and suggested that the so called Quantum Keystones which the Hai sell might have something to do with the wormhole, for there are some stories told in Hai space of these stones being able to unlock previously impassible pathways. May you retrieve ten of them for us so that we may be able to discover what is on the other side of the wormhole?"`
+			`	"I must ask you, do you know of the Hai?" You nod. "Splendid! Then you will be able to help. One of the scientists on my team grew up in Hai space, and suggested that the so called Quantum Keystones which the Hai sell might have something to do with the wormhole, for there are some stories told in Hai space of these stones being able to unlock previously impassible pathways. May you retrieve ten of them for us so that we may be able to discover if these stones do allow access into the wormhole?"`
 			branch remnant
 				has "First Contact: Remnant: offered"
 			choice
@@ -344,7 +344,7 @@ mission "Deep: Remnant 0"
 				goto end
 			
 			label friendly
-			` You tell Ivan about how the region of space that the wormhole leads to is known as the Ember Waste, and that it is inhabited by a group of friendly humans who fled human space during the Alpha Wars and have advanced independently of humanity for centuries.`
+			`	You tell Ivan about how the region of space that the wormhole leads to is known as the Ember Waste, and that it is inhabited by a group of friendly humans who fled human space during the Alpha Wars and have advanced independently of humanity for centuries.`
 			
 			label end
 			`	"This is very interesting, and would turn out to be an amazing discovery if true. Please, bring us the Quantum Keystones so that we might try to understand why they allow entry into the wormhole, and later we may attempt to learn more about these beings that you describe."`
@@ -405,7 +405,7 @@ mission "Deep: Remnant 1A"
 	on enter Arculus
 		dialog `This region of space appears to be inhabited. You should attempt to find out more about the beings living here so that you may tell Ivan.`
 	
-	on enter Nenia
+	on enter Nenia # Forces the player to check the Ember Waste, but the player could have taken a keystone and seen for themself that they could enter the Ember Waste while the group was doing research, therefore making this mission extraneous. Any possible solutions? Create a C branch for if the player did not know of the Remnant at the time of speaking with Ivan but later learned about them when Ivan was studying the stones?
 		set "discovered void sprites"
 		dialog `This system is full of strange space-dwelling creatures that appear to be eating asteroids orbiting the star. If this is so close to the wormhole then one can only wonder what can be founder deeper into this region of space.`
 	
