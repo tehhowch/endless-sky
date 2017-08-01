@@ -319,6 +319,7 @@ mission "Deep: Remnant 0"
 	description `Buy 10 Quantum Keystones from Hai space and return them to <destination> so that Ivan may research them and their link to the spacial anomaly in Terminus.`
 	source
 		attributes deep
+		near "Epsilon Leonis" 1 100
 	to offer
 		"deep convoy" >= 2
 		has "Deep: Mystery Cubes: done"
