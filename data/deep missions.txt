@@ -13,13 +13,13 @@
 #	3 transport scientist jobs
 #	3 escort science vessel jobs
 #	3 record academic conference jobs
-#	2 convoy missions
+#	2 of 3 convoy missions added by this
 #	The current TMBR string + the 3 missions added by this
 #	The Deep: Mystery Cubes string added by this
 #	The Deep Archaeology string
 #	The Deep: Singularity string added by this
-#	The Deep: Remnant string added by this
-#	The Remnant intro missions (kind of optional, as the player may choose to plunder Remnant tech, but this would ruin future storylines for the player; do you really want the Bactrian that much?)
+#	Half the Deep: Remnant string added by this
+#	Discover the Remnant (and finish their intro missions to complete the rest of the Deep: Remnant string, or attack the Remnant to plunder their outfits instead)
 #	The Deep: Star Queen Rescue string added by this
 
 
@@ -28,21 +28,37 @@
 # that will be filled in once the storyboard is finalized #
 ###########################################################
 
-# Only need to do 2 of 3 convoy missions
-# Escort convoys of freighters to and from different regions of space to gather materials for experiments that the Deep is conducting.
-mission "Deep: Syndicate Convoy" # Korath-based tech
+mission "Deep: Syndicate Convoy"
 	minor
 	name `Pickup from Hephaestus`
-	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> for a payment of <payment>.`
+	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> by <date> for payment (<payment>).`
 	source
 		attributes deep
-	stopovers Hephaestus
+		near Gomeisa 2
+	stopover Hephaestus
+	deadline
 	to offer
-		random < 30
 		"mystery cube" >= 10
+		or
+			random < 30
+			and
+				"deep convoy" == 1
+				random < 40
+			and
+				"deep convoy" == 2
+				random < 50
+		
 	on offer
 		conversation
-			``
+			`You are approached by a man in a Deep Security uniform who asks you if you would be willing to escort a few freighters to <stopovers> and back by <date>. "We would normally have DS ships do it," he says, "but we're short on available ships given certain circumstances."`
+			choice
+				`	"Sure, I can do that."`
+				`	"Sorry, but I will not be traveling in that direction any time soon."`
+					decline
+			
+			`	"Good. Before you leave, know that there may be pirate forces waiting for you in Tania Australis, Merak, and Altair. You can try to avoid them, but make sure you get the freighters back on time."`
+			`	The Deep Security officer wishes you good luck and walks off, leaving you wonder how he knows where pirate fleets might be waiting for you.`
+				accept
 	
 	npc accompany save
 		personality timid escort
@@ -53,21 +69,18 @@ mission "Deep: Syndicate Convoy" # Korath-based tech
 				"Mule"
 				"Bulk Freighter" 2
 	npc
-		personality nemesis waiting
-		system
-			distance 3
+		personality nemesis staying
+		system "Tania Australis"
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 5
+		personality nemesis staying
+		system Merak
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 7
+		personality nemesis staying
+		system Altair
 		government Pirate
 		fleet "Small Northern Pirates"
 	npc
@@ -77,28 +90,43 @@ mission "Deep: Syndicate Convoy" # Korath-based tech
 		fleet "Large Northern Pirates"
 	
 	on stopover
-		conversation
-			``
+		dialog `The location where the freighters land to pick up their cargo is on the night side of <planet>. The Syndicate employees who load the freighters do not allow you to see what is inside the cargo, but advise you to leave quickly after the cargo is done being loaded.`
 	
 	on complete
 		"deep convoy" ++
 		payment 720000
-		conversation
-			``
+		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
 
-mission "Deep: Tarazed Convoy" # Quarg-based tech
+mission "Deep: Tarazed Convoy"
 	minor
 	name `Pickup from Tarazed`
-	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> for a payment of <payment>.`
+	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> by <date> for payment (<payment>).`
 	source
 		attributes deep
-	stopovers Tarazed
+		near Gomeisa 2
+	stopover Tarazed
+	deadline
 	to offer
-		random < 30
 		"mystery cube" >= 10
+		or
+			random < 30
+			and
+				"deep convoy" == 1
+				random < 40
+			and
+				"deep convoy" == 2
+				random < 50
 	on offer
 		conversation
-			``
+			`As you are walking through the spaceport, a woman in a Deep Security uniform stops you. "You are Captain <last>, correct?" You nod. "Would you be willing to transport a handful of freighters to <stopovers> where they will pick up some cargo then return them here by <date>? Normally this kind of job would be done by Deep Security, but we have no ships to spare at the moment."`
+			choice
+				`	"Sure, I can do that."`
+				`	"Sorry, but I will not be traveling in that direction any time soon."`
+					decline
+			
+			`	"Thank you, Captain. Before you go, I need to inform you that you may encounter pirate fleets near Tania Australis, Muphrid, and Ascella, and you may have to go through those systems if you are to return the freighters on time, so be prepared."`
+			`	The Deep Security officer wishes you good luck and walks off, leaving you wonder how she knows where pirate fleets might be waiting for you.`
+				accept
 	
 	npc accompany save
 		personality timid escort
@@ -106,24 +134,21 @@ mission "Deep: Tarazed Convoy" # Quarg-based tech
 		fleet
 			names civilian
 			variant
-				"Behemoth" 2
-				"Mule"
+				"Freighter" 3
+				"Mule" 2
 	npc
-		personality nemesis waiting
-		system
-			distance 3
+		personality nemesis staying
+		system "Tania Australis"
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 5
+		personality nemesis staying
+		system Muphrid
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 7
+		personality nemesis staying
+		system Ascella
 		government Pirate
 		fleet "Small Northern Pirates"
 	npc
@@ -133,28 +158,43 @@ mission "Deep: Tarazed Convoy" # Quarg-based tech
 		fleet "Large Northern Pirates"
 	
 	on stopover
-		conversation
-			``
+		dialog `You and the freighters are directed to park in a private hangar owned by the Tarazed Corporation. While watching the cargo crates get loaded on to the freighters, you notice that the crates have labels on them which read "only to be viewed by authorized personnel" in large red letters.`
 	
 	on complete
 		"deep convoy" ++
 		payment 1020000
-		conversation
-			``
+		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."
 
-mission "Deep: Kraz Convoy" # Some crazy stuff that Edward has made
+mission "Deep: Kraz Convoy"
 	minor
 	name `Pickup from Kraz`
-	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> for a payment of <payment>.`
+	description `Escort a convoy of freighters to <stopovers> where they will pick up materials for scientific experiments. Then return the convoy to <destination> by <date> for payment (<payment>).`
 	source
 		attributes deep
-	stopovers Kraz
+		near Gomeisa 2
+	stopover Kraz
+	deadline
 	to offer
-		random < 30
 		"mystery cube" >= 10
+		or
+			random < 30
+			and
+				"deep convoy" == 1
+				random < 40
+			and
+				"deep convoy" == 2
+				random < 50
 	on offer
 		conversation
-			``
+			`A Deep Security officer approaches you when you enter the spaceport and asks if you would be able to do a job for the Deep. "We're short on Deep Security ships at the moment, but we need three Behemoths escorted to <stopovers> where they will pick up cargo, then escorted back here by <date>."
+			choice
+				`	"Sure, I can do that."`
+				`	"Sorry, but I will not be traveling in that direction any time soon."`
+					decline
+			
+			`	"Much appreciated, Captain. And for your well being as well as that of the cargo's, you must know that there may be pirates waiting in Algieba, Cor Caroli, and Wei. Behemoths are tough ships so you should be able to travel through those systems and not slow yourself down by taking alternative routes."`
+			`	The Deep Security officer wishes you good luck and walks off, leaving you wonder how she knows where pirate fleets might be waiting for you.`
+				accept
 	
 	npc accompany save
 		personality timid escort
@@ -162,24 +202,20 @@ mission "Deep: Kraz Convoy" # Some crazy stuff that Edward has made
 		fleet
 			names civilian
 			variant
-				"Behemoth" 2
-				"Bulk Freighter"
+				"Behemoth" 3
 	npc
-		personality nemesis waiting
-		system
-			distance 3
+		personality nemesis staying
+		system Algieba
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 5
+		personality nemesis staying
+		system "Cor Caroli"
 		government Pirate
 		fleet "Large Northern Pirates"
 	npc
-		personality nemesis waiting
-		system
-			distance 7
+		personality nemesis staying
+		system Wei
 		government Pirate
 		fleet "Small Northern Pirates"
 	npc
@@ -189,14 +225,12 @@ mission "Deep: Kraz Convoy" # Some crazy stuff that Edward has made
 		fleet "Large Northern Pirates"
 	
 	on stopover
-		conversation
-			``
+		dialog `When you arrive, Kraz Cybernetics already has the cargo waiting by the spaceport to be loaded on to the Behemoths. After a few hours of loading the massive freighters, the spaceprt crew gives you the all clear signal while the freighter captains get ready to depart.`
 	
 	on complete
 		"deep convoy" ++
 		payment 1260000
-		conversation
-			``
+		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."
 
 # What exactly could they be? 
 # Why would you be burying them in random places, giving them to beggars, leaving them in abandoned towers, and leaving them by the sides of roads? These seem like very scattered locations. 
