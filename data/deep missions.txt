@@ -40,9 +40,6 @@ mission "Deep: Syndicate Convoy" # Korath-based tech
 	to offer
 		random < 30
 		"mystery cube" >= 10
-		"Transport scientists: done" >= 3
-		"Escort science vessel: done" >= 3
-		"Record academic conference: done" >= 3
 	on offer
 		conversation
 			``
@@ -99,9 +96,6 @@ mission "Deep: Tarazed Convoy" # Quarg-based tech
 	to offer
 		random < 30
 		"mystery cube" >= 10
-		"Transport scientists: done" >= 3
-		"Escort science vessel: done" >= 3
-		"Record academic conference: done" >= 3
 	on offer
 		conversation
 			``
@@ -158,9 +152,6 @@ mission "Deep: Kraz Convoy" # Some crazy stuff that Edward has made
 	to offer
 		random < 30
 		"mystery cube" >= 10
-		"Transport scientists: done" >= 3
-		"Escort science vessel: done" >= 3
-		"Record academic conference: done" >= 3
 	on offer
 		conversation
 			``
@@ -252,7 +243,6 @@ mission "Deep: TMBR 0"
 	destination Allhome
 	to offer
 		random < 60
-		"mystery cube" >= 10
 		"Transport scientists: done" >= 3
 		"Escort science vessel: done" >= 3
 		"Record academic conference: done" >= 3
