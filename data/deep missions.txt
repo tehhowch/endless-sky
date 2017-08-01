@@ -474,7 +474,6 @@ mission "Deep: Remnant 2A"
 	on complete
 		event "reset arculus"
 		event "deep: scan log research" 21
-		payment 100000
 		dialog
 			`The team is visibly excited when you return with the scanner logs. "Give us a few weeks to look these over," Ivan says, "then we will contact you about what we want you to do next."`
 
@@ -518,7 +517,6 @@ mission "Deep: Remnant 1B"
 	on complete
 		event "reset arculus"
 		event "deep: scan log research" 21
-		payment 100000
 		dialog
 			`The team is visibly excited when you return with the scanner logs. "Give us a few weeks to look these over," Ivan says, "then we will contact you about what we want you to do next."`
 
@@ -529,8 +527,8 @@ event "clear arculus"
 		
 event "reset arculus"
 	system Arculus
-		fleet "Large Remnant" 1500
-		fleet "Small Remnant" 1000
+		add fleet "Large Remnant" 1500
+		add fleet "Small Remnant" 1000
 
 event "deep: scan log research"
 
@@ -546,124 +544,192 @@ mission "Deep: Remnant Technology"
 	on offer
 		payment 250000
 		dialog `You recieve a message from Ivan after you land. "Thanks for all the help so far. We brought our findings so far to the Deep government and they gave us more funding! We've transfered 250,000 credits to your account for your recent help. Please meet us on <destination> if you want to assist us more.`
+	
+	on decline
+		set "Deep: Remnant Research: done" # Allows the player to decline this and any mission beyond this point and still get a chance to unlock the Bactrian, but not doing the other half of the Deep: Remnant chain could ruin future situations for the player.
 
 mission "Deep: Remnant: Engines"
 	landing
-	invisible
-	destination Valhalla
+	name `Fetching Engines`
+	description `Acquire a Forge-Class Thruster and Forge-Class Steering from the Remnant and bring the engines to <destination>.`
+	source Valhalla
 	to offer
 		has "Deep: Remnant Technology: done"
 	on offer
 		conversation
-			`So, now we need you to get us some of their technology.`
+			`Thanks to the increased funds, the team has moved their research lab to a much more advanced facility which is located closer to the spaceport itself. "This will make transfering material from your ship to the lab much easier, which will be important in these next few missions," Ivan explains.`
+			`	The team of scientists begin explaining to you what they've discovered from the scanner logs you provides. The Remnant, although clearly human, have somehow advanced far beyond what the rest of humanity has achieved.`
+			
 			branch friendly
 				has "ember waste label"
-			`If they're hostile, you'll need to steal it. We want some of their engines, mang.`
-				accept
+			`	"We know that you told us that they tried to attack you, but we are very interested in what their technology may hold. Therefore we need you to be willing to plunder some of their technology and bring it to us to study and analyze."`
+			choice
+				`	"Is this really necessary?"`
+				`	"I'd be more than happy to help."`
+					goto accept
+				`	"Sorry, but I'm not interested in working for you anymore."`
+					decline
+			
+			`	"If they aren't willing to be friendly and simply sell you their technology then I'm afraid that plundering is the only way that we can get our hands on it. You don't have to destroy their ships if you don't want to, we simply need you to be able to disable them and take their outfits."`
+			choice
+				`	"Alright, I'll do it."`
+					goto accept
+				`	"Sorry, but I'm not going to attack human beings for the sake of science."`
+					decline
 			
 			label friendly
-			`So if they're friendly, will they give you their stuff?`
+			`	"You told us that these humans were friendly. Do they allow you to purchase their technology?"`
 			branch license
 				has "license: Remnant"
-			`They won't sell me their stuff.`
-			`Maybe if you do work for them they will. Go try. Or you can steal it. We need engines.`
-				accept
+			`	"No," you respond. "They have not given me a license to buy any of their outfits or ships."`
+			`	The scientists ponder on this for a moment. Eventually, Maria speaks up. "Maybe if you assist them in some way they may give you access to their technology. Try doing jobs for them or see if anyone in their spaceports needs something from you."`
+			`	"You could also plunder their technology if they won't sell it to you," Ivan chimes in.`
+			choice
+				`	"I'll see if I can try to get my hands on what you need."`
+					goto accept
+				`	"Sorry, but I'm not interested in doing that kind of work for you."`
+					decline
 			
 			label license
-			`They let me buy their stuff. Tell me what you want.`
-			`Engines plz.`
+			`	"Yes," you respond. "I had to do a few odd jobs for them, but they eventually gave me license to purchase their outfits and ships."`
+			`	"Then all you need to do is buy whatever we ask you to and bring it back here. Are you interested?"`
+			choice
+				`	"I'd be glad to help"`
+				`	"Sorry, but I don't want to spend money for your research."`
+					decline
+			
+			label accept
+			`	"Great!" Ivan exclaims. "Right now we'd be interested in studying their engines. Please bring us one Forge-Class Thruster and one Forge-Class Steering. They shouldn't be too hard to get."`
 				accept
-				
+	
+	on decline
+		set "Deep: Remnant Research: done"
+			
 	on visit
-		dialog `You have landed on <planet>, but you do not have the two smallest Remnant engines.`
+		dialog `You have landed on <planet>, but you do not have both a Forge-Class Thruster and Forge-Class Steering. Return to <planet> once you have both engines.`
+		
 	on complete
-		payment
-		outfit "Crucible-Class Thruster" -1
-		outfit "Crucible-Class Steering" -1
+		payment 417000
+		outfit "Forge-Class Thruster" -1
+		outfit "Forge-Class Steering" -1
 
 mission "Deep: Remnant: Generators"
 	landing
-	name ``
-	description ``
+	name `Fetching Generators`
+	description `Acquire a Millennium Cell from the Remnant and bring the generator to <destination>.`
 	source Valhalla
 	to offer
 		has "Deep: Remnant: Engines: done"
 	on offer
 		conversation
-			`This is interesting tech. Very similar to ion thrusters, but much better.`
-			`Please bring us one of their reactors next.`
-				accept
+			`The scientists are able to quickly have the engines removed from your ship and ready in their research lab thanks to it being much closer to the spaceport. They pay you 417,000 credits for bringing the engines to them. After about three hours of analyzing the engines, Ivan walks up to you.`
+			`	"This is very interesting tech. They seem similar to human ion engines, but surprisingly better than even atomic engines, being both more powerful and more efficient at the same time. They're slightly more power-hungry, but it's still amazing that such an isolated group of humans could make such a technological leap in such a short amount of time."`
+			`	"We've decided that the next Remnant technology we want to look at is their power generators. Could you bring us one of their Millenium Cells?"`
+			choice
+				`	"Sure. I'll be back in no time at all."`
+					accept
+				`	"Sorry, but I'm no longer interested in working for you."`
+					decline
+	
+	on decline
+		set "Deep: Remnant Research: done"
 	
 	on visit
-		dialog `Get it, fool.`
+		dialog `You have landed on <planet>, but you do not have a Millennium Cell. Return to <planet> once you have the generator.`
 	
 	on complete
-		payment
+		payment 383500
 		outfit "Millennium Cell" -1
 
 mission "Deep: Remnant: Inhibitor Cannon"
 	landing
-	name ``
-	description ``
-	source
+	name `Fetching Cannons`
+	description `Acquire an Inhibitor Cannon from the Remnant and bring the weapon to <destination>.`
+	source Valhalla
 	to offer
 		has "Deep: Remnant: Generators: done"
 	on offer
 		conversation
-			`So efficient. Much thermoelectric.`
-			`Weapon next. How about that Inhibitor Cannon.`
-				accept
+			`Again the Remnant technology is removed from your ship and placed in the research lab. This time they pay you 383,500 credits. The scientists once again take a few hours to analyze the outfit before telling you their findings.`
+			`	"This Millennium Cell is little more than a radiothermal generator. Not exactly the best kind of generator if you're looking for lots of power. A fusion generator does far better in that realm. But for a radiothermal generator it runs surprisingly cold. We may have to take it apart to find out why that is."`
+			`	"Next we want to see how their weapons technology has advanced. Their Inhibitor Cannons seem very interesting to me. Could you retrieve just one of them?"`
+			choice
+				`	"I'd be glad to."`
+					accept
+				`	"Sorry, but I'm no longer interested in working for you."`
+					decline
+	
+	on decline
+		set "Deep: Remnant Research: done"
 	
 	on visit
-		dialog `Do things right for once.`
+		dialog `You have landed on <planet>, but you do not have an Inhibitor Cannon. Return to <planet> once you have the weapon.`
 	
 	on complete
-		payment
+		payment 235500
 		outfit "Inhibitor Cannon" -1
 
 mission "Deep: Remnant Surveillance"
 	landing
-	name ``
-	description ``
-	source
-	stopovers Caelian Arculus Aventine
+	name `Remnant Surveillance`
+	description `Land on each of the Remnant worlds (<stopovers>) and place a number of sensor cubes. Then return to <destination> once you are done.`
+	source Valhalla
+	stopover Viminal
+	stopover Arculus
+	stopover Aventine
 	to offer
 		has "Deep: Remnant: Inhibitor Cannon: done"
 	on offer
 		conversation
-			`Damn, this a fine gun.`
-			`Thanks for all the help. This has been very insightful. We'll be busy with this tech for months.`
+			`Instead of transfering the Inhibitor Cannon to the research lab, it is transfered onto a Deep Security ship and lifted off to another planet. Ivan explains that it is going to be tested at a "more secure location," as the Deep does not want word of a strange group of humans from beyond the anomaly in Terminus getting out.`
 			branch friendly
 				"reputation: Remnant" >= 1
-			`Thanks for all your work. You da best.`
+			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>. You've done a lot for humanity these past few weeks that you have been helping us. It may take us months to fully understand the technology you have brought us, but rest assured that that once we do understand it the galaxy will be a better place. I may be seeing you later, Captain. Stay safe."`
 				decline
 				
 			label friendly
-			`Now how about those ships. Place some mystery cubes on their planets plz.`
+			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>, but I have one last thing to ask of you." Ivan reaches into his pocket and pulls out six objects that you recognize as sensor cubes. "I need you to place two of these on each of the Remnant worlds near their spaceports. This entire time we have been looking at outfits, but we have very little information on the capabilities of Remnant ships. These cubes will allow us to get that information. I'll pay you <payment> out of my own pocket if you do this for me, Captain."`
+			choice
+				`	"You can count on me, Ivan."`
+				`	"Sorry, but this doesn't seem like the right thing to do. You'll need to find someone else to do this for you."`
+					decline
+			
+			`	"Thank you, Captain. Return here once you have finish and I'll hand you the credits."`
 				accept
 	
 	on decline
 		set "Deep: Remnant Research: done"
 	
-	on stopover Caelian
-		dialog ``
+	on stopover Viminal
+		dialog `You try to make an effort of not being seen as you decide to place the sensor cubes. You place one of the cubes outside of the spaceport dome, buried in the snow so that it is difficult to find. The other you place in a dark corner of the spaceport where it almost blends in to its surroundings.`
 	on stopover Arculus
-		dialog ``
+		dialog `The place the first of the cubes at the entrance of a now-abandoned underground settlement in a dark area where it will not be seen. Unable to find a good spot for the second one, you decide to leave it in a ditch and cover it in sand. Although you are unable to see anyone, you feel that you are being watched.`
 	on stopover Aventine
-		dialog ``
+		dialog `You place one of the sensor cubes inside an alley way in the more ancient part of town where you are sure that it will not be found. You decide to place the other once far outside of the town up near the top of the valley where it will still be able to detect incoming ships.`
 	
 	on visit
-		dialog `You haven't placed a cube on all the Remnant worlds.`
+		dialog `You have landed on <planet>, but you have not placed a cube on all the Remnant worlds. Return to the Ember Waste and make sure you have landed on all three Remnant worlds.`
 	
 	on complete
-		payment
+		payment 500000
 		set "Deep: Remnant Research: done"
-		conversation
-			`Thanks man. You da best.`
+		dialog `When you return to Valhalla, you are unable to find Ivan. Instead you meet Maria who hands you the <payment>. "Ivan told me to give this to you, Captain. Thanks again for helping us out so much. We couldn't have done it without you."`
 
 ###########################################################
 ###########################################################
 ###########################################################
+
+mission "Deep: Star Queen Rescue Timer"
+	landing
+	invisible
+	to offer
+		has "Deep: Remnant Research: done"
+		has "Deep: Singularity: done"
+	on offer
+		event "deep: star queen rescue timer" 90
+		fail
+
+event "deep: star queen rescue timer"
 
 mission "Deep: Star Queen Rescue 0"
 	minor
@@ -674,9 +740,7 @@ mission "Deep: Star Queen Rescue 0"
 	destination Valhalla
 	waypoint Betelgeuse
 	to offer
-		random < 25
-		has "Deep: Remnant Research: done"
-		has "Deep: Singularity: done"
+		has "event: deep: star queen rescue timer"
 
 	on offer
 		conversation
