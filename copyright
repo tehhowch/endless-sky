@@ -247,6 +247,19 @@ Copyright: Eric Denni (spfldsatellite@gmail.com)
 License: CC-BY-SA-4.0
 
 Files:
+ images/ship/mining*
+ sounds/plasmab*
+Copyright: Zachary Siple
+License: CC-BY-SA-4.0
+
+Files:
+ images/outfit/plasma?drill*
+ images/projectile/plasmab*
+Copyright: Zachary Siple
+License: CC-BY-SA-4.0
+Comment: Derived from works by Michael Zahniser (under the same license).
+
+Files:
  images/land/badlands0*
  images/land/badlands5*
  images/land/badlands7*
