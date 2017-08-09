@@ -50,6 +50,7 @@ mission "Deep: Syndicate Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
+		not "Deep: Mystery Cubes: done"
 		or
 			random < 20
 			and
@@ -121,6 +122,7 @@ mission "Deep: Tarazed Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
+		not "Deep: Mystery Cubes: done"
 		or
 			random < 20
 			and
@@ -191,6 +193,7 @@ mission "Deep: Kraz Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
+		not "Deep: Mystery Cubes: done"
 		or
 			random < 20
 			and
@@ -259,11 +262,12 @@ mission "Deep: Kraz Convoy"
 # Information gathered from these cubes is used by Deep Security and is on rare occasions handed over to the Republic or Navy (DS is an independent police force and therefore is under no jurisdiction to have to hand over all its info to the Navy).
 # For some reason, pirates know of this and send bounty hunters after anyone they know are in possesion of these cubes, stealing them before destroying the merchant.
 # Cubes are asked to be retrieved by merchants for reasons unknown; malfunctions? just old sensors? One can only wonder.
+# Individual cubes are not that useful, but more cubes together amplify the amount of information able to be recorded similar to multiple radio telescopes being able to do better than a single telescope. Two cubes near a spaceport are able to easily scan ships in a spaceport, but dozens can be needed on a single planet to scan a system.
+# Designed to be hard to detect
 
-# Deep: Mystery Cubes missions will involve first... I have no idea.
-# I'm thinking about having one of the missions involve going to Carbuncle Station
-# Maybe something to do with assisting Deep Security in tracking down a warlord (DS would still be low on ships during this time for whatever reason)
-# Might have to get the Navy involved
+# The reason Deep Security is low on ships in the convoy missions is because they are busy hunting a Deep-born pirate warlord who has been using some of the secrets of the Deep against it. e.g. the knowledge of the cubes.
+# Eventually this becomes a problem for the Navy as well as the warlord starts using stolen cubes to be able to avoid the Navy, and the Navy doesn't even have the tech to be able to detect these cubes.
+# This string involves trying to hunt down said warlord, but it will be mostly unsuccessful; the warlord's tracks run cold in the Far North (no cubes up there) suggesting they either ran up into the anarchist worlds or ran east toward the Core.
 mission "Deep: Mystery Cubes"
 	minor
 	name ``
@@ -272,8 +276,16 @@ mission "Deep: Mystery Cubes"
 		attributes deep
 	destination
 	to offer
-		"random" < 40
-		"deep convoy" >= 1
+		or
+			and
+				"deep convoy" == 1
+				random < 30
+			and
+				"deep convoy" == 2
+				random < 60
+			and
+				"deep convoy" == 3
+				random < 90
 	on offer
 		conversation
 			``
@@ -389,6 +401,8 @@ mission "Deep: TMBR 2"
 # The player gets called into somewhere and is asked about their work for Albert. They get questioned on what Albert told them, and seeing as how the player has been helping the Deep lately, the Deep tell the player some of their folklore.
 # "Over the centuries the exact date of when the Deep was established have been lost, but folklore says that the first humans arrived here in the mid 1300s before the time of the Black Death."
 # Not sure what these missions would entail. Would likely involve some of the scientists from Deep: TMBR, since they left to work on Midgard, where the singularity is. Also want to involve Lt. Paris in some way, who will be first introduced in Deep: Mystery Cubes
+
+# At this point in time the player would have helped out the Deep quite a bit, possibly including discovering the Remnant for the Deep.
 mission "Deep: Singularity"
 	minor
 	name ``
