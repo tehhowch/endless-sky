@@ -813,7 +813,7 @@ mission "Deep: Remnant: Generators"
 	on offer
 		conversation
 			`An unloading crew is able to quickly remove the engines from your ship and transport them to Ivan's research lab, thanks to the close proximity to the spaceport. You are escorted into a lobby where one of the administrative staff pays you 417,000 credits in exchange for the engines. He asks you to wait, indicating that Ivan or one of the other scientists should be out to meet you shortly. After about three hours of waiting, Ivan enters the room.`
-			`	"These engines, they are fantastic! The scans made them seem similar to human ion engines, but surprisingly they can outperform even atomic engines! The thrust-to-mass ratio is great, and they have somehow avoided the immense heat generation that our engines emit. They do have some downsides, but it's still amazing that such an isolated group of humans could make such a brilliant technological leap in such a short amount of time."`
+			`	"These engines, they are fantastic! The scans made them seem similar to human ion engines, but surprisingly they can outperform even atomic engines! The thrust-to-mass ratio is great, and they have somehow avoided the immense heat generation that our engines emit. They do have some downsides, but it's still amazing that such an isolated group of humans could make technological leaps beyond even what the Deep has accomplished."`
 			`	"We've decided that the next Remnant technology we'd like to examine is their power generation. Could you bring us one of their Millenium Cells?"`
 			choice
 				`	"Sure. I'll be back in no time at all."`
