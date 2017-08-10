@@ -319,7 +319,7 @@ mission "Deep: Mystery Cubes 0"
 				goto choice
 			
 			label paris
-			`A Deep Security officer calls your name just before you enter the spaceport's central market. As he enters, you notice that it is Lieutenant Paris, the same officer who asked you to escort a convoy to Kraz. "Greetings, Captain <last>. I hope that you have been well since we last met. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
+			`A Deep Security officer calls your name just before you enter the spaceport's central market. As he approaches, you notice that it is Lieutenant Paris, the same officer who asked you to escort a convoy to Kraz. "Greetings, Captain <last>. I hope that you have been well since we last met. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
 			
 			label choice
 			choice
