@@ -582,7 +582,6 @@ mission "Deep: Singularity"
 		or
 			"deep convoy" == 3
 			has "Deep: TMBR 2: done"
-			has "Deep: Remnant Research: done"
 		or
 			"deep convoy" >= 2
 			has "Deep: Remnant Research: done"
