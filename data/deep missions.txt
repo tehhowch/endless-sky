@@ -50,7 +50,7 @@ mission "Deep: Syndicate Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes: done"
+		not "Deep: Mystery Cubes 3B: done"
 		or
 			random < 20
 			and
@@ -131,7 +131,7 @@ mission "Deep: Tarazed Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes: done"
+		not "Deep: Mystery Cubes 3B: done"
 		or
 			random < 20
 			and
@@ -199,7 +199,7 @@ mission "Deep: Tarazed Convoy"
 	on complete
 		"deep convoy" ++
 		payment 1020000
-		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."
+		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
 
 
 
@@ -214,7 +214,8 @@ mission "Deep: Kraz Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes: done"
+		not "Deep: Mystery Cubes 3B: done"
+		not "Deep: Mystery Cubes 0: offered"
 		or
 			random < 20
 			and
@@ -273,29 +274,32 @@ mission "Deep: Kraz Convoy"
 	on complete
 		"deep convoy" ++
 		payment 1260000
-		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."
+		dialog `When you return to <planet> with the freighters, you are greeted by the same Deep Security officer that offered you the job. He hands you <payment>. "Thank you for accepting this job on such a short notice, Captain. I should introduce myself. I am Lieutenant Paris, and I will make sure to contact you in the future should the Deep require your help."`
 
 
 
 # Lore about the mysterious cubes:
-# These cubes, called sensor cubes, are used by the Deep to track fleet movements above the planet which they are placed on, most importantly the movements of pirate fleets.
-# The Deep uses merchants to place the cubes to try and make them more inconspicuous
 # Information gathered from these cubes is used by Deep Security and is on rare occasions handed over to the Republic or Navy (DS is an independent police force and therefore is under no jurisdiction to have to hand over all its info to the Navy).
-# For some reason, pirates know of this and send bounty hunters after anyone they know are in possesion of these cubes, stealing them before destroying the merchant.
-# Cubes are asked to be retrieved by merchants for reasons unknown; malfunctions? just old sensors? One can only wonder.
-# Individual cubes are not that useful, but more cubes together amplify the amount of information able to be recorded similar to multiple radio telescopes being able to do better than a single telescope. Two cubes near a spaceport are able to easily scan ships in a spaceport, but dozens can be needed on a single planet to scan a system.
 # Designed to be hard to detect
 
-# The reason Deep Security is low on ships in the convoy missions is because they are busy hunting a Deep-born pirate warlord who has been using some of the secrets of the Deep against it. e.g. the knowledge of the cubes.
 # Eventually this becomes a problem for the Navy as well as the warlord starts using stolen cubes to be able to avoid the Navy, and the Navy doesn't even have the tech to be able to detect these cubes.
 # This string involves trying to hunt down said warlord, but it will be mostly unsuccessful; the warlord's tracks run cold in the Far North (no cubes up there) suggesting they either ran up into the anarchist worlds or ran east toward the Core.
-mission "Deep: Mystery Cubes"
+
+mission "Deep: Mystery Cubes 0"
 	minor
-	name ``
-	description ``
+	name `Gaining an Edge` # Get it? Because cubes have edges! ...Probably going to rename this.
+	description `Land on <stopovers> to place the mysterious cubes that Lieutenant Paris has given you.`
 	source
 		attributes deep
-	destination
+	destination Memory
+	stopover "New Sahara"
+	stopover "Bounty"
+	stopover "Heartland"
+	stopover "New Tibet"
+	stopover "New Greenland"
+	stopover "New Switzerland"
+	stopover "Tundra"
+	stopover "Arabia"
 	to offer
 		or
 			and
@@ -308,6 +312,142 @@ mission "Deep: Mystery Cubes"
 				"deep convoy" == 3
 				random < 90
 	on offer
+		conversation
+			branch paris
+				has "Deep: Kraz Convoy: done"
+			`A Deep Security officer calls your name and approaches you just before you enter the spaceport's central market. "Greetings, Captain <last>, I'm Lieutenant Paris. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
+				goto choice
+			
+			label paris
+			`A Deep Security officer calls your name just before you enter the spaceport's central market. As he enters, you notice that it is Lieutenant Paris, the same officer who asked you to escort a convoy to Kraz. "Greetings, Captain <last>. I hope that you have been well since we last met. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
+			
+			label choice
+			choice
+				`	"I'd love to help. What is the situation?"`
+					goto situation
+				`	"Sorry, but I can't help right now."`
+			
+			`	"Whatever plans you have, I suggest you change them, as this is an urgent situation."`
+			choice
+				`	"Okay, I'll help. What is the situation?"`
+				`	"Then I can't help you. Sorry."`
+					decline
+			
+			label situation
+			`	"Excellent. I'm sure that you are aware that much of Deep Security is currently preoccupied, hence why we have been procuring merchants to escort many of the Deep's convoys. The reason this is the case is that we have been attempting to detain a particularly meddlesome pirate warlord who goes by the name of Beelzebub. From what we can ascertain, Beelzebub was either born in the Deep or has contacts in the Deep, which is making tracking them down rather difficult, as they seem to know our every move. That is where you and a few other merchants come in."`
+			`	Paris reaches into his pocket and pulls out a bag which he then hands to you. Inside of the bag are at least two dozen of the mysterious cubes that you have transported in the past, only with one distinct difference; these cubes have a thick red streak running down the middle of the cube.`
+			`	"The Deep requires that you place these on a number of worlds in the Dirt Belt which I will mark on your map for you. Place at least four of these devices around the spaceport of each marked planet, then come to <destination> where I will collect any remaining cubes that you may have. If a Deep Security ship did this then it would likely catch the attention of any pirates in the system and that information would make its way to Beelzebub, but random merchants should be inconspicuous enough to throw Beelzebub off or trail. Is that clear?"`
+			choice
+				`	"Crystal clear, Lieutenant. I will prepare to leave shortly."`
+					accept
+				`	"What do these cubes do?"`
+			
+			apply
+				set "deep: interested in cubes"
+			`	"I don't believe that I am authorized to tell you that. Just know that they will help us catch Beelzebub."`
+			choice
+				`	"Understood. I'll place the cubes for you."`
+					accept
+				`	"This feels too secretive for me. I don't want to help anymore."`
+					decline
+
+	on complete
+		event "deep: warlord detected" 17
+		payment 640000
+		conversation
+			`You find Lieutenant Paris waiting for you in the spaceport. You hand him the bag of remaining cubes, and he hands you <payment> for helping.`
+			
+			branch interested
+				has "deep: interested in cubes"
+			label interested
+			choice
+				`	"Is there anything else that you need me to do?"`
+					goto next
+				`	"What is it that those cubes are for?"`
+					goto cubes
+			
+			label interested
+			choice
+				`	"Is there anything else that you need me to do?"`
+				`	"Are you able to tell me what the cubes are for now?"`
+					goto cubes
+			
+			label next
+			`	"Not at the moment, Captain, but I'll contact you should anything else arise."`
+				decline
+			
+			label cubes
+			`	Paris takes a moment to pause before responding. "They're sensor devices. They are used to track the movement of pirate fleets, but they are almost useless alone; dozens could be needed in a single system to track entire fleets. The ones that I gave you were fine tuned though, designed to only detect the ship that we know that Beelzebub is using. That is all that I am allowed to tell you, at least for the time being."`
+				decline
+
+
+
+# The cubes detect a ship, but the warlord isn't on it. While DS were detaining the ship, it turns out that a minor Navy base was attacked and some docked ships were stolen. DS call in the 6 merchants that helped place the cubes at the request of the Navy
+mission "Deep: Mystery Cubes 1"
+	landing
+	name ``
+	description ``
+	source
+		government Republic "Free Worlds" Neutral Syndicate
+	destination Luna
+	to offer
+		has "event: deep: warlord detected"
+	on offer
+		dialog ``
+
+
+
+# The Navy explains the situation to the merchants who are called in. They want every ship they can get on taking down the warlord given that the warlord has both Deep and Navy tech in their hands
+# "This is the most wanted warlord by the Republic since the turn of the 28th century."
+# It is believed that the pirates will try to move as far from any non-pirate settlement as possible, which will be either in the Far North or in Buccaneer Bay near the Core.
+# Two of the merchants along with Lt. Paris and a small Navy fleet are stationed on Maelstrom
+mission "Deep: Mystery Cubes 2"
+	landing
+	name ``
+	description ``
+	destination Maelstrom
+	to offer
+		has "Deep: Mystery Cubes 1: done"
+	on offer
+		conversation
+			``
+			choice
+				``
+					accept
+				``
+					decline
+
+
+
+# The player's group is attacked by two pirate Cruisers right after getting word that a group on Sunracer was attacked by a large pirate fleet
+mission "Deep: Mystery Cubes 3A"
+	landing
+	name ``
+	description ``
+	to offer
+		has "Deep: Mystery Cubes 2: done"
+	on offer
+		conversation
+			``
+				launch
+
+
+
+# The player lands after being attacked and the groups are called to convene on Farpoint. At Farpoint, a Navy admiral gives a sitrep; the stolen vessels are all accounted for (mostly destroyed), but the warlord seems to have escaped. Either he ran up into the Far North in the confusion or is in the Core. The Navy and DS will continue working, but the merchants are no longer needed.
+mission "Deep: Mystery Cubes 3B"
+	landing
+	name ``
+	description ``
+	destination Farpoint
+	to offer
+		has "Deep: Mystery Cubes 3A: done"
+	on offer
+		conversation
+			``
+				accept
+
+	on complete
+		payment
 		conversation
 			``
 
@@ -354,7 +494,7 @@ mission "Deep: TMBR 0"
 			`	Hannah chimes in, "I've been wondering: Do you know where the band is? They've been quiet for a while now, ever since that broadcast. I heard rumors that the Republic detained them for trespassing, but since you're here..."`
 			choice
 				`	"I know where they are, and rest assured that they're safe."`
-				`	"Sorry, I don't know where they are. I need to leave now."`
+				`	"Sorry, I don't know where they are."`
 					goto decline
 			
 			`	The group falls silent until Maria asks "Do you think you could bring them to us for a live concert?"`
@@ -367,7 +507,7 @@ mission "Deep: TMBR 0"
 				accept
 			
 			label decline
-			`	The group looks visibly dissapointed that you are unaware of the location of the band. A few minutes later, they inform you that they must depart for Midgard and say their farewells.`
+			`	The group looks visibly disappointed that you are unaware of the location of the band. A few minutes later, they inform you that they must depart for Midgard and say their farewells.`
 				decline
 			
 	to complete
@@ -421,7 +561,7 @@ mission "Deep: TMBR 2"
 			`	The crowd gets larger and larger over time, and judging by the increased number of ships landing, word has quickly spread that "There Might Be Riots" is back.`
 			`	As Ulrich and the band take the stage, you spot the scientists in the front row, grinning and cheering wildly. The first song is one you heard them play in Hai space, and even though none in the audience know the words to sing along, they appear to love the message, and the cheers and screams only grow more frenetic.`
 			`	During an intermission, you invite the scientists onto your ship to personally meet the band. The thrill in the eyes of each of the scientists is astounding as they meet the members of "There Might Be Riots."`
-			`	Before the intermission ends, each of the scientists thank you personally for bringing the band to Midgard, and Isaac even hands you <payment>. "It's the least we could give you," he adds. As the scientists start to depart your ship to listen to the rest of the concert, Hannah runs up and hugs you without a word before running off with the crowd.`
+			`	Before the intermission ends, each of the scientists thank you personally for bringing the band to Midgard, and Isaac even hands you <payment>. "It's the least we could give you," he adds. As the scientists start to depart your ship to listen to the rest of the concert, Hannah runs back to hug you before rejoining her friends in the crowd.`
 
 
 
@@ -437,11 +577,12 @@ mission "Deep: Singularity"
 	source
 		attributes deep
 	to offer
-		has "Deep: Mystery Cubes: done"
+		has "Deep: Mystery Cubes 3B: done"
 		has "Deep Archaeology 5: done"
 		or
 			"deep convoy" == 3
 			has "Deep: TMBR 2: done"
+			has "Deep: Remnant Research: done"
 		or
 			"deep convoy" >= 2
 			has "Deep: Remnant Research: done"
@@ -459,7 +600,7 @@ mission "Deep: Remnant 0"
 		attributes deep
 		near "Epsilon Leonis" 1 100
 	to offer
-		has "Deep: Mystery Cubes: done"
+		has "Deep: Mystery Cubes 3B: done"
 		has "Terminus exploration: done"
 		has "First Contact: Hai: offered"
 		or
@@ -512,8 +653,16 @@ mission "Deep: Remnant 0"
 		event "deep: keystone research" 47
 		payment 60000
 		conversation
-			`Upon returning to <planet>, you learn that Ivan has left for his research lab on Valhalla, but his research assistant Maria is waiting to retrieve the keystones. She hands you <payment>, enough to pay for half of the cost of the stones.`
-			`	"Thank you for buying these keystones for us. It may take us a month or two to fully study them. We will contact you when we are in need of your assistance again."`
+			branch TMBR
+				has "Deep: TMBR 0: offered"
+			`Upon returning to <planet>, you learn that Ivan has left for his research lab on Valhalla, but his research assistant, Maria, is waiting to retrieve the keystones. She hands you <payment>, enough to pay for half of the cost of the stones.`
+				goto end
+			
+			label TMBR
+			`Upon returning to <planet>, you learn that Ivan has left for his research lab on Valhalla, but instead you find that Maria is waiting to retrieve the keystones. She hands you <payment>, enough to pay for half of the cost of the stones.`
+			
+			label end
+			`	"Thank you for buying these keystones for us. It may take us a month or two to fully study them. We'll contact you when we are in need of your assistance again."`
 
 event "deep: keystone research"
 
@@ -647,7 +796,7 @@ mission "Deep: Remnant 1B"
 	on offer
 		conversation
 			`You contact Ivan after you land and he sends you directions to his research lab, located on the outskirts of the city. When you arrive you hardly have time to greet Ivan, Maria, and the others before Ivan begins discussing what they have learned from the Quantum Keystones.`
-			`	"As you mentioned before, a single Keystone is sufficient to enter the wormhole. We've determined that there is a stabilization effect, either on the ship or the wormhole, that allows matter to cross the threshold. However, we'll need much more time to fully understand the true mechanism." Ivan asks, "Last time, you mentioned that there were humans living in this space, the... the 'Remainder'?"`
+			`	"As you mentioned before, a single Keystone is sufficient to enter the wormhole. We've determined that there is a stabilization effect, either on the ship or the wormhole, that allows matter to cross the threshold. However, we'll need much more time to fully understand the true mechanism." Ivan asks, "Last time, you mentioned that there were humans living in this space, the... the 'Remainder?`"`
 			`	"Remnant."`
 			`	"Right, that was it. Well, we've decided that we need to know more about their ships and technology - perhaps they have some alternative method of interacting with these unstable wormholes that can accelerate our understanding. Would you kindly bring us some outfit scanning logs from their ships?"`
 			choice
@@ -929,7 +1078,7 @@ mission "Deep: Remnant Surveillance"
 				decline
 				
 			label friendly
-			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>, but I have one last thing to ask." Ivan reaches into his pocket and retrieves six small, black cubes. "Would you bring two of these to each of the Remnant worlds? We've been learning a great deal from the study of the Remnant outfits, but aside from your scanning logs we have very little information on the Remnant ships. If you were to place these near their spaceports, it would be most helpful."`
+			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>, but I have one last thing to ask." Ivan reaches into his pocket and retrieves six objects that you recognize as sensor cubes. "Would you bring two of these to each of the Remnant worlds? We've been learning a great deal from the study of the Remnant outfits, but aside from your scanning logs we have very little information on the Remnant ships. If you were to place these near their spaceports, they would be able to scan any nearby ships, which would be most helpful."`
 			choice
 				`	"You can count on me, Ivan."`
 				`	"Sorry, but this doesn't seem like the right thing to do. You'll need to find someone else to do this for you."`
