@@ -33,7 +33,6 @@
 #		The Deep: Scientist Rescue string added by this
 #
 #	To Do:
-#		Write Deep: Mystery Cubes
 #		Write Deep: Singularity
 #		Rewrite Deep: Scientist Rescue to account for the player's previous actions assisting the Deep and to account for the new characters that the player will now know which are involved in the situation.
 #		Add logs where necessary
@@ -50,7 +49,7 @@ mission "Deep: Syndicate Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes 3B: done"
+		not "Deep: Mystery Cubes 4: done"
 		or
 			random < 20
 			and
@@ -116,7 +115,8 @@ mission "Deep: Syndicate Convoy"
 	on complete
 		"deep convoy" ++
 		payment 720000
-		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
+		conversation
+			`When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
 
 
 
@@ -131,7 +131,7 @@ mission "Deep: Tarazed Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes 3B: done"
+		not "Deep: Mystery Cubes 4: done"
 		or
 			random < 20
 			and
@@ -199,7 +199,8 @@ mission "Deep: Tarazed Convoy"
 	on complete
 		"deep convoy" ++
 		payment 1020000
-		dialog `When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
+		conversation
+			`When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
 
 
 
@@ -214,8 +215,7 @@ mission "Deep: Kraz Convoy"
 	deadline
 	to offer
 		"mystery cube" >= 10
-		not "Deep: Mystery Cubes 3B: done"
-		not "Deep: Mystery Cubes 0: offered"
+		not "Deep: Mystery Cubes 4: done"
 		or
 			random < 20
 			and
@@ -274,20 +274,21 @@ mission "Deep: Kraz Convoy"
 	on complete
 		"deep convoy" ++
 		payment 1260000
-		dialog `When you return to <planet> with the freighters, you are greeted by the same Deep Security officer that offered you the job. He hands you <payment>. "Thank you for accepting this job on such a short notice, Captain. I should introduce myself. I am Lieutenant Paris, and I will make sure to contact you in the future should the Deep require your help."`
+		conversation
+			branch paris
+				has "Deep: Mystery Cubes 0: offered"
+			`When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
+				decline
+			
+			label paris
+			`When you return to <planet> with the freighters, you are greeted by the same Deep Security officer that offered you the job. He hands you <payment>. "Thank you for accepting this job on such a short notice, Captain. I should introduce myself. I am Lieutenant Paris, and I will make sure to contact you in the future should the Deep require your help."`
 
 
 
-# Lore about the mysterious cubes:
-# Information gathered from these cubes is used by Deep Security and is on rare occasions handed over to the Republic or Navy (DS is an independent police force and therefore is under no jurisdiction to have to hand over all its info to the Navy).
-# Designed to be hard to detect
-
-# Eventually this becomes a problem for the Navy as well as the warlord starts using stolen cubes to be able to avoid the Navy, and the Navy doesn't even have the tech to be able to detect these cubes.
 # This string involves trying to hunt down said warlord, but it will be mostly unsuccessful; the warlord's tracks run cold in the Far North (no cubes up there) suggesting they either ran up into the anarchist worlds or ran east toward the Core.
-
 mission "Deep: Mystery Cubes 0"
 	minor
-	name `Gaining an Edge` # Get it? Because cubes have edges! ...Probably going to rename this.
+	name `Gaining an Edge`
 	description `Land on <stopovers> to place the mysterious cubes that Lieutenant Paris has given you.`
 	source
 		attributes deep
@@ -350,7 +351,10 @@ mission "Deep: Mystery Cubes 0"
 					accept
 				`	"This feels too secretive for me. I don't want to help anymore."`
 					decline
-
+			
+	on stopover
+		dialog `You have placed cubes on the last of the planets that Paris has asked you to. When you look into the bag you find that there are three left. Go to <destination> to give the remaining cubes to Paris.`
+		
 	on complete
 		event "deep: warlord detected" 17
 		payment 640000
@@ -378,76 +382,166 @@ mission "Deep: Mystery Cubes 0"
 			
 			label cubes
 			`	Paris takes a moment to pause before responding. "They're sensor devices. They are used to track the movement of pirate fleets, but they are almost useless alone; dozens could be needed in a single system to track entire fleets. The ones that I gave you were fine tuned though, designed to only detect the ship that we know that Beelzebub is using. That is all that I am allowed to tell you, at least for the time being."`
-				decline
 
 
 
-# The cubes detect a ship, but the warlord isn't on it. While DS were detaining the ship, it turns out that a minor Navy base was attacked and some docked ships were stolen. DS call in the 6 merchants that helped place the cubes at the request of the Navy
 mission "Deep: Mystery Cubes 1"
 	landing
-	name ``
-	description ``
+	name `Travel to <planet>`
+	description `Travel to <destination> to learn more about the situation with the warlord Beelzebub.`
 	source
 		government Republic "Free Worlds" Neutral Syndicate
 	destination Luna
 	to offer
 		has "event: deep: warlord detected"
 	on offer
-		dialog ``
+		dialog `You receive a message from Lieutenant Paris. "Greetings, Captain. The situation involving Beelzebub has gone slightly sour, and the Navy is involved now. I have been asked to gather the merchants who assisted the Deep previously in placing the cubes. If you are interested, please come to <destination>."`
 
 
 
-# The Navy explains the situation to the merchants who are called in. They want every ship they can get on taking down the warlord given that the warlord has both Deep and Navy tech in their hands
-# "This is the most wanted warlord by the Republic since the turn of the 28th century."
-# It is believed that the pirates will try to move as far from any non-pirate settlement as possible, which will be either in the Far North or in Buccaneer Bay near the Core.
-# Two of the merchants along with Lt. Paris and a small Navy fleet are stationed on Maelstrom
 mission "Deep: Mystery Cubes 2"
 	landing
-	name ``
-	description ``
+	name `Blockading the Devil`
+	description `Travel to <destination> to set up a blockade in homes of capturing the warlord Beelzebub.`
 	destination Maelstrom
+	deadline
 	to offer
 		has "Deep: Mystery Cubes 1: done"
 	on offer
 		conversation
-			``
+			`The Republic still use the facility on Earth's moon as a minor Navy shipyard, even in its old age. Many of the landing pads are currently filled by Navy capital ships or Deep Security ships. This must be the main base of operations at the moment for tracking Beelzebub.`
+			`	Upon landing, you are escorted by pair of men in Navy uniforms past the tourist areas and into the back of the facility to an elevator. One of your esorts uses a keycard to open the elevator and ushers you in. The elevator opens up many floors below the spaceport to an area of the facility that looks far newer than what is on the surface.`
+			`	You are kept in what looks like a waiting room along with five others. After a bit of talking, you find out that these are the other merchant captains who helped place the cubes across different regions of human space.`
+			`	An hour of waiting passes, and Lieutenant Paris walks into the room followed by a Navy admiral. "I hope you are all enjoying your stay," the admiral remarks. "We've checked each of your records, and it would appear that you are all clear of any crimes that would connect you to public enemy number one, 'Beelzebub.' How, then, is it that most of the cubes were mysteriously disabled shortly after pirate fleets entered the system?"`
+			`	The admiral looks to each of the captains in the room, seemingly waiting for a response.`
 			choice
-				``
-					accept
-				``
-					decline
+				`	(Say nothing.)`
+					goto next
+				`	"Maybe they know how to detect the cubes."`
+			
+			`	"If that is possible than a group of no-good anarchists have figured out how to detect something that even the Navy can not." The admiral turns to Paris, who nods as if to back up the admirals claims that the Navy is unable to detect the Deep's mysterious cubes.`
+			label next
+			`	"Allow me to explain the situation. Roughly two weeks after the last of the sensor cubes that you ladies and gentlemen placed were in position, we spotted Beelzebub's ship in the northern region of the Dirt Belt. Navy ships from the nearest base were dispatched to apprehend the vessel, which turned out to be nothing more than a decoy." While previously the admiral was speaking calmly, he begins to raise his voice. "That very same day, with a number of our ships off-world, a pirate fleet managed to assault the base and capture a handful of docked Cruisers, while simultaneously disabling many of the cubes across the Dirt Belt and Core."`
+			`	Paris begins to fill in the rest of the story. "The cubes that Deep Security had you position on multiple worlds were surveillance devices - sensor cubes, as we call them - designed to track Beelzebub's ship and notify us when the ship was located. It can be presumed that Beelzebub now has access to these cubes and has undoubtedly converted them to work in their favor. It may take us weeks to retrieve them, but at the moment it can be assumed that Beelzebub knows where we will be."`
+			choice
+				`	"Why are you involving us in this?"`
+				`	"Are we part of a plan to take Beelzebub down?"`
+			
+			`	"Beelzebub is perhaps the most wanted warlord by the Republic since the 28th century. With both Navy and Deep technology now in the hands of this criminal, every available ship will be required to take them down. The primary purpose for bringing you all here was to determine if any of you were connected to Beelzebub, possibly leading to Beelzebub being able to locate the cubes, but seeing as how you are all in the clear we are now hoping that you would be willing to assist us in trapping Beelzebub. The six of your fleets combined would certainly make up for anything that the Navy has lost in the attack."`
+			`	"How much will we be paid?" one of the other merchant captains asks. "At minimum, 1,000,000 credits," the admiral replies. The captain who asked instantly agrees to help, quickly followed by two others.`
+			choice
+				`	"I'll help as well."`
+					goto accept
+				`	"Sorry, but I am not interested in helping."`
+			
+			`	Only one of the other merchant captains declines as well. You are both escorted out of the room, and as you leave the admiral begins to explain to the other four captains how they will be helping.`
+			`	The trip back up the elevator is silent until the doors open and a flood of conversations hits you as you step back out into the spaceport.`
+				decline
+			
+			label accept
+			`	In the end, only one of the merchant captains declines. She is escorted out of the room as the admiral begins to explain how each merchant captain will be helping.`
+			`	"We assume that Beelzebub knows where we will be, but we know where Beelzebub is as well. The stolen Cruisers and the remaining pirate fleet that attacked our base moved toward the Core. Given the heinous crime that Beelzebub has just committed, they will undoubtedly be attempting to get as far away from the law as possible. That leaves us only two possible places that Beelzebub will go: Buccaner Bay or the anarchist colonies of the Far North, the latter of which being far more appealing for a warlord.`
+			`	The admiral goes on to explain how multiple blockades will be set up across the galaxy in an attempt to either capture Beelzebub or box them in. At the same time, any spare Navy and Deep Security fleets will be scanning the galaxy from the Dirt Belt toward the Paradise Worlds and the Core in an attempt to weed the warlord out of hiding and toward the blockades.`
+			`	"Captain <last>, you will be stationed on <destination> with Lieutenant Paris and a small Navy fleet. Please gather your things and travel there immediately."`
+				accept
+	
+	npc accompany save
+		personality heroic escort
+		government Republic
+		fleet
+			names deep
+			variant
+				"Mule"
+				"Raven" 2
+	
+	npc accompany save
+		personality heroic opportunistic escort
+		government Republic
+		fleet
+			names "republic capital"
+			variant
+				"Cruiser"
+				"Gunboat" 2
+		
 
 
-
-# The player's group is attacked by two pirate Cruisers right after getting word that a group on Sunracer was attacked by a large pirate fleet
-mission "Deep: Mystery Cubes 3A"
+mission "Deep: Mystery Cubes 3"
 	landing
-	name ``
-	description ``
+	name `Defend <planet>`
+	description `Destroy the pirates attacking <planet>.`
 	to offer
 		has "Deep: Mystery Cubes 2: done"
 	on offer
 		conversation
+			`The <planet> spaceport has multiple landing pads large enough to park even the largest of Navy capital ships. Paris explains to you that at one time this world was used as a major Navy base, but has since been replaced by Farpoint closer to the Far North anarchist worlds.`
+			`	Once every ship is parked, the captains have a short meeting on an empty landing pad. "Don't expect this job to be fun," Lieutenant Paris states. "We could be waiting around here for days before anything happens, and we need to stay in system that entire time."`
+			choice
+				`	"What do we do while we wait?"`
+			`	"For now, you can walk around the spaceport and see what there might be to do, but don't stray too far, otherwise you might never get back to your ship in time." Paris hands you a communication device. "This way you can be notified when something happens regardless of where you are."`
+			choice
+				`	(Wander the spaceport.)`
+				`	(Stay near my ship.)`
+					goto ship
+			`	Other than the occasional whining of a train's whistle, the spaceport of <planet> is not particularly exciting. You try to pass the time by talking to a few tourists, most of which getting ready to go rock climbing. While walking through the resturaunt district of the spaceport, the ground begins to shake slightly. Many of the locals don't even seem to react to the earthquake, and eventually it subsides. Once you have walked through the entire spaceport and seen all that it has to offer, you begin to make your way back to your ship.`
+				goto mirfak
+				
+			label ship
+			`	One of the Navy crew members gets a ball out of their cabin and a small game of football starts inside of an open landing pad. Other crew members try to pass the time by reading or writing. Everyone comes to a standstill though once the ground begins to shake; an earthquake. A Navy member calls out to everyone. "Don't worry, this is a small one. We get earthquakes like this a lot on Gemstone." The earthquake eventually ends, and you decide to go into your ship to rest.`
+			
+			label mirfak
+			`	Suddenly, your communication device beeps and you begin to hear Lieutenant Paris' voice. "The blockade in Mirfak has just been attacked, I repeat the blockade in Mirfak has just been attacked. Reports are that the blockade has sustained heavy losses as two Cruisers were among the fleet of pirates."
+			`	"Should we go help them?" someone else says. "We were given our orders and we're going to follow them unless told otherwise." The comms fall quiet as the waiting continues."`
 			``
+			`	A few hours pass without any new information. The atmosphere feels tense as everyone anxiously waits. Without warning, one of the Ravens takes off and the communications device begins blaring with chatter. "A pirate fleet just jumped into the system containing two Navy Cruisers!" All the captains and their crew scatter for their ships, ready to fight.` 
 				launch
 
+	npc
+		personality heroic
+		government Republic
+		fleet
+			names deep
+			fighters "deep fighter"
+			variant
+				"Mule"
+				"Raven" 2
+				"Lance"
+				
+	npc
+		personality heroic opportunistic
+		government Republic
+		fleet
+			names "republic capital"
+			fighters "republic fighter"
+			variant
+				"Cruiser"
+				"Gunboat" 2
+				"Combat Drone" 4
+	
+	npc kill
+		personality staying heroic
+		fleet
+			names "pirate"
+			variant
+				"Cruiser" 2
+				"Fury (Laser)" 3
+		dialog `All attacking pirates have been destroyed.`
 
 
-# The player lands after being attacked and the groups are called to convene on Farpoint. At Farpoint, a Navy admiral gives a sitrep; the stolen vessels are all accounted for (mostly destroyed), but the warlord seems to have escaped. Either he ran up into the Far North in the confusion or is in the Core. The Navy and DS will continue working, but the merchants are no longer needed.
-mission "Deep: Mystery Cubes 3B"
+# The player lands after being attacked and the groups are called to convene on Farpoint. At Farpoint, a Navy admiral gives a sitrep; the stolen vessels are all accounted for (all destroyed, save for one), but the warlord seems to have escaped. Either Beelzebub ran up into the Far North in the confusion or is in the Core. The Navy and DS will continue working, but the merchants are no longer needed as Beelzebub doesn't have the Cruisers to fight with anymore and Deep Security has begun sweeping the galaxy for the modified sensor cubes.
+mission "Deep: Mystery Cubes 4"
 	landing
-	name ``
-	description ``
+	name `Rendezvous on <planet>`
+	description `Travel to <destination> where the `
 	destination Farpoint
 	to offer
-		has "Deep: Mystery Cubes 3A: done"
+		has "Deep: Mystery Cubes 4: done"
 	on offer
 		conversation
 			``
 				accept
 
 	on complete
-		payment
+		payment 1000000
 		conversation
 			``
 
@@ -577,7 +671,7 @@ mission "Deep: Singularity"
 	source
 		attributes deep
 	to offer
-		has "Deep: Mystery Cubes 3B: done"
+		has "Deep: Mystery Cubes 4: done"
 		has "Deep Archaeology 5: done"
 		or
 			"deep convoy" == 3
@@ -599,7 +693,7 @@ mission "Deep: Remnant 0"
 		attributes deep
 		near "Epsilon Leonis" 1 100
 	to offer
-		has "Deep: Mystery Cubes 3B: done"
+		has "Deep: Mystery Cubes 4: done"
 		has "Terminus exploration: done"
 		has "First Contact: Hai: offered"
 		or
