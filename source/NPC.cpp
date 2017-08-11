@@ -199,10 +199,10 @@ void NPC::Load(const DataNode &node)
 	// Since a ship's government is not serialized, set it now.
 	for(const shared_ptr<Ship> &ship : ships)
 	{
-		ship->FinishLoading();
 		ship->SetGovernment(government);
 		ship->SetPersonality(personality);
 		ship->SetIsSpecial();
+		ship->FinishLoading(false);
 		if(!waypoints.empty())
 			ship->SetWaypoints(waypoints, doPatrol);
 		if(!stopovers.empty())
@@ -529,10 +529,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	
 	// Convert fleets into instances of ships.
 	for(const shared_ptr<Ship> &ship : ships)
-	{
 		result.ships.push_back(make_shared<Ship>(*ship));
-		result.ships.back()->FinishLoading();
-	}
 	auto shipIt = stockShips.begin();
 	auto nameIt = shipNames.begin();
 	for( ; shipIt != stockShips.end() && nameIt != shipNames.end(); ++shipIt, ++nameIt)
@@ -550,6 +547,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetGovernment(result.government);
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
+		result.ships.back()->FinishLoading(true);
 		// Use the destinations stored in the NPC copy, in case they were auto-generated.
 		if(!result.stopovers.empty())
 			ship->SetStopovers(result.stopovers, result.doVisit);
