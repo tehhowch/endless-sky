@@ -81,6 +81,7 @@ fleet "Wanderer Drones"
 	names "wanderer"
 	personality
 		surveillance
+		fleeing
 	variant 4
 		"Earth Shaper"
 	variant 2
