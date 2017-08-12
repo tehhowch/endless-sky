@@ -1481,6 +1481,7 @@ ship "Gunboat"
 
 
 ship "Harvester"
+	sprite "ship/harvester"
 	attributes
 		category "Drone"
 		"cost" 70000
@@ -2376,6 +2377,7 @@ ship "Raven"
 
 
 ship "Scavenger"
+	sprite "ship/scavenger"
 	attributes
 		category "Heavy Freighter"
 		"cost" 1950000
