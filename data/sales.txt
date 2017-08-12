@@ -27,7 +27,7 @@ shipyard "Southbound Basics"
 	"Fury"
 	"Argosy"
 	"Hauler"
-	"Harvester
+	"Harvester"
 
 shipyard "Southbound Advanced"
 	"Hauler II"
