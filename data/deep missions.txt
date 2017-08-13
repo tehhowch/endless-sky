@@ -517,7 +517,7 @@ mission "Deep: Mystery Cubes 3"
 			`	One of the Navy crew members gets a ball out of their cabin and a small game of football starts inside of an open landing pad. Other crew members try to pass the time by reading or writing. Everyone comes to a standstill though once the ground begins to shake; an earthquake. A Navy member calls out to everyone. "Don't worry, this is a small one. We get earthquakes like this a lot on Gemstone." The earthquake eventually ends, and you decide to go into your ship to rest.`
 			
 			label mirfak
-			`	Suddenly, your communication device beeps and you begin to hear Lieutenant Paris' voice. "The blockade in Mirfak has just been attacked, I repeat the blockade in Mirfak has just been attacked. Reports are that the blockade has sustained heavy losses as a single Cruisers was among the fleet of pirates."
+			`	Suddenly, your communication device beeps and you begin to hear Lieutenant Paris' voice. "The blockade in Mirfak has just been attacked, I repeat the blockade in Mirfak has just been attacked. Reports are that the blockade has sustained heavy losses as a single Cruiser was among the fleet of pirates."
 			`	"Should we go help them?" someone else says. "We were given our orders and we're going to follow them unless told otherwise." The comms fall quiet as the waiting continues."`
 			``
 			`	A few hours pass without any new information. The atmosphere feels tense as everyone anxiously waits. Without warning, one of the Ravens takes off and the communications device begins blaring with chatter. "A pirate fleet just jumped into the system containing two Navy Cruisers!" All the captains and their crew scatter for their ships, ready to fight.` 
