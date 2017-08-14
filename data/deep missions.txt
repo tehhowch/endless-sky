@@ -1765,14 +1765,14 @@ mission "Deep: Scientist Rescue 3A"
 			`	"It's yours to keep. I hope you have good luck with your travels, and have fun using the Bactrian. It's a mighty fine ship to fly." Lieutenant Paris pays his bill and leaves, as you ponder the possibilities that await.`
 
 
-	invisible
+
 mission "Deep: Scientist Rescue 3B"
 	landing
+	invisible
 	to offer
 		has "Deep: Scientist Rescue 2: done"
 		has "Deep: Scientist Rescue 2: Pirate Bactrian: done"
 		not "Deep: Scientist Rescue 3A: offered"
-
 	on offer
 		set "license: City-Ship"
 		conversation
