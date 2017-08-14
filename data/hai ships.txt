@@ -76,6 +76,7 @@ ship "Aphid" "Aphid (Mining)"
 		Supercapacitor
 
 
+
 ship "Centipede"
 	sprite "ship/hai centipede"
 	thumbnail "thumbnail/hai centipede"
