@@ -131,7 +131,11 @@ fleet "Wanderer Miners"
 	names "wanderer"
 	cargo 0
 	personality
-		heroic mining harvests
+		mining harvests
+	variant 20
+		"Earth Shaper" 2
+	variant 10
+		"Earth Shaper" 3
 	variant 10
 		"Summer Leaf"
 	variant 5
@@ -638,12 +642,6 @@ event "wanderers: first tech increase"
 		add variant 2
 			"Autumn Leaf"
 			"Summer Leaf"
-	fleet "Wanderer Miners"
-		add variant 3
-			"Autumn Leaf"
-		add variant 2
-			"Autumn Leaf"
-			"Summer Leaf"
 	shipyard "Wanderer Basics"
 		"Flycatcher"
 	shipyard "Wanderer Advanced"
@@ -740,9 +738,6 @@ event "wanderers: tempest mass production"
 		remove variant
 			"Autumn Leaf"
 			"Summer Leaf"
-	fleet "Wanderer Miners"
-		add variant
-			"Tempest"
 	shipyard "Wanderer Advanced"
 		"Tempest"
 	outfitter "Wanderer Advanced"
