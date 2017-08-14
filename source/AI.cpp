@@ -332,6 +332,8 @@ void AI::Step(const PlayerInfo &player)
 		bool thisIsLaunching = (isLaunching && it->GetSystem() == player.GetSystem());
 		if(isStranded || it->IsDisabled())
 		{
+			// Derelicts never ask for help, to make sure that only the player
+			// will repair them.
 			if(it->IsDestroyed() || it->GetPersonality().IsDerelict())
 				continue;
 			
@@ -2821,7 +2823,7 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 	{
 		// Check if this ship has any forward-facing weapons.
 		for(const Hardpoint &weapon : ship.Weapons())
-			if(!weapon.CanAim() && weapon.GetOutfit())
+			if(!weapon.CanAim() && !weapon.IsTurret() && weapon.GetOutfit())
 			{
 				shouldAutoAim = true;
 				break;
