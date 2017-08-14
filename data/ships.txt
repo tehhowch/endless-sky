@@ -266,7 +266,7 @@ ship "Barb"
 	turret 8 6 "Blaster Turret"
 	explode "tiny explosion" 15
 	explode "small explosion" 5
-	description `Though the Syndicate doesn't build Fighter carriers, it is testing the waters with the Barb, a cheap and flexible carrier-launched craft featuring newly-developed miniaturized ion engines. The design philosophy of the Barb seems to have been "uglier than the Protector," and as you look at the cockpit nestled between the massive gun port and turret mount, you wonder where the power systems are supposed to go. Though an awkward-looking ship, it seems flexible enough to become a dangerous addition to any fleet with carriers.`
+	description `Though the Syndicate doesn't build fighter carriers, it is testing the waters with the Barb, a cheap and flexible carrier-launched craft featuring newly-developed miniaturized ion engines. The design philosophy of the Barb seems to have been "uglier than the Protector," and as you look at the cockpit nestled between the massive gun port and turret mount, you wonder where the power systems are supposed to go. Though an awkward-looking ship, it seems flexible enough to become a dangerous addition to any fleet with carriers.`
 
 
 
@@ -1480,6 +1480,44 @@ ship "Gunboat"
 
 
 
+ship "Harvester"
+	sprite "ship/harvester"
+	attributes
+		category "Drone"
+		"cost" 70000
+		"hull" 500
+		"mass" 22
+		"drag" .6
+		"heat dissipation" .85
+		"cargo space" 15
+		"outfit space" 56
+		"weapon capacity" 6
+		"engine capacity" 28
+		"automaton" 1
+		weapon
+			"blast radius" 4
+			"shield damage" 40
+			"hull damage" 20
+			"hit force" 60
+	outfits
+		"Plasma Drill" 2
+
+		"nGVF-AA Fuel Cell"
+		"Supercapacitor"
+
+		"X1200 Ion Steering"
+		"X1700 Ion Thruster"
+
+	gun 15.5 -39
+	gun -15.5 -39
+	engine 6.5 37.5
+	engine -6.5 37.5
+	explode "tiny explosion" 15
+	description "The recent asteroid mining boom prompted companies to expand their horizons, and start sending out larger fleets of vessels outfitted for mining. Unfortunately, paying to retrofit cargo ships as well as crew them is expensive, as there are very few ships that are able to effectively mine."
+	description "	After petitioning the Republic to allow civilian drone use, the large mining corporations, led by Southbound Shipyards finally got the Republic parliament to give them rights to use drones, as long as they weren't armed with anything other than industrial equipment. Southbound quickly released the first civilian drone, the Harvester, which had clearly been in the works for some time."
+
+
+
 ship "Hauler"
 	sprite "ship/hauler i"
 	attributes
@@ -2335,6 +2373,59 @@ ship "Raven"
 	explode "small explosion" 40
 	"final explode" "final explosion small"
 	description "The Lionheart Raven is their most popular warship, an agile and elegant vessel that can nevertheless deal out and absorb considerable damage. Ravens are a favorite ship for bounty hunters, because they are more than a match for pirate interceptors and can be used by a skilled pilot to take down much larger ships as well."
+
+
+
+ship "Scavenger"
+	sprite "ship/scavenger"
+	attributes
+		category "Heavy Freighter"
+		"cost" 1950000
+		"shields" 2500
+		"hull" 4900
+		"required crew" 13
+		"bunks" 18
+		"mass" 330
+		"drag" 10.5
+		"heat dissipation" .6
+		"fuel capacity" 400
+		"cargo space" 220
+		"outfit space" 280
+		"weapon capacity" 60
+		"engine capacity" 100
+		weapon
+			"blast radius" 60
+			"shield damage" 600
+			"hull damage" 300
+			"hit force" 900
+	outfits
+		"Quad Blaster Turret"
+		"Heavy Anti-Missile Turret"
+		
+		"S3 Thermionic"
+		"LP072a Battery Pack"
+		"D23-QP Shield Generator"
+		"Small Radar Jammer"
+		"Water Coolant System"
+		
+		"X3700 Ion Thruster"
+		"X3200 Ion Steering"
+		"Hyperdrive"
+		
+	engine 16.5 171
+	engine -16.5 171
+	engine 30.5 156
+	engine -30.5 156
+	turret 0 -83.5
+	turret 0 88
+	drone 26.5 -24.5 under right
+	drone -26.5 -24.5 under left
+	explode "tiny explosion" 15
+	explode "small explosion" 30
+	explode "medium explosion" 25
+	explode "large explosion" 10
+	"final explode" "final explosion medium"
+	description `Along with the release of the Harvester drone, Southbound Shipyards also released the first civilian drone carrier. The Scavenger, much like other heavy freighters, flies like a brick and is not well suited for mining itself. Instead, it serves as the home base for the mining drones to drop off mined materials, rather than assisting the mining operation itself.`
 
 
 

@@ -224,7 +224,7 @@ outfit "Laser Turret"
 		"firing heat" 2.4
 		"shield damage" 2
 		"hull damage" 2.6
-	description "Laser Turrets are hated by fighter pilots because it is entirely impossible to dodge them once you are within their reach. This turret carries a pair of lasers and can swivel instantly to fire on new targets as they approach. Laser Turrets are especially useful when mounted on slow-moving freighters to fend off packs of small pirate vessels."
+	description "Laser Turrets are hated by fighter pilots because it is nearly impossible to dodge them once you are within their reach. This turret carries a pair of lasers and can swivel almost instantly to fire on new targets as they approach. Laser Turrets are especially useful when mounted on slow-moving freighters to fend off packs of small pirate vessels."
 
 outfit "Heavy Laser Turret"
 	category "Turrets"
@@ -402,6 +402,31 @@ outfit "Plasma Cannon"
 		"hull damage" 25
 		"heat damage" 340
 	description "The Plasma Cannon fires bursts of superheated plasma. In addition to damaging your target, these plasma bursts impart a significant amount of heat, especially to a target whose shields are down."
+
+outfit "Plasma Drill"
+	category "Guns"
+	cost 45000
+	thumbnail "outfit/plasma drill"
+	"mass" 3
+	"outfit space" -3
+	"weapon capacity" -3
+	"gun ports" -1
+	weapon
+		sprite "projectile/plasmab"
+			"frame rate" 4
+		sound "plasmab"
+		"hit effect" "plasma explosion"
+		"inaccuracy" 7
+		"velocity" 2
+		"lifetime" 75
+		"random lifetime" 2
+		"reload" 2
+		"firing energy" .95
+		"firing heat" 3.4
+		"shield damage" .4
+		"hull damage" 2.6
+		"heat damage" 5
+	description `The Plasma Drill is based around the original Plasma Cannon, scaled down so much though that the range and damage have been greatly reduced. The drill was commissioned specifically for the Harvester drone, although the demand from solo captains was large enough that it was released to be sold individually as well.`
 
 outfit "Plasma Turret"
 	category "Turrets"
