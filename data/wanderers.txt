@@ -81,6 +81,7 @@ fleet "Wanderer Drones"
 	names "wanderer"
 	personality
 		surveillance
+		fleeing
 	variant 4
 		"Earth Shaper"
 	variant 2
@@ -148,6 +149,7 @@ shipyard "Wanderer Advanced"
 	"Deep River"
 
 outfitter "Wanderer Basics"
+	"Sunflare"
 	"Thunderhead Missile"
 	"Small Biochemical Cell"
 	"Large Biochemical Cell"
@@ -168,6 +170,7 @@ outfitter "Wanderer Basics"
 	"Hyperdrive"
 
 outfitter "Wanderer Advanced"
+	"Sunflare"
 	"Sunbeam"
 	"Thunderhead Missile"
 	"Thunderhead Launcher"
