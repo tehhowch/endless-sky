@@ -21,8 +21,8 @@ ship "Earth Shaper"
 		"heat dissipation" .9
 		"fuel capacity" 300
 		"cargo space" 21
-		"outfit space" 63
-		"weapon capacity" 5
+		"outfit space" 62
+		"weapon capacity" 4
 		"engine capacity" 26
 		"atmosphere scan" 100
 		"automaton" 1

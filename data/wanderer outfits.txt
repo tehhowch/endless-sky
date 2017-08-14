@@ -12,15 +12,15 @@ outfit "Sunflare"
 	category "Guns"
 	licenses
 		"Wanderer Outfits"
-	cost 85000
-	thumbnail "outfit/sunbeam"
-	"mass" 5
-	"outfit space" -5
-	"weapon capacity" -5
+	cost 112500
+	thumbnail "outfit/sunflare"
+	"mass" 4
+	"outfit space" -4
+	"weapon capacity" -4
 	"gun ports" -1
 	weapon
 		sprite "projectile/sunflare"
-			"frame time" 3
+			"frame time" 4
 			"random start frame"
 		sound "disruptor"
 		"hit effect" "sunbeam impact"
@@ -31,12 +31,12 @@ outfit "Sunflare"
 		"burst reload" 1
 		"burst count" 12
 		"cluster"
-		"firing energy" 5.6
+		"firing energy" 5.5
 		"firing heat" 18.6
-		"shield damage" 1.6
-		"hull damage" 8.5
+		"shield damage" 1.5
+		"hull damage" 8.3
 		"heat damage" 12.1
-	description "The Wanderers developed this miniaturized laser as an effective mining tool for their Earth Shaper drones. Its pulsed firing mechanism prevents excessive energy drain and heat buildup, yet still generates the necessary firepower to harvest minerals."
+	description "The Wanderers developed this miniaturized laser as an effective mining tool for their Earth Shaper drones. Its pulsed firing mode limits the energy drain and heat buildup from sustained use, yet still generates the necessary firepower to harvest minerals."
 
 outfit "Sunbeam"
 	category "Guns"
