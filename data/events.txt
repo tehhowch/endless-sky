@@ -34,11 +34,13 @@ event "war begins"
 	date 4 7 3014
 	system "Gamma Corvi"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 1400
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 1300
-		fleet "Human Miners" 4000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 1300
+		add fleet "Small Southern Merchants" 600
+		add fleet "Large Southern Merchants" 1400
+		add fleet "Human Miners" 10000
 	system Spica
 		government "Free Worlds"
 	system Minkar
@@ -94,31 +96,40 @@ event "war begins"
 	system "Kappa Centauri"
 		government "Free Worlds"
 	system Castor
-		fleet "Small Northern Merchants" 800
-		fleet "Large Northern Merchants" 1100
-		fleet "Small Republic" 800
-		fleet "Large Republic" 400
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 800
+		add fleet "Large Northern Merchants" 1100
+		add fleet "Small Republic" 4000
+		add fleet "Large Republic" 2000
 	system Pollux
-		fleet "Small Northern Merchants" 700
-		fleet "Large Northern Merchants" 1100
-		fleet "Small Republic" 700
-		fleet "Large Republic" 900
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 700
+		add fleet "Large Northern Merchants" 1100
+		add fleet "Small Republic" 2333
+		add fleet "Large Republic" 1636
 	system Vega
-		fleet "Small Northern Merchants" 1000
-		fleet "Large Northern Merchants" 4000
-		fleet "Small Republic" 900
-		fleet "Large Republic" 1000
-		fleet "Human Miners" 6250
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 1000
+		add fleet "Large Northern Merchants" 4000
+		add fleet "Small Republic" 2057
+		add fleet "Large Republic" 1250
 	system Denebola
-		fleet "Small Northern Merchants" 1000
-		fleet "Large Northern Merchants" 3000
-		fleet "Small Republic" 700
-		fleet "Large Republic" 900
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 1000
+		add fleet "Large Northern Merchants" 3000
+		add fleet "Small Republic" 2333
+		add fleet "Large Republic" 1636
 	system Merak
-		fleet "Small Northern Merchants" 1500
-		fleet "Large Northern Merchants" 4000
-		fleet "Small Republic" 1100
-		fleet "Large Republic" 1300
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 1500
+		add fleet "Large Northern Merchants" 4000
+		add fleet "Small Republic" 2444
+		add fleet "Large Republic" 1925
 	planet Geminus
 		description `Until recently, Geminus was home to the Republic Navy Yard, the largest shipyard in human space. Now, there is nothing left of the shipyard but a gaping crater in the ground, from the recent terrorist bombing.`
 		spaceport `Fortunately, the spaceport and residential areas survived the bombing, which was focused only on the Navy yard and happened early in the morning, when very few people were at work.`
@@ -1935,40 +1946,13 @@ event "pug flee"
 		fleet "Large Southern Pirates" 3000
 	system Deneb
 		fleet "Small Core Merchants" 5000
-		object
-			sprite star/g5
-			period 10
-		object Pugglemug
-			sprite planet/ocean2
-			distance 317.56
-			period 90.543791
-			object
-				sprite planet/dust3
-				distance 159
-				period 16.370052
-		object Pugglequat
-			sprite planet/desert3
-			distance 966.8
-			period 480.9777
-			object
-				sprite planet/rhea
-				distance 156
-				period 18.632773
-		object
-			sprite planet/dust7
-			distance 1538.84
-			period 965.85111
-		object
-			sprite planet/dust0
-			distance 1788.4
-			period 1210.0881
-		object "Pug Wormhole"
+		add object "Pug Wormhole"
 			sprite planet/wormhole
 			distance 2320.29
 			period 1788.2712
 
 
-
+# Reconciliation branch resolution
 event "pug territory liberated"
 	system Orvala
 		government "Free Worlds"
@@ -2554,6 +2538,7 @@ event "fwc reconnect vega"
 
 
 
+# Checkmate branch resolution
 event "fwc pug defeated"
 	system Altair
 		government Republic
