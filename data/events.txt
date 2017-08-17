@@ -38,6 +38,7 @@ event "war begins"
 		fleet "Large Southern Merchants" 1400
 		fleet "Small Free Worlds" 600
 		fleet "Large Free Worlds" 1300
+		fleet "Human Miners" 4000
 	system Spica
 		government "Free Worlds"
 	system Minkar
@@ -107,6 +108,7 @@ event "war begins"
 		fleet "Large Northern Merchants" 4000
 		fleet "Small Republic" 900
 		fleet "Large Republic" 1000
+		fleet "Human Miners" 6250
 	system Denebola
 		fleet "Small Northern Merchants" 1000
 		fleet "Large Northern Merchants" 3000
@@ -191,12 +193,14 @@ event "initial deployment 1"
 		fleet "Small Northern Pirates" 4000
 		fleet "Large Northern Pirates" 8000
 		fleet "Navy Surveillance" 2000
+		fleet "Human Miners" 3000
 	system Phecda
 		fleet "Small Northern Merchants" 900
 		fleet "Small Southern Merchants" 1100
 		fleet "Small Republic" 900
 		fleet "Large Republic" 1100
 		fleet "Navy Surveillance" 2000
+		fleet "Human Miners" 3000
 	system Algorel
 		fleet "Small Southern Merchants" 800
 		fleet "Large Southern Merchants" 1200
@@ -277,6 +281,7 @@ event "initial deployment 2"
 		fleet "Large Free Worlds" 10000
 		fleet "Small Southern Pirates" 4000
 		fleet "Large Southern Pirates" 8000
+		fleet "Human Miners" 3000
 	system Zubeneschamali
 		fleet "Small Southern Merchants" 500
 		fleet "Large Southern Merchants" 1000
@@ -284,6 +289,7 @@ event "initial deployment 2"
 		fleet "Large Free Worlds" 2400
 		fleet "Small Southern Pirates" 4000
 		fleet "Large Southern Pirates" 5000
+		fleet "Human Miners" 1750
 	system Kochab
 		fleet "Small Southern Merchants" 1800
 		fleet "Large Southern Merchants" 5000
@@ -305,6 +311,7 @@ event "initial deployment 2"
 		fleet "Small Republic" 1000
 		fleet "Large Republic" 2000
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 4000
 	system "Delta Velorum"
 		fleet "Small Southern Merchants" 1000
 		fleet "Large Southern Merchants" 3000
@@ -313,6 +320,7 @@ event "initial deployment 2"
 		fleet "Small Republic" 1600
 		fleet "Large Republic" 2400
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 2000
 	system Turais
 		fleet "Small Southern Merchants" 2000
 		fleet "Large Southern Merchants" 6000
@@ -321,6 +329,7 @@ event "initial deployment 2"
 		fleet "Small Republic" 1000
 		fleet "Large Republic" 1800
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 2000
 	system Gacrux
 		fleet "Small Southern Merchants" 2000
 		fleet "Large Southern Merchants" 5000
@@ -336,6 +345,7 @@ event "initial deployment 2"
 		fleet "Small Republic" 1200
 		fleet "Large Republic" 1800
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 3000
 	system Muhlifain
 		fleet "Small Southern Merchants" 1000
 		fleet "Large Southern Merchants" 3500
@@ -361,7 +371,7 @@ event "initial deployment 2"
 		fleet "Navy Surveillance" 1600
 	system Alioth
 		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
+		fleet "Large Southern Merchants" 600
 		fleet "Small Southern Pirates" 1200
 		fleet "Large Southern Pirates" 2400
 		fleet "Small Republic" 3000
@@ -381,6 +391,7 @@ event "initial deployment 2"
 		fleet "Small Republic" 2000
 		fleet "Large Republic" 3000
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 5000
 	system Rutilicus
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
@@ -388,20 +399,22 @@ event "initial deployment 2"
 		fleet "Small Republic" 1000
 		fleet "Large Republic" 2000
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 3000
 	system Alphecca
 		fleet "Small Southern Merchants" 2000
-		fleet "Large Northern Merchants" 3500
+		fleet "Large Southern Merchants" 3500
 		fleet "Small Southern Pirates" 3000
 		fleet "Small Republic" 3000
 		fleet "Large Republic" 4000
 		fleet "Navy Surveillance" 1600
 	system Boral
 		fleet "Small Southern Merchants" 3000
-		fleet "Large Northern Merchants" 8000
+		fleet "Large Southern Merchants" 8000
 		fleet "Small Southern Pirates" 1500
 		fleet "Small Republic" 7000
 		fleet "Large Republic" 12000
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 2000
 	system Cebalrai
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
@@ -433,6 +446,7 @@ event "initial deployment 3"
 		fleet "Small Southern Pirates" 3000
 		fleet "Small Free Worlds" 3000
 		fleet "Large Free Worlds" 6000
+		fleet "Human Miners" 3000
 	system Sabik
 		fleet "Small Southern Merchants" 400
 		fleet "Large Southern Merchants" 600
@@ -445,6 +459,7 @@ event "initial deployment 3"
 		fleet "Large Free Worlds" 700
 		fleet "Small Southern Pirates" 1400
 		fleet "Large Southern Pirates" 3000
+		fleet "Human Miners" 3000
 	system Kornephoros
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 700
@@ -674,6 +689,7 @@ event "initial deployment 4"
 		fleet "Small Free Worlds" 2000
 		fleet "Large Free Worlds" 3000
 		fleet "Navy Surveillance" 800
+		fleet "Human Miners" 2000
 	system Lesath
 		fleet "Small Southern Merchants" 800
 		fleet "Large Southern Merchants" 1600
@@ -689,6 +705,7 @@ event "initial deployment 4"
 		fleet "Large Southern Pirates" 8000
 		fleet "Small Free Worlds" 1000
 		fleet "Large Free Worlds" 2100
+		fleet "Human Miners" 2000
 	system Alniyat
 		fleet "Small Southern Merchants" 500
 		fleet "Large Southern Merchants" 600
@@ -716,13 +733,15 @@ event "initial deployment 4"
 		fleet "Large Southern Pirates" 1600
 		fleet "Small Free Worlds" 4000
 		fleet "Large Free Worlds" 8000
+		fleet "Human Miners" 3000
 	system "Yed Prior"
-		fleet "Small Northern Merchants" 800
-		fleet "Large Northern Merchants" 1100
+		fleet "Small Southern Merchants" 800
+		fleet "Large Southern Merchants" 1100
 		fleet "Small Southern Pirates" 1000
 		fleet "Large Southern Pirates" 2000
 		fleet "Small Free Worlds" 5000
 		fleet "Large Free Worlds" 8000
+		fleet "Human Miners" 1600
 	system "Kappa Centauri"
 		fleet "Small Southern Merchants" 900
 		fleet "Large Southern Merchants" 2700
@@ -753,6 +772,7 @@ event "initial deployment 4"
 		fleet "Small Southern Pirates" 1400
 		fleet "Large Southern Pirates" 3000
 		fleet "Navy Surveillance" 800
+		fleet "Human Miners" 3000
 	system Kornephoros
 		fleet "Small Southern Merchants" 800
 		fleet "Large Southern Merchants" 1000
@@ -772,6 +792,7 @@ event "capture of Kornephoros"
 		fleet "Small Republic" 300
 		fleet "Large Republic" 500
 		fleet "Navy Surveillance" 800
+		fleet "Human Miners" 3000
 	system Sabik
 		fleet "Small Southern Merchants" 800
 		fleet "Large Southern Merchants" 1000
@@ -818,6 +839,7 @@ event "recapture of Kornephoros"
 		fleet "Large Southern Merchants" 800
 		fleet "Small Free Worlds" 600
 		fleet "Large Free Worlds" 600
+		fleet "Human Miners" 3000
 	system Kornephoros
 		government "Free Worlds"
 		fleet "Small Southern Merchants" 800
@@ -852,6 +874,7 @@ event "oathkeepers founded"
 		fleet "Large Oathkeeper" 4000
 		fleet "Small Northern Pirates" 2000
 		fleet "Large Northern Pirates" 2000
+		fleet "Human Miners" 3000
 	system Mirzam
 		fleet "Small Northern Merchants" 2000
 		fleet "Large Northern Merchants" 2000
@@ -871,6 +894,7 @@ event "oathkeepers founded"
 		fleet "Small Oathkeeper" 1000
 		fleet "Large Oathkeeper" 2000
 		fleet "Large Northern Pirates" 4000
+		fleet "Human Miners" 3000
 	system Rigel
 		fleet "Small Northern Merchants" 2000
 		fleet "Large Northern Merchants" 4000
@@ -878,6 +902,7 @@ event "oathkeepers founded"
 		fleet "Large Oathkeeper" 2000
 		fleet "Small Northern Pirates" 3000
 		fleet "Large Northern Pirates" 5000
+		fleet "Human Miners" 2000
 	system Alnitak
 		fleet "Small Northern Pirates" 3000
 		fleet "Large Northern Pirates" 5000
@@ -895,6 +920,7 @@ event "oathkeepers founded"
 		fleet "Large Northern Pirates" 2000
 		fleet "Large Oathkeeper" 2000
 		fleet "Small Northern Merchants" 4000
+		fleet "Human Miners" 2000
 	system Almaaz
 		fleet "Small Northern Pirates" 500
 		fleet "Large Northern Pirates" 600
@@ -937,8 +963,8 @@ event "plasma turret available"
 
 event "fw conservatory founded"
 	system "Yed Prior"
-		fleet "Small Northern Merchants" 500
-		fleet "Large Northern Merchants" 800
+		fleet "Small Southern Merchants" 500
+		fleet "Large Southern Merchants" 800
 		fleet "Small Southern Pirates" 1200
 		fleet "Large Southern Pirates" 2400
 		fleet "Small Free Worlds" 1000
@@ -1035,6 +1061,7 @@ event "navy occupying the south"
 		fleet "Large Southern Merchants" 1200
 		fleet "Small Republic" 500
 		fleet "Large Republic" 700
+		fleet "Human Miners" 3000
 	system "Delta Sagittarii"
 		fleet "Small Southern Merchants" 1200
 		fleet "Large Southern Merchants" 4000
@@ -1196,6 +1223,7 @@ event "fw southern expansion"
 		fleet "Small Southern Pirates" 3000
 		fleet "Large Southern Pirates" 7000
 		fleet "Navy Surveillance" 5000
+		fleet "Human Miners" 5500
 	system "Delta Sagittarii"
 		government "Free Worlds"
 		fleet "Small Southern Merchants" 1200
@@ -1205,6 +1233,7 @@ event "fw southern expansion"
 		fleet "Small Southern Pirates" 3000
 		fleet "Large Southern Pirates" 7000
 		fleet "Navy Surveillance" 3000
+		fleet "Human Miners" 4000
 	system "Kaus Borealis"
 		fleet "Small Southern Merchants" 900
 		fleet "Large Southern Merchants" 4000
@@ -1218,7 +1247,7 @@ event "fw southern expansion"
 event "fw occupying the north"
 	system Alioth
 		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
+		fleet "Large Southern Merchants" 600
 		fleet "Small Free Worlds" 500
 		fleet "Large Free Worlds" 800
 		fleet "Small Republic" 5000
@@ -1226,15 +1255,16 @@ event "fw occupying the north"
 		fleet "Navy Surveillance" 4000
 	system Alphecca
 		fleet "Small Southern Merchants" 2000
-		fleet "Large Northern Merchants" 3500
+		fleet "Large Southern Merchants" 3500
 		fleet "Small Free Worlds" 1200
 		fleet "Large Free Worlds" 2000
 		fleet "Navy Surveillance" 6000
 	system Boral
 		fleet "Small Southern Merchants" 3000
-		fleet "Large Northern Merchants" 8000
+		fleet "Large Southern Merchants" 8000
 		fleet "Small Free Worlds" 1500
 		fleet "Large Free Worlds" 3800
+		fleet "Human Miners" 2000
 	system Seginus
 		fleet "Small Southern Merchants" 1200
 		fleet "Large Southern Merchants" 2700
@@ -1422,6 +1452,7 @@ event "fw expanded and cut"
 		fleet "Small Republic" 500
 		fleet "Large Republic" 700
 		fleet "Large Free Worlds" 3000
+		fleet "Human Miners" 6000
 	system Rastaban
 		government Republic
 		fleet "Small Southern Merchants" 1000
@@ -1461,6 +1492,7 @@ event "fw at war with Syndicate"
 	system Rutilicus
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
+		fleet "Human Miners" 3000
 	system Cebalrai
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
@@ -1510,6 +1542,7 @@ event "fw armistice"
 		fleet "Large Southern Merchants" 2000
 		fleet "Small Southern Pirates" 8000
 		fleet "Small Republic" 1000
+		fleet "Human Miners" 3000
 	system Cebalrai
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
@@ -1568,6 +1601,7 @@ event "navy out of rastaban"
 		fleet "Small Southern Pirates" 3000
 		fleet "Large Southern Pirates" 7000
 		fleet "Navy Surveillance" 3000
+		fleet "Human Miners" 4000
 	system Lesath
 		fleet "Small Southern Merchants" 800
 		fleet "Large Southern Merchants" 1600
@@ -1666,6 +1700,7 @@ event "pug invasion 2"
 		fleet "Large Northern Merchants" 3000
 		fleet "Small Pug" 800
 		fleet "Large Pug" 1200
+		fleet "Human Miners" 5000
 	system Altair
 		government Pug
 		fleet "Small Core Merchants" 400
@@ -1712,6 +1747,7 @@ event "pug invasion 3"
 		fleet "Large Core Merchants" 800
 		fleet "Small Pug" 800
 		fleet "Large Pug" 1100
+		fleet "Human Miners" 3000
 	system Alderamin
 		government Pug
 		fleet "Small Core Merchants" 2000
@@ -1787,6 +1823,7 @@ event "at war with the pug"
 			"Syndicate (Extremist)" -.01
 	system "Delta Capricorni"
 		fleet "Small Core Merchants" 1500
+		fleet "Human Miners" 6000
 
 
 
@@ -1849,6 +1886,7 @@ event "pug flee"
 		fleet "Large Northern Merchants" 3000
 		fleet "Small Republic" 800
 		fleet "Large Republic" 1200
+		fleet "Human Miners" 5000
 	system Altair
 		fleet "Small Core Merchants" 400
 		fleet "Large Core Merchants" 600
@@ -1866,6 +1904,7 @@ event "pug flee"
 		fleet "Large Core Merchants" 800
 		fleet "Small Syndicate" 500
 		fleet "Large Syndicate" 600
+		fleet "Human Miners" 3000
 	system Alderamin
 		fleet "Small Core Merchants" 2000
 		fleet "Large Core Merchants" 3200
@@ -1881,12 +1920,14 @@ event "pug flee"
 		fleet "Large Core Merchants" 600
 		fleet "Small Republic" 1600
 		fleet "Large Republic" 3000
+		fleet "Human Miners" 2000
 	system Nocte
 		fleet "Small Northern Merchants" 1500
 		fleet "Large Northern Merchants" 5000
 		fleet "Small Republic" 3000
 		fleet "Large Republic" 7000
 		fleet "Small Northern Pirates" 2500
+		fleet "Human Miners" 1600
 	system Orvala
 		fleet "Small Southern Merchants" 3000
 		fleet "Large Southern Merchants" 6000
@@ -2074,6 +2115,7 @@ event "fwc southern liberation"
 		fleet "Small Southern Pirates" 3000
 		fleet "Large Southern Pirates" 7000
 		fleet "Large Republic" 3000
+		fleet "Human Miners" 4000
 	system Rastaban
 		government "Free Worlds"
 		fleet "Small Southern Merchants" 1200
@@ -2191,6 +2233,7 @@ event "fwc defended cebalrai"
 		fleet "Large Southern Pirates" 6000
 		fleet "Small Free Worlds" 2000
 		fleet "Large Free Worlds" 3000
+		fleet "Human Miners" 1750
 	system Seginus
 		fleet "Small Southern Merchants" 1200
 		fleet "Large Southern Merchants" 2700
@@ -2216,6 +2259,7 @@ event "fwc defended cebalrai"
 		fleet "Large Free Worlds" 900
 		fleet "Small Southern Pirates" 3000
 		fleet "Large Southern Pirates" 7000
+		fleet "Human Miners" 4000
 	system Rastaban
 		government "Free Worlds"
 		fleet "Small Southern Merchants" 1200
@@ -2317,6 +2361,7 @@ event "fwc pug invasion"
 		fleet "Large Core Merchants" 800
 		fleet "Small Pug" 800
 		fleet "Large Pug" 1100
+		fleet "Human Miners" 3000
 	system Alderamin
 		government Pug
 		fleet "Small Core Merchants" 2000
@@ -2453,12 +2498,14 @@ event "fwc liberation of rasalhague"
 	system Vega
 		fleet "Small Southern Merchants" 1500
 		fleet "Large Southern Merchants" 2000
+		fleet "Human Miners" 5000
 	system Altair
 		fleet "Small Core Merchants" 400
 		fleet "Large Core Merchants" 600
 	system "Delta Capricorni"
 		fleet "Small Core Merchants" 700
 		fleet "Large Core Merchants" 800
+		fleet "Human Miners" 3000
 	system Alderamin
 		fleet "Small Core Merchants" 2000
 		fleet "Large Core Merchants" 3200

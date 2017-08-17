@@ -1895,6 +1895,7 @@ event "battle of alioth"
 		fleet "Large Southern Merchants" 2000
 		fleet "Small Southern Pirates" 8000
 		fleet "Small Republic" 1000
+		fleet "Human Miners" 3000
 	system Cebalrai
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
@@ -1915,6 +1916,7 @@ event "end battle of alioth"
 		fleet "Small Republic" 1000
 		fleet "Large Republic" 2000
 		fleet "Navy Surveillance" 1600
+		fleet "Human Miners" 3000
 	system Cebalrai
 		fleet "Small Southern Merchants" 600
 		fleet "Large Southern Merchants" 2000
