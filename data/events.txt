@@ -162,101 +162,147 @@ mission "event: war begins"
 event "initial deployment 1"
 	date 24 7 3014
 	system Spica
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 1700
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1500
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4800
+		add fleet "Large Southern Merchants" 3923
+		add fleet "Small Free Worlds" 800
+		add fleet "Large Free Worlds" 1500
 	system Minkar
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1500
-		fleet "Small Free Worlds" 700
-		fleet "Large Free Worlds" 1200
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 3150
+		add fleet "Large Southern Merchants" 3000
+		add fleet "Small Free Worlds" 700
+		add fleet "Large Free Worlds" 1200
 	system Mimosa
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2300
-		fleet "Small Free Worlds" 1200
-		fleet "Large Free Worlds" 1900
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4800
+		add fleet "Large Southern Merchants" 4259
+		add fleet "Small Free Worlds" 1200
+		add fleet "Large Free Worlds" 1900
 	system Kraz
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Free Worlds" 700
-		fleet "Large Free Worlds" 900
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Small Southern Merchants" 9000
+		add fleet "Large Southern Merchants" 8000
+		add fleet "Small Free Worlds" 700
+		add fleet "Large Free Worlds" 900
 	system Acrux
-		fleet "Small Southern Merchants" 500
-		fleet "Large Southern Merchants" 800
-		fleet "Small Free Worlds" 700
-		fleet "Large Free Worlds" 1100
-		fleet "Human Miners" 5000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 3000
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Free Worlds" 700
+		add fleet "Large Free Worlds" 1100
 	
 	system "Tania Australis"
-		fleet "Small Northern Merchants" 1400
-		fleet "Large Northern Merchants" 2900
-		fleet "Small Republic" 600
-		fleet "Large Republic" 400
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Northern Pirates"
+		remove fleet "Large Northern Pirates"
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		add fleet "Small Northern Merchants" 1400
+		add fleet "Large Northern Merchants" 2900
+		add fleet "Small Republic" 750
+		add fleet "Large Republic" 400
+		add fleet "Navy Surveillance" 2000
 	planet Ingot
 		add description `Ingot is also now home to a burgeoning Navy base, although since the planet is so unlivable most of the troops are just living in ships in orbit.`
 	system Fala
-		fleet "Small Northern Merchants" 1900
-		fleet "Large Northern Merchants" 3500
-		fleet "Small Republic" 600
-		fleet "Large Republic" 400
-		fleet "Small Northern Pirates" 4000
-		fleet "Large Northern Pirates" 8000
-		fleet "Navy Surveillance" 2000
-		fleet "Human Miners" 3000
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Northern Pirates"
+		remove fleet "Large Northern Pirates"
+		remove fleet "Human Miners"
+		add fleet "Small Northern Merchants" 1900
+		add fleet "Large Northern Merchants" 3500
+		add fleet "Small Republic" 705
+		add fleet "Large Republic" 400
+		add fleet "Small Northern Pirates" 4000
+		add fleet "Large Northern Pirates" 8000
+		add fleet "Navy Surveillance" 2000
+		add fleet "Human Miners" 3000
 	system Phecda
-		fleet "Small Northern Merchants" 900
-		fleet "Small Southern Merchants" 1100
-		fleet "Small Republic" 900
-		fleet "Large Republic" 1100
-		fleet "Navy Surveillance" 2000
-		fleet "Human Miners" 3000
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		add fleet "Small Northern Merchants" 900
+		add fleet "Small Southern Merchants" 1100
+		add fleet "Small Republic" 1097
+		add fleet "Large Republic" 1100
+		add fleet "Navy Surveillance" 2000
+		add fleet "Human Miners" 3000
 	system Algorel
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1200
-		fleet "Small Republic" 700
-		fleet "Large Republic" 500
-		fleet "Small Southern Pirates" 2500
-		fleet "Large Southern Pirates" 8000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Militia"
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 800
+		add fleet "Large Southern Merchants" 1200
+		add fleet "Small Republic" 913
+		add fleet "Large Republic" 500
+		add fleet "Small Southern Pirates" 2500
+		add fleet "Large Southern Pirates" 8000
+		add fleet "Navy Surveillance" 2000
 	planet "New Wales"
 		add description `The Republic Navy has planted a base on New Wales: so far, just a densely packed cluster of prefabricated barracks and infirmary buildings on the outskirts of one of the mining colonies.`
 	system Porrima
-		fleet "Small Southern Merchants" 1400
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Republic" 1200
-		fleet "Large Republic" 1800
-		fleet "Small Southern Pirates" 9000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		add fleet "Small Southern Merchants" 1400
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Republic" 1411
+		add fleet "Large Republic" 1800
+		add fleet "Small Southern Pirates" 9000
+		add fleet "Navy Surveillance" 2000
 	system Ipsing
-		fleet "Small Southern Merchants" 2800
-		fleet "Large Southern Merchants" 7000
-		fleet "Small Republic" 2500
-		fleet "Large Republic" 4000
-		fleet "Small Southern Pirates" 5000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		add fleet "Small Southern Merchants" 2800
+		add fleet "Large Southern Merchants" 7000
+		add fleet "Small Republic" 2500
+		add fleet "Large Republic" 4000
+		add fleet "Small Southern Pirates" 5000
+		add fleet "Navy Surveillance" 2000
 	system Mizar
-		fleet "Small Southern Merchants" 1400
-		fleet "Large Southern Merchants" 4500
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 1400
-		fleet "Small Southern Pirates" 9000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		add fleet "Small Southern Merchants" 1400
+		add fleet "Large Southern Merchants" 4500
+		add fleet "Small Republic" 1000
+		add fleet "Large Republic" 1400
+		add fleet "Small Southern Pirates" 9000
+		add fleet "Navy Surveillance" 2000
 	system Muphrid
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4800
-		fleet "Small Republic" 1100
-		fleet "Large Republic" 1900
-		fleet "Small Southern Pirates" 9000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 4800
+		add fleet "Small Republic" 1410
+		add fleet "Large Republic" 1900
+		add fleet "Small Southern Pirates" 9000
+		add fleet "Navy Surveillance" 2000
 	system Menkent
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1900
-		fleet "Small Republic" 500
-		fleet "Large Republic" 600
-		fleet "Navy Surveillance" 2000
-		fleet "Human Miners" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		add fleet "Small Southern Merchants" 700
+		add fleet "Large Southern Merchants" 1900
+		add fleet "Small Republic" 600
+		add fleet "Large Republic" 600
+		add fleet "Navy Surveillance" 2000
 	planet "New Austria"
 		add description `The Navy has recently requisitioned one of the abandoned mining towns and begun refurbishing it for a secure military base, with the mining tunnels used as deep underground bunkers.`
 	shipyard "Syndicate Basics"
