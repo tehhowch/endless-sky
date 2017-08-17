@@ -13143,8 +13143,8 @@ system Kochab
 	trade Plastic 309
 	fleet "Small Southern Merchants" 2000
 	fleet "Large Southern Merchants" 6000
-	fleet "Small Southern Pirates" 5000
 	fleet "Small Militia" 6000
+	fleet "Small Southern Pirates" 5000
 	object
 		sprite star/k5
 		period 10
