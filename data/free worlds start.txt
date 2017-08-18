@@ -1500,12 +1500,6 @@ mission "FW Pirates 4"
 
 
 
-event "battle for Thule"
-	system Men
-		fleet "Small Southern Pirates" 10000
-
-
-
 mission "FW Pirates 4B"
 	name "Return to Longjump"
 	description "Escort the newly repaired F.S. Terebinth back to the Free Worlds base on <destination>."

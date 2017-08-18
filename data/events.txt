@@ -1062,6 +1062,12 @@ event "fw conservatory founded"
 
 
 
+event "battle for Thule"
+	system Men
+		fleet "Small Southern Pirates" 10000
+
+
+
 event "Thule becomes independent"
 	system Men
 		government Independent
@@ -1097,7 +1103,7 @@ event "fw abandoned Bloodsea"
 		government Pirate
 		fleet "Small Southern Pirates" 1000
 		fleet "Large Southern Pirates" 2000
-		fleet "Large Militia" 5000
+		fleet "Large Free Worlds" 5000
 
 
 
@@ -1120,7 +1126,7 @@ event "fw abandoned Greenrock"
 		fleet "Large Core Pirates" 7000
 		fleet "Small Northern Pirates" 5000
 		fleet "Large Northern Pirates" 9000
-		fleet "Large Militia" 9000
+		fleet "Large Free Worlds" 9000
 
 
 
@@ -1132,27 +1138,43 @@ event "flamethrower available"
 
 event "navy occupying the south"
 	system Rastaban
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2400
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 2400
+		add fleet "Small Republic" 1125
 	system Girtab
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 900
+		add fleet "Large Southern Merchants" 2000
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 700
 	system Albaldah
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1200
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
-		fleet "Human Miners" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 1200
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 700
 	system "Delta Sagittarii"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
-		fleet "Human Miners" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Militia"
+		remove fleet "Small Southern Pirates"
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 700
 
 
 
