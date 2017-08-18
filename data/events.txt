@@ -745,113 +745,138 @@ event "initial deployment 4"
 	planet Geminus
 		"required reputation" 10
 	system Sargas
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2500
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 5000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1500
-		fleet "Navy Surveillance" 800
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4200
+		add fleet "Large Southern Merchants" 15000
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 5000
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 1500
+		add fleet "Navy Surveillance" 800
 	system Dschubba
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 2600
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 6000
-		fleet "Small Free Worlds" 2000
-		fleet "Large Free Worlds" 3000
-		fleet "Navy Surveillance" 800
-		fleet "Human Miners" 2000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4000
+		add fleet "Large Southern Merchants" 19500
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 6000
+		add fleet "Small Free Worlds" 2000
+		add fleet "Large Free Worlds" 3000
+		add fleet "Navy Surveillance" 800
 	system Lesath
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1100
-		fleet "Navy Surveillance" 800
+		remove fleet "Small Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4000
+		add fleet "Large Southern Merchants" 8000
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Small Free Worlds" 800
+		add fleet "Large Free Worlds" 1100
+		add fleet "Navy Surveillance" 800
 	system Atria
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 2600
-		fleet "Small Southern Pirates" 5000
-		fleet "Large Southern Pirates" 8000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 2100
-		fleet "Human Miners" 2000
+		remove fleet "Small Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 2333
+		add fleet "Large Southern Merchants" 19500
+		add fleet "Small Southern Pirates" 5000
+		add fleet "Large Southern Pirates" 8000
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 2100
 	system Alniyat
-		fleet "Small Southern Merchants" 500
-		fleet "Large Southern Merchants" 600
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 4000
-		fleet "Small Free Worlds" 1500
-		fleet "Large Free Worlds" 4000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Large Southern Merchants" 4200
+		add fleet "Small Free Worlds" 1500
+		add fleet "Large Free Worlds" 4000
 	system Han
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 9000
-		fleet "Small Free Worlds" 3000
-		fleet "Large Free Worlds" 8000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 4000
+		add fleet "Large Southern Merchants" 20000
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 9000
+		add fleet "Small Free Worlds" 3000
+		add fleet "Large Free Worlds" 8000
 	system Pherkad
-		fleet "Small Southern Merchants" 500
-		fleet "Large Southern Merchants" 700
-		fleet "Small Free Worlds" 900
-		fleet "Large Free Worlds" 1700
-		fleet "Small Southern Pirates" 1000
-		fleet "Large Southern Pirates" 1900
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Large Southern Merchants" 2333
+		add fleet "Small Free Worlds" 900
+		add fleet "Large Free Worlds" 1700
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 5181
 	system "Beta Lupi"
-		fleet "Small Southern Merchants" 800
-		fleet "Small Southern Pirates" 1100
-		fleet "Large Southern Pirates" 1600
-		fleet "Small Free Worlds" 4000
-		fleet "Large Free Worlds" 8000
-		fleet "Human Miners" 3000
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Small Southern Merchants" 4000
+		add fleet "Small Southern Pirates" 4125
+		add fleet "Large Southern Pirates" 4444
+		add fleet "Small Free Worlds" 4000
+		add fleet "Large Free Worlds" 8000
 	system "Yed Prior"
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1100
-		fleet "Small Southern Pirates" 1000
-		fleet "Large Southern Pirates" 2000
-		fleet "Small Free Worlds" 5000
-		fleet "Large Free Worlds" 8000
-		fleet "Human Miners" 1600
+		remove fleet "Small Militia"
+		remove fleet "Large Militia"
+		add fleet "Large Southern Merchants" 3520
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 6000
+		add fleet "Small Free Worlds" 5000
+		add fleet "Large Free Worlds" 8000
 	system "Kappa Centauri"
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 2700
-		fleet "Small Southern Pirates" 1600
-		fleet "Large Southern Pirates" 2000
-		fleet "Small Free Worlds" 3000
-		fleet "Large Free Worlds" 5000
+		remove fleet "Small Militia"
+		add fleet "Small Southern Merchants" 9000
+		add fleet "Large Southern Merchants" 27000
+		add fleet "Small Southern Pirates" 8000
+		add fleet "Large Southern Pirates" 2000
+		add fleet "Small Free Worlds" 3000
+		add fleet "Large Free Worlds" 5000
 	
 	system Rastaban
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1900
-		fleet "Small Southern Pirates" 4000
-		fleet "Large Southern Pirates" 8000
-		fleet "Small Republic" 900
-		fleet "Large Republic" 700
-		fleet "Navy Surveillance" 1200
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 1900
+		add fleet "Small Southern Pirates" 4000
+		add fleet "Large Southern Pirates" 8000
+		add fleet "Small Republic" 900
+		add fleet "Large Republic" 700
+		add fleet "Navy Surveillance" 1200
 	system Sabik
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 800
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1200
-		fleet "Navy Surveillance" 800
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		add fleet "Small Southern Merchants" 600
+		add fleet "Large Southern Merchants" 800
+		add leet "Small Free Worlds" 4000
+		add fleet "Large Free Worlds" 4800
+		add fleet "Navy Surveillance" 800
 	system Aldhibain
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 800
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 600
-		fleet "Small Southern Pirates" 1400
-		fleet "Large Southern Pirates" 3000
-		fleet "Navy Surveillance" 800
-		fleet "Human Miners" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		add fleet "Small Southern Merchants" 600
+		add fleet "Large Southern Merchants" 800
+		add fleet "Large Free Worlds" 4200
+		add fleet "Navy Surveillance" 800
 	system Kornephoros
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1000
-		fleet "Small Southern Pirates" 5000
-		fleet "Small Free Worlds" 900
-		fleet "Large Free Worlds" 1700
-		fleet "Navy Surveillance" 800
-		fleet "Human Miners" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		add fleet "Small Southern Merchants" 800
+		add fleet "Large Southern Merchants" 1000
+		add fleet "Small Free Worlds" 9000
+		add fleet "Large Free Worlds" 11333
+		add fleet "Navy Surveillance" 800
 
 
 
