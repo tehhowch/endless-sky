@@ -775,7 +775,7 @@ void Engine::Draw() const
 	
 	if(Preferences::Has("Show CPU / GPU load"))
 	{
-		string loadString = to_string(static_cast<int>(load * 100. + .5)) + "% CPU";
+		string loadString = to_string(lround(load * 100.)) + "% CPU";
 		Color color = *colors.Get("medium");
 		font.Draw(loadString,
 			Point(-10 - font.Width(loadString), Screen::Height() * -.5 + 5.), color);
@@ -1172,7 +1172,7 @@ void Engine::CalculateStep()
 			}
 			string commodity;
 			string message;
-			int amount = 0;
+			double amount = 0.;
 			if((*it)->OutfitType())
 			{
 				const Outfit *outfit = (*it)->OutfitType();
@@ -1183,10 +1183,11 @@ void Engine::CalculateStep()
 					{
 						commodity = outfit->Name();
 						player.Harvest(outfit);
+						amount *= (*it)->UnitSize();
 					}
 					else
 						message = name + Format::Number(amount) + " "
-							+ (amount == 1 ? outfit->Name() : outfit->PluralName()) + ".";
+							+ (amount == 1. ? outfit->Name() : outfit->PluralName()) + ".";
 				}
 			}
 			else
@@ -1196,8 +1197,10 @@ void Engine::CalculateStep()
 					commodity = (*it)->CommodityType();
 			}
 			if(!commodity.empty())
-				message = name + (amount == 1 ? "a ton" : Format::Number(amount) + " tons")
+			{
+				message = name + (amount == 1. ? "a ton" : Format::Number(amount) + " tons")
 					+ " of " + Format::LowerCase(commodity) + ".";
+			}
 			if(!message.empty())
 			{
 				int free = collector->Cargo().Free();
