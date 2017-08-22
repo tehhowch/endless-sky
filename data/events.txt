@@ -1436,7 +1436,7 @@ event "liberation of Poisonwood"
 		fleet "Large Southern Merchants" 4000
 		fleet "Small Southern Pirates" 6000
 		fleet "Small Free Worlds" 700
-		fleet "Small Free Worlds" 1200
+		fleet "Large Free Worlds" 1200
 		fleet "Human Miners" 2000
 
 event "Poisonwood reverts to Republic"
@@ -1446,7 +1446,7 @@ event "Poisonwood reverts to Republic"
 		fleet "Large Southern Merchants" 4000
 		fleet "Small Southern Pirates" 4000
 		fleet "Small Free Worlds" 1500
-		fleet "Small Free Worlds" 2600
+		fleet "Large Free Worlds" 2600
 		fleet "Human Miners" 2000
 
 event "death of nguyen"
