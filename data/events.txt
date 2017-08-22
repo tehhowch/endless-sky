@@ -1540,6 +1540,13 @@ event "albatross joins free worlds"
 
 
 
+event "battle for zeta aquilae"
+	"reputation: Republic" = -1000
+	system "Zeta Aquilae"
+		fleet "Small Southern Merchants" 5000
+
+
+
 event "fw expanded and cut"
 	system Rasalhague
 		government "Free Worlds"
@@ -1553,38 +1560,71 @@ event "fw expanded and cut"
 		government "Free Worlds"
 	system "Delta Sagittarii"
 		government Republic
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 6000
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
-		fleet "Large Free Worlds" 3000
-		fleet "Human Miners" 6000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		remove fleet "Human Miners"
+		add fleet "Small Southern Merchants" 2000
+		add fleet "Large Southern Merchants" 6000
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 700
+		add fleet "Large Free Worlds" 3000
+		add fleet "Human Miners" 6000
 	system Rastaban
 		government Republic
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Republic" 700
-		fleet "Large Republic" 900
-		fleet "Large Free Worlds" 2000
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 6000
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Republic" 700
+		add fleet "Large Republic" 900
+		add fleet "Large Free Worlds" 2000
 	system Girtab
 		government Republic
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
-		fleet "Small Republic" 900
-		fleet "Large Republic" 1200
-		fleet "Large Free Worlds" 1800
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 3000
+		add fleet "Small Republic" 900
+		add fleet "Large Republic" 1200
+		add fleet "Large Free Worlds" 1800
 	system Lesath
-		fleet "Small Southern Merchants" 6000
-		fleet "Large Southern Merchants" 9000
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 1000
-		fleet "Large Free Worlds" 800
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 6000
+		add fleet "Large Southern Merchants" 9000
+		add fleet "Small Republic" 1000
+		add fleet "Large Republic" 1000
+		add fleet "Large Free Worlds" 2933
 	system "Alpha Arae"
-		fleet "Small Southern Merchants" 5000
-		fleet "Large Southern Merchants" 6000
-		fleet "Small Republic" 800
-		fleet "Large Republic" 1000
-		fleet "Large Free Worlds" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 5000
+		add fleet "Large Southern Merchants" 24000
+		add fleet "Small Republic" 800
+		add fleet "Large Republic" 1000
+		add fleet "Large Free Worlds" 3000
 
 
 
