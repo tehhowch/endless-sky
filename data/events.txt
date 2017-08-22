@@ -1288,21 +1288,13 @@ event "normal in Alnasl"
 
 event "fw southern expansion"
 	system Lesath
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1100
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 5000
-		fleet "Navy Surveillance" 4000
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 5000
+		add fleet "Navy Surveillance" 4000
 	system Sargas
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2500
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1500
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 5000
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 5000
 	system Rastaban
 		government "Free Worlds"
 		fleet "Small Southern Merchants" 1200
@@ -1313,38 +1305,36 @@ event "fw southern expansion"
 		fleet "Large Southern Pirates" 7000
 		fleet "Navy Surveillance" 2000
 	system Girtab
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 5000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 1700
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 5000
 	system Albaldah
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1200
-		fleet "Small Free Worlds" 900
-		fleet "Large Free Worlds" 1900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 5000
-		fleet "Human Miners" 5500
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 900
+		add fleet "Large Free Worlds" 1900
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 5000
 	system "Delta Sagittarii"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 3000
-		fleet "Human Miners" 4000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 900
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 3000
 	system "Kaus Borealis"
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Republic" 400
-		fleet "Large Republic" 500
+		remove fleet "Small Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Republic" 628
+		add fleet "Large Republic" 1333
 	planet "New Iceland"
 		add description `	In the wake of their defeat in the south, the Navy has begun to set up a massive new base here on New Iceland, in order to allow them to continue to have a strong presence in this sector.`
 
