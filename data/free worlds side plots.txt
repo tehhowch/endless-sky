@@ -333,21 +333,17 @@ event "wolf pack 3 ready"
 
 event "wolf pack gacrux start"
 	system Gacrux
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 5000
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 4000
-		fleet "Small Republic" 8000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Republic" 8000
 
 event "wolf pack gacrux end"
 	system Gacrux
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 5000
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 4000
-		fleet "Small Republic" 2000
-		fleet "Large Republic" 3000
-		fleet "Navy Surveillance" 1600
+		remove fleet "Small Republic"
+		add fleet "Small Republic" 2000
+		add fleet "Large Republic" 3000
+		add fleet "Navy Surveillance" 1600
 
 
 
@@ -407,19 +403,17 @@ event "wolf pack 4 ready"
 
 event "wolf pack mizar start"
 	system Mizar
-		fleet "Small Southern Merchants" 1400
-		fleet "Large Southern Merchants" 4500
-		fleet "Small Republic" 5000
-		fleet "Small Southern Pirates" 9000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Republic" 5000
 
 event "wolf pack mizar end"
 	system Mizar
-		fleet "Small Southern Merchants" 1400
-		fleet "Large Southern Merchants" 4500
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 1400
-		fleet "Small Southern Pirates" 9000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Republic"
+		add fleet "Small Republic" 1000
+		add fleet "Large Republic" 1400
+		add fleet "Navy Surveillance" 2000
 
 
 
