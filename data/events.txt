@@ -1635,16 +1635,6 @@ event "fw at war with Syndicate"
 			"Pirate" -.4
 			"Korath" -.5
 		bribe 0
-	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Human Miners" 3000
-	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-	system Holeb
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
 
 
 
@@ -1683,24 +1673,6 @@ event "fw armistice"
 		"required reputation" 70
 	planet Mainsail
 		"required reputation" 40
-	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 8000
-		fleet "Small Republic" 1000
-		fleet "Human Miners" 3000
-	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Republic" 1000
-	system Holeb
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
-		fleet "Small Southern Pirates" 5000
-		fleet "Small Republic" 2000
-		fleet "Large Republic" 3000
-		fleet "Navy Surveillance" 1600
 
 
 
@@ -2216,50 +2188,55 @@ event "fwc southern battle"
 	system "Delta Sagittarii"
 		fleet "Large Free Worlds" 4000
 	system Rastaban
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 4000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Large Free Worlds"
 	system Girtab
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Large Free Worlds"
 
 
 
 event "fwc southern liberation"
 	system "Delta Sagittarii"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Large Republic" 3000
-		fleet "Human Miners" 4000
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 1161
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Large Republic" 3000
+		add fleet "Human Miners" 4000
 	system Rastaban
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Large Republic" 3000
+		remove fleet "Small Southern Merchants"
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 6000
+		add fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 700
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Large Republic" 3000
 	system Girtab
 		government Neutral
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
+		add fleet "Small Southern Merchants" 9000
+		add fleet "Large Southern Merchants" 6000
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 1700
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
 	system Lesath
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1100
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 5000
-		fleet "Navy Surveillance" 4000
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Free Worlds"
+		add fleet "Small Southern Merchants" 923
+		add fleet "Large Southern Merchants" 1945
+		add fleet "Small Free Worlds" 800
+		add fleet "Large Free Worlds" 1100
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 5000
+		add fleet "Navy Surveillance" 4000
 
 
 

@@ -1884,47 +1884,35 @@ mission "FW Rand 1B"
 
 event "battle of alioth"
 	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 8000
-		fleet "Small Republic" 1000
-		fleet "Human Miners" 3000
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
 	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Republic" 1000
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+	system Holeb
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
 	system Alioth
-		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
-		fleet "Small Southern Pirates" 1200
-		fleet "Large Southern Pirates" 2400
-		fleet "Small Republic" 3000
-			
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Pirates" 1200
+		add fleet "Large Southern Pirates" 2400
+		add fleet "Small Republic" 7500
+
 event "end battle of alioth"
 	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 8000
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 2000
-		fleet "Navy Surveillance" 1600
-		fleet "Human Miners" 3000
+		add fleet "Large Republic" 2000
+		add fleet "Navy Surveillance" 1600
 	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 2000
-		fleet "Navy Surveillance" 1600
+		add fleet "Large Republic" 2000
+		add fleet "Navy Surveillance" 1600
+	system Holeb
+		add fleet "Large Republic" 3000
+		add fleet "Navy Surveillance" 1600
 	system Alioth
-		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
-		fleet "Small Southern Pirates" 1200
-		fleet "Large Southern Pirates" 2400
-		fleet "Small Republic" 3000
-		fleet "Large Republic" 4000
-		fleet "Navy Surveillance" 1600
+		add fleet "Large Republic" 4000
+		add fleet "Navy Surveillance" 1600
 
 
 
