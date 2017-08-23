@@ -1694,48 +1694,64 @@ event "deep sky tech available"
 event "navy out of rastaban"
 	system Rastaban
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 2000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 2400
+		add fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 1076
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 2000
 	system Girtab
 		government Neutral
-		fleet "Small Southern Merchants" 900
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 5000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Merchants" 9000
+		add fleet "Large Southern Merchants" 6000
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 30600
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 5000
 	system "Delta Sagittarii"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 3000
-		fleet "Human Miners" 4000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Merchants" 3000
+		add fleet "Large Southern Merchants" 12000
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 1285
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 3000
+		add fleet "Human Miners" 12000
 	system Lesath
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1100
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 5000
-		fleet "Navy Surveillance" 4000
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Merchants" 923
+		add fleet "Large Southern Merchants" 1945
+		add fleet "Small Free Worlds" 800
+		add fleet "Large Free Worlds" 1100
+		add fleet "Small Southern Pirates" 2000
+		add fleet "Large Southern Pirates" 5000
+		add fleet "Navy Surveillance" 4000
 	system "Alpha Arae"
-		fleet "Small Southern Merchants" 2100
-		fleet "Large Southern Merchants" 8000
-		fleet "Small Southern Pirates" 6000
-		fleet "Large Southern Pirates" 13000
-		fleet "Small Republic" 900
-		fleet "Large Republic" 800
-		fleet "Navy Surveillance" 1200
+		remove fleet "Large Southern Merchants"
+		remove fleet "Large Free Worlds"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Merchants" 3620
+		add fleet "Large Southern Merchants" 8000
+		add fleet "Small Southern Pirates" 6000
+		add fleet "Large Southern Pirates" 13000
+		add fleet "Small Republic" 900
+		add fleet "Large Republic" 800
+		add fleet "Navy Surveillance" 1200
 
 
 
@@ -1751,14 +1767,18 @@ event "stack core for sale"
 
 event "syndicate occupies sol"
 	system Sol
-		fleet "Small Northern Merchants" 500
-		fleet "Large Northern Merchants" 700
-		fleet "Small Republic" 800
-		fleet "Large Republic" 1200
-		fleet "Small Core Merchants" 900
-		fleet "Large Core Merchants" 1400
-		fleet "Small Syndicate" 400
-		fleet "Large Syndicate" 600
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Northern Merchants" 500
+		add fleet "Large Northern Merchants" 700
+		add fleet "Small Republic" 800
+		add fleet "Large Republic" 1200
+		add fleet "Small Core Merchants" 9000
+		add fleet "Large Core Merchants" 4666
+		add fleet "Small Syndicate" 400
+		add fleet "Large Syndicate" 600
 
 
 
@@ -1777,22 +1797,25 @@ event "pug invasion"
 	unvisit Peacock
 	system "Zeta Aquilae"
 		government Pug
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
-		fleet "Small Pug" 1000
-		fleet "Large Pug" 2000
+		add fleet "Small Southern Merchants" 1250
+		add fleet "Large Southern Merchants" 3000
+		add fleet "Small Pug" 1000
+		add fleet "Large Pug" 2000
 	system Rasalhague
 		government Pug
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Pug" 800
-		fleet "Large Pug" 2000
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 2000
 	system Orvala
 		government Pug
-		fleet "Small Southern Merchants" 3000
-		fleet "Large Southern Merchants" 6000
-		fleet "Small Pug" 5000
-		fleet "Large Pug" 9000
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Pug" 5000
+		add fleet "Large Pug" 9000
 	planet Rand
 		security 0
 	planet Oblivion
@@ -1814,32 +1837,33 @@ event "pug invasion 2"
 	unvisit Markab
 	system Vega
 		government Pug
-		fleet "Small Northern Merchants" 800
-		fleet "Large Northern Merchants" 3000
-		fleet "Small Pug" 800
-		fleet "Large Pug" 1200
-		fleet "Human Miners" 5000
+		remove fleet "Small Republic"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Northern Merchants" 4000
+		add fleet "Large Northern Merchants" 12000
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 1200
 	system Altair
 		government Pug
-		fleet "Small Core Merchants" 400
-		fleet "Large Core Merchants" 600
-		fleet "Small Northern Merchants" 1000
-		fleet "Large Northern Merchants" 3000
-		fleet "Small Pug" 700
-		fleet "Large Pug" 900
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Pug" 700
+		add fleet "Large Pug" 900
 	system Fomalhaut
 		government Pug
-		fleet "Small Core Merchants" 1000
-		fleet "Large Core Merchants" 1200
-		fleet "Small Pug" 1400
-		fleet "Large Pug" 2000
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		add fleet "Small Pug" 1400
+		add fleet "Large Pug" 2000
 	system Nocte
 		government Pug
-		fleet "Small Northern Merchants" 1500
-		fleet "Large Northern Merchants" 5000
-		fleet "Small Pug" 3000
-		fleet "Large Pug" 7000
-		fleet "Human Miners" 1600
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Small Northern Pirates"
+		add fleet "Small Pug" 3000
+		add fleet "Large Pug" 7000
 	planet Silver
 		security 0
 	planet Shiver
@@ -1861,17 +1885,18 @@ event "pug invasion 3"
 	unvisit Alnair
 	system "Delta Capricorni"
 		government Pug
-		fleet "Small Core Merchants" 700
-		fleet "Large Core Merchants" 800
-		fleet "Small Pug" 800
-		fleet "Large Pug" 1100
-		fleet "Human Miners" 3000
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 1100
 	system Alderamin
 		government Pug
-		fleet "Small Core Merchants" 2000
-		fleet "Large Core Merchants" 3200
-		fleet "Small Pug" 1200
-		fleet "Large Pug" 2500
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		remove fleet "Small Core Pirates"
+		remove fleet "Large Core Pirates"
+		add fleet "Small Pug" 1200
+		add fleet "Large Pug" 2500
 	planet Maker
 		security 0
 	planet Furnace
