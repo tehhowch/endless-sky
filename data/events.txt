@@ -2442,52 +2442,54 @@ event "fwc pug invasion"
 			"Free Worlds" -.01
 	system "Zeta Aquilae"
 		government Pug
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
-		fleet "Small Pug" 1000
-		fleet "Large Pug" 2000
+		add fleet "Small Southern Merchants" 1250
+		add fleet "Large Southern Merchants" 3000
+		add fleet "Small Pug" 1000
+		add fleet "Large Pug" 2000
 	system Rasalhague
 		government Pug
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Pug" 800
-		fleet "Large Pug" 2000
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 2000
 	system Orvala
 		government Pug
-		fleet "Small Southern Merchants" 3000
-		fleet "Large Southern Merchants" 6000
-		fleet "Small Pug" 5000
-		fleet "Large Pug" 9000
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		add fleet "Small Pug" 5000
+		add fleet "Large Pug" 9000
 	system Altair
 		government Pug
-		fleet "Small Core Merchants" 400
-		fleet "Large Core Merchants" 600
-		fleet "Small Northern Merchants" 1000
-		fleet "Large Northern Merchants" 3000
-		fleet "Small Pug" 700
-		fleet "Large Pug" 900
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Pug" 700
+		add fleet "Large Pug" 900
 	system Vega
 		government "Free Worlds"
 	system "Delta Capricorni"
 		government Pug
-		fleet "Small Core Merchants" 700
-		fleet "Large Core Merchants" 800
-		fleet "Small Pug" 800
-		fleet "Large Pug" 1100
-		fleet "Human Miners" 3000
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 1100
 	system Alderamin
 		government Pug
-		fleet "Small Core Merchants" 2000
-		fleet "Large Core Merchants" 3200
-		fleet "Small Pug" 1200
-		fleet "Large Pug" 2500
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		remove fleet "Small Core Pirates"
+		remove fleet "Large Core Pirates"
+		add fleet "Small Pug" 1200
+		add fleet "Large Pug" 2500
 	system Nocte
 		government Pug
-		fleet "Small Northern Merchants" 1500
-		fleet "Large Northern Merchants" 5000
-		fleet "Small Pug" 3000
-		fleet "Large Pug" 7000
-		fleet "Human Miners" 1600
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Small Northern Pirates"
+		add fleet "Small Pug" 3000
+		add fleet "Large Pug" 7000
 	planet Rand
 		security 0
 	planet Oblivion
@@ -2522,19 +2524,19 @@ event "fwc navy retakes cebalrai"
 	unvisit Menkent
 	system Cebalrai
 		government Republic
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1500
-		fleet "Small Republic" 500
-		fleet "Large Republic" 600
-		fleet "Large Free Worlds" 5000
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Free Worlds"
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 681
+		add fleet "Large Free Worlds" 5000
 	system Menkent
 		government Republic
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1900
-		fleet "Small Republic" 300
-		fleet "Large Republic" 400
-		fleet "Large Free Worlds" 2000
-		fleet "Human Miners" 2000
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		add fleet "Small Republic" 300
+		add fleet "Large Republic" 500
+		add fleet "Large Free Worlds" 2000
 
 
 
@@ -2576,11 +2578,12 @@ event "fwc peace with the navy"
 		"required reputation" 40
 	system Vega
 		government Pug
-		fleet "Small Northern Merchants" 800
-		fleet "Large Northern Merchants" 3000
-		fleet "Small Pug" 800
-		fleet "Large Pug" 1200
-		fleet "Human Miners" 5000
+		remove fleet "Small Southern Merchants"
+		add fleet "Small Northern Merchants" 800
+		add fleet "Large Northern Merchants" 3000
+		add fleet "Small Pug" 800
+		add fleet "Large Pug" 1200
+		add fleet "Human Miners" 5000
 
 
 
@@ -2599,33 +2602,37 @@ event "fwc battle for rasalhague"
 event "fwc liberation of rasalhague"
 	system Rasalhague
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Republic" 400
-		fleet "Large Republic" 600
-		fleet "Small Free Worlds" 400
-		fleet "Large Free Worlds" 600
+		add fleet "Small Southern Merchants" 1764
+		add fleet "Large Southern Merchants" 2000
+		add fleet "Small Republic" 400
+		add fleet "Large Republic" 600
+		add fleet "Small Free Worlds" 400
+		add fleet "Large Free Worlds" 600
 	system "Zeta Aquilae"
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 3000
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
 	system Vega
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Human Miners" 5000
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
+		add fleet "Small Southern Merchants" 1500
+		add fleet "Large Southern Merchants" 2000
 	system Altair
-		fleet "Small Core Merchants" 400
-		fleet "Large Core Merchants" 600
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
 	system "Delta Capricorni"
-		fleet "Small Core Merchants" 700
-		fleet "Large Core Merchants" 800
-		fleet "Human Miners" 3000
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
 	system Alderamin
-		fleet "Small Core Merchants" 2000
-		fleet "Large Core Merchants" 3200
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
 	system Deneb
-		fleet "Small Core Merchants" 10000
-		fleet "Small Pug" 100
-		fleet "Large Pug" 100
+		add fleet "Small Core Merchants" 10000
+		add fleet "Small Pug" 133
+		add fleet "Large Pug" 111
 
 
 
@@ -2638,12 +2645,14 @@ event "fwc reconnect zeta aquilae"
 	link "Zeta Aquilae" Ascella
 	system "Zeta Aquilae"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Republic" 400
-		fleet "Large Republic" 600
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 800
+		remove fleet "Small Southern Merchants"
+		remove fleet "Small Southern Merchants"
+		add fleet "Small Southern Merchants" 1500
+		add fleet "Large Southern Merchants" 6000
+		add fleet "Small Republic" 400
+		add fleet "Large Republic" 600
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 800
 	system Orvala
 		government "Free Worlds"
 
@@ -2659,11 +2668,8 @@ event "fwc reconnect vega"
 	link Sol Vega
 	system Vega
 		government Republic
-		fleet "Small Southern Merchants" 1500
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Republic" 500
-		fleet "Large Republic" 700
-		fleet "Human Miners" 5000
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 700
 
 
 
