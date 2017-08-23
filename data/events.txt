@@ -1968,8 +1968,13 @@ event "at war with the pug"
 			"Syndicate" -.01
 			"Syndicate (Extremist)" -.01
 	system "Delta Capricorni"
-		fleet "Small Core Merchants" 1500
-		fleet "Human Miners" 6000
+		remove fleet "Small Core Merchants"
+		remove fleet "Large Core Merchants"
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
+		remove fleet "Human Miners"
+		add fleet "Small Core Merchants" 1500
+		add fleet "Human Miners" 6000
 
 
 
@@ -1982,11 +1987,10 @@ event "battle for delta capricorni"
 event "reconnected delta capricorni"
 	link "Delta Capricorni" Markab
 	system "Delta Capricorni"
-		fleet "Small Core Merchants" 1500
-		fleet "Large Core Merchants" 3000
-		fleet "Small Pug" 2000
-		fleet "Large Syndicate" 400
-		fleet "Human Miners" 3000
+		add fleet "Large Core Merchants" 3000
+		add fleet "Small Pug" 2000
+		add fleet "Large Syndicate" 400
+		add fleet "Human Miners" 6000
 
 
 
@@ -1999,10 +2003,10 @@ event "battle for altair"
 event "liberation of altair"
 	system Altair
 		government Republic
-		fleet "Small Core Merchants" 1000
-		fleet "Large Core Merchants" 2000
-		fleet "Small Pug" 2000
-		fleet "Large Syndicate" 800
+		add fleet "Small Core Merchants" 3000
+		add fleet "Large Core Merchants" 2000
+		add fleet "Small Pug" 2000
+		add fleet "Large Syndicate" 800
 
 
 
@@ -2010,8 +2014,10 @@ event "reconnected altair"
 	link Altair Sol
 	system Altair
 		government Republic
-		fleet "Small Core Merchants" 800
-		fleet "Large Core Merchants" 1200
+		remove fleet "Small Pug"
+		remove fleet "Large Syndicate"
+		add fleet "Small Core Merchants" 4000
+		add fleet "Large Core Merchants" 3000
 
 
 
