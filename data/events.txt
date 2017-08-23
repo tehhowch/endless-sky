@@ -1914,25 +1914,28 @@ event "pug invasion 4"
 	unvisit Diphda
 	unvisit Ankaa
 	system Sol
-		fleet "Small Northern Merchants" 300
-		fleet "Large Northern Merchants" 500
-		fleet "Small Republic" 600
-		fleet "Large Republic" 900
-		fleet "Small Core Merchants" 1000
-		fleet "Large Core Merchants" 2000
+		remove fleet "Small Core Merchants"
+		remove fleet "Small Core Merchants"
+		remove fleet "Large Core Merchants"
+		remove fleet "Large Core Merchants"
+		remove fleet "Small Syndicate"
+		remove fleet "Large Syndicate"
+		add fleet "Small Northern Merchants" 750
+		add fleet "Large Northern Merchants" 1750
+		add fleet "Small Republic" 2400
+		add fleet "Large Republic" 3600
+		add fleet "Small Core Merchants" 1000
+		add fleet "Large Core Merchants" 2000
 	system Diphda
 		government Pug
-		fleet "Small Core Merchants" 2000
-		fleet "Large Core Merchants" 600
-		fleet "Small Pug" 1000
-		fleet "Large Pug" 1500
+		remove fleet "Small Syndicate"
+		add fleet "Small Pug" 1000
+		add fleet "Large Pug" 1500
 	system Caph
 		government Pug
-		fleet "Small Core Merchants" 500
-		fleet "Large Core Merchants" 600
-		fleet "Small Pug" 700
-		fleet "Large Pug" 1000
-		fleet "Human Miners" 2000
+		remove fleet "Small Syndicate"
+		add fleet "Small Pug" 700
+		add fleet "Large Pug" 1000
 	planet Reunion
 		security 0
 	planet "Kraken Station"
