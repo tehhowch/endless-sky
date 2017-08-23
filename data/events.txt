@@ -2276,27 +2276,29 @@ event "fwc southern liberation"
 
 event "fwc attack kaus borealis"
 	system "Alpha Arae"
-		fleet "Small Southern Merchants" 5000
-		fleet "Large Southern Merchants" 6000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Large Free Worlds"
 	system "Kaus Borealis"
-		fleet "Large Southern Merchants" 4000
-		fleet "Large Free Worlds" 3000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Large Republic"
+		add fleet "Large Free Worlds" 3000
 
 
 
 event "fwc capture kaus borealis"
 	system "Alpha Arae"
-		fleet "Small Southern Merchants" 5000
-		fleet "Large Southern Merchants" 6000
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1000
+		add fleet "Small Free Worlds" 1000
+		add fleet "Large Free Worlds" 1000
 	system "Kaus Borealis"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 400
-		fleet "Large Free Worlds" 400
-		fleet "Large Republic" 2000
+		add fleet "Small Southern Merchants" 2000
+		add fleet "Small Free Worlds" 400
+		add fleet "Large Free Worlds" 461
+		add fleet "Large Republic" 2000
 	planet "New Iceland"
 		description `New Iceland is a perpetually hazy volcanic world, with a slightly caustic atmosphere but enough reserves of metal and petrochemicals to draw a large number of settlers. Some of those settlers also make a living as farmers, and a few well-developed factory towns produce goods for export to other worlds. Many of the inhabitants wear dust masks to avoid letting the particulate matter from the volcanoes accumulate in their lungs.`
 
@@ -2312,17 +2314,19 @@ event "fwc attack cebalrai"
 event "fwc capture cebalrai"
 	system Cebalrai
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1500
-		fleet "Small Free Worlds" 400
-		fleet "Large Free Worlds" 400
-		fleet "Large Republic" 2000
+		add fleet "Small Southern Merchants" 1250
+		add fleet "Large Southern Merchants" 2000
+		add fleet "Small Free Worlds" 400
+		add fleet "Large Free Worlds" 400
+		add fleet "Large Republic" 2000
 	system "Kaus Borealis"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 700
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 600
+		add fleet "Large Free Worlds" 700
 
 
 
@@ -2340,73 +2344,52 @@ event "fwc defend cebalrai"
 
 event "fwc defended cebalrai"
 	system Cebalrai
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1500
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 600
-		fleet "Large Republic" 5000
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 1500
+		add fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 666
+		add fleet "Large Republic" 5000
 	system Sargas
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2500
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1500
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
+		remove fleet "Navy Surveillance"
 	system Lesath
-		fleet "Small Southern Merchants" 6000
-		fleet "Large Southern Merchants" 9000
-		fleet "Large Free Worlds" 800
+		remove fleet "Small Southern Merchants"
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Southern Merchants" 6000
+		add fleet "Large Southern Merchants" 9000
+		add fleet "Large Free Worlds" 2933
 	system Dschubba
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 2600
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 6000
-		fleet "Small Free Worlds" 2000
-		fleet "Large Free Worlds" 3000
-		fleet "Human Miners" 1750
+		remove fleet "Navy Surveillance"
 	system Seginus
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2700
-		fleet "Small Free Worlds" 700
-		fleet "Large Free Worlds" 1100
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
 	system Alnasl
-		fleet "Small Southern Merchants" 1300
-		fleet "Large Southern Merchants" 2500
-		fleet "Small Southern Pirates" 6000
-		fleet "Small Free Worlds" 2000
-		fleet "Large Free Worlds" 3000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Free Worlds" 2000
+		add fleet "Large Free Worlds" 3000
 	system Eber
-		fleet "Small Southern Merchants" 1900
-		fleet "Large Southern Merchants" 2900
-		fleet "Small Southern Pirates" 3000
-		fleet "Small Free Worlds" 2000
-		fleet "Large Free Worlds" 3000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Free Worlds" 2000
+		add fleet "Large Free Worlds" 3000
 	system "Delta Sagittarii"
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Free Worlds" 600
-		fleet "Large Free Worlds" 900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Human Miners" 4000
+		remove fleet "Large Republic"
 	system Rastaban
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
+		remove fleet "Large Republic"
 	system Albaldah
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 1200
-		fleet "Small Free Worlds" 900
-		fleet "Large Free Worlds" 1900
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Human Miners" 3000
+		remove fleet "Navy Surveillance"
 
 
 
@@ -2419,12 +2402,12 @@ event "fwc attack menkent"
 event "fwc capture menkent"
 	system Menkent
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1900
-		fleet "Small Free Worlds" 300
-		fleet "Large Free Worlds" 400
-		fleet "Large Republic" 2000
-		fleet "Human Miners" 2000
+		add fleet "Small Southern Merchants" 813
+		add fleet "Large Southern Merchants" 1900
+		add fleet "Small Free Worlds" 300
+		add fleet "Large Free Worlds" 400
+		add fleet "Large Republic" 2000
+		add fleet "Human Miners" 2000
 	planet "New Austria"
 		description `New Austria is a rugged mountain world, full of snow-capped peaks and valleys so deep and so steep that they rarely see sunlight. The few settlements that have been built here were developed for mining sapphires and rubies; the sapphires found in New Austria range from blue to yellow to black to clear in color, and are used both for industrial abrasives and for jewelry. For centuries the locals have been trying to find a deposit of diamonds, which would sell for much higher prices than sapphires, and local folklore revolves around the prosperity that would come to this world if diamonds were ever discovered.`
 
