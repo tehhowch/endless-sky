@@ -311,7 +311,11 @@ mission "FW Southern Battle 1B"
 event "battle for Rastaban"
 	"reputation: Republic" = -1000
 	system Rastaban
-		fleet "Small Free Worlds" 10000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 10000
 	system Lesath
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"

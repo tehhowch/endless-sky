@@ -36,11 +36,11 @@ event "war begins"
 		government "Free Worlds"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
 		add fleet "Small Free Worlds" 600
 		add fleet "Large Free Worlds" 1300
-		add fleet "Small Southern Merchants" 600
-		add fleet "Large Southern Merchants" 1400
-		add fleet "Human Miners" 10000
+		"set period" fleet "Small Southern Merchants" 600
+		"set period" fleet "Large Southern Merchants" 1400
 	system Spica
 		government "Free Worlds"
 	system Minkar
@@ -96,40 +96,30 @@ event "war begins"
 	system "Kappa Centauri"
 		government "Free Worlds"
 	system Castor
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 800
-		add fleet "Large Northern Merchants" 1100
-		add fleet "Small Republic" 4000
-		add fleet "Large Republic" 2000
+		"set period" fleet "Small Northern Merchants" 800
+		"set period" fleet "Large Northern Merchants" 1100
+		"set period" fleet "Small Republic" 800
+		"set period" fleet "Large Republic" 400
 	system Pollux
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 700
-		add fleet "Large Northern Merchants" 1100
-		add fleet "Small Republic" 2333
-		add fleet "Large Republic" 1636
+		"set period fleet "Small Northern Merchants" 700
+		"set period" fleet "Large Northern Merchants" 1100
+		"set period" fleet "Small Republic" 700
+		"set period" fleet "Large Republic" 900
 	system Vega
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 1000
-		add fleet "Large Northern Merchants" 4000
-		add fleet "Small Republic" 2057
-		add fleet "Large Republic" 1250
+		"set period" fleet "Small Northern Merchants" 1000
+		"set period" fleet "Large Northern Merchants" 4000
+		"set period" fleet "Small Republic" 900
+		"set period" fleet "Large Republic" 1000
 	system Denebola
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 1000
-		add fleet "Large Northern Merchants" 3000
-		add fleet "Small Republic" 2333
-		add fleet "Large Republic" 1636
+		"set period" fleet "Small Northern Merchants" 1000
+		"set period" fleet "Large Northern Merchants" 3000
+		"set period" fleet "Small Republic" 700
+		"set period" fleet "Large Republic" 900
 	system Merak
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 1500
-		add fleet "Large Northern Merchants" 4000
-		add fleet "Small Republic" 2444
-		add fleet "Large Republic" 1925
+		"set period" fleet "Small Northern Merchants" 1500
+		"set period" fleet "Large Northern Merchants" 4000
+		"set period" fleet "Small Republic" 1100
+		"set period" fleet "Large Republic" 1300
 	planet Geminus
 		description `Until recently, Geminus was home to the Republic Navy Yard, the largest shipyard in human space. Now, there is nothing left of the shipyard but a gaping crater in the ground, from the recent terrorist bombing.`
 		spaceport `Fortunately, the spaceport and residential areas survived the bombing, which was focused only on the Navy yard and happened early in the morning, when very few people were at work.`
@@ -166,31 +156,31 @@ event "initial deployment 1"
 		remove fleet "Large Militia"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4800
-		add fleet "Large Southern Merchants" 3923
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 1700
 		add fleet "Small Free Worlds" 800
 		add fleet "Large Free Worlds" 1500
 	system Minkar
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 3150
-		add fleet "Large Southern Merchants" 3000
+		"set period" fleet "Small Southern Merchants" 700
+		"set period" fleet "Large Southern Merchants" 1500
 		add fleet "Small Free Worlds" 700
 		add fleet "Large Free Worlds" 1200
 	system Mimosa
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4800
-		add fleet "Large Southern Merchants" 4259
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 2300
 		add fleet "Small Free Worlds" 1200
 		add fleet "Large Free Worlds" 1900
 	system Kraz
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 8000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 1600
 		add fleet "Small Free Worlds" 700
 		add fleet "Large Free Worlds" 900
 	system Acrux
@@ -198,109 +188,82 @@ event "initial deployment 1"
 		remove fleet "Large Militia"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 3000
-		add fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Merchants" 500
+		"set period" fleet "Large Southern Merchants" 800
 		add fleet "Small Free Worlds" 700
 		add fleet "Large Free Worlds" 1100
 	
 	system "Tania Australis"
 		remove fleet "Small Northern Pirates"
 		remove fleet "Large Northern Pirates"
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		add fleet "Small Northern Merchants" 1400
-		add fleet "Large Northern Merchants" 2900
-		add fleet "Small Republic" 750
+		"set period" fleet "Small Northern Merchants" 1400
+		"set period" fleet "Large Northern Merchants" 2900
+		"set period" fleet "Small Republic" 600
 		add fleet "Large Republic" 400
 		add fleet "Navy Surveillance" 2000
 	planet Ingot
 		add description `Ingot is also now home to a burgeoning Navy base, although since the planet is so unlivable most of the troops are just living in ships in orbit.`
 	system Fala
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		remove fleet "Small Northern Pirates"
-		remove fleet "Large Northern Pirates"
-		remove fleet "Human Miners"
-		add fleet "Small Northern Merchants" 1900
-		add fleet "Large Northern Merchants" 3500
-		add fleet "Small Republic" 705
+		"set period" fleet "Small Northern Merchants" 1900
+		"set period" fleet "Large Northern Merchants" 3500
+		"set period" fleet "Small Republic" 600
 		add fleet "Large Republic" 400
-		add fleet "Small Northern Pirates" 4000
-		add fleet "Large Northern Pirates" 8000
+		"set period" fleet "Small Northern Pirates" 4000
+		"set period" fleet "Large Northern Pirates" 8000
 		add fleet "Navy Surveillance" 2000
-		add fleet "Human Miners" 3000
+		"set period" fleet "Human Miners" 3000
 	system Phecda
-		remove fleet "Small Northern Merchants"
 		remove fleet "Large Northern Merchants"
-		remove fleet "Small Southern Merchants"
 		remove fleet "Large Southern Merchants"
-		add fleet "Small Northern Merchants" 900
-		add fleet "Small Southern Merchants" 1100
-		add fleet "Small Republic" 1097
+		"set period" fleet "Small Northern Merchants" 900
+		"set period" fleet "Small Southern Merchants" 1100
+		"set period" fleet "Small Republic" 900
 		add fleet "Large Republic" 1100
 		add fleet "Navy Surveillance" 2000
-		add fleet "Human Miners" 3000
+		"set period" fleet "Human Miners" 3000
 	system Algorel
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 800
-		add fleet "Large Southern Merchants" 1200
-		add fleet "Small Republic" 913
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1200
+		"set period" fleet "Small Republic" 700
 		add fleet "Large Republic" 500
-		add fleet "Small Southern Pirates" 2500
-		add fleet "Large Southern Pirates" 8000
+		"set period" fleet "Small Southern Pirates" 2500
+		"set period" fleet "Large Southern Pirates" 8000
 		add fleet "Navy Surveillance" 2000
 	planet "New Wales"
 		add description `The Republic Navy has planted a base on New Wales: so far, just a densely packed cluster of prefabricated barracks and infirmary buildings on the outskirts of one of the mining colonies.`
 	system Porrima
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1400
-		add fleet "Large Southern Merchants" 4000
-		add fleet "Small Republic" 1411
+		"set period" fleet "Small Southern Merchants" 1400
+		"set period" fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Republic" 1200
 		add fleet "Large Republic" 1800
-		add fleet "Small Southern Pirates" 9000
+		"set period" fleet "Small Southern Pirates" 9000
 		add fleet "Navy Surveillance" 2000
 	system Ipsing
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 2800
-		add fleet "Large Southern Merchants" 7000
+		"set period" fleet "Small Southern Merchants" 2800
+		"set period" fleet "Large Southern Merchants" 7000
 		add fleet "Small Republic" 2500
 		add fleet "Large Republic" 4000
-		add fleet "Small Southern Pirates" 5000
+		"set period" fleet "Small Southern Pirates" 5000
 		add fleet "Navy Surveillance" 2000
 	system Mizar
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1400
-		add fleet "Large Southern Merchants" 4500
+		"set period" fleet "Small Southern Merchants" 1400
+		"set period" fleet "Large Southern Merchants" 4500
 		add fleet "Small Republic" 1000
 		add fleet "Large Republic" 1400
-		add fleet "Small Southern Pirates" 9000
+		"set period" fleet "Small Southern Pirates" 9000
 		add fleet "Navy Surveillance" 2000
 	system Muphrid
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 4800
-		add fleet "Small Republic" 1410
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 4800
+		"set period" fleet "Small Republic" 1100
 		add fleet "Large Republic" 1900
-		add fleet "Small Southern Pirates" 9000
+		"set period" fleet "Small Southern Pirates" 9000
 		add fleet "Navy Surveillance" 2000
 	system Menkent
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		add fleet "Small Southern Merchants" 700
-		add fleet "Large Southern Merchants" 1900
-		add fleet "Small Republic" 600
+		"set period" fleet "Small Southern Merchants" 700
+		"set period" fleet "Large Southern Merchants" 1900
+		"set period" fleet "Small Republic" 500
 		add fleet "Large Republic" 600
 		add fleet "Navy Surveillance" 2000
 	planet "New Austria"
@@ -317,83 +280,69 @@ event "initial deployment 2"
 	system Izar
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Small Southern Merchants" 1750
-		add fleet "Large Southern Merchants" 9000
+		"set period" fleet "Small Southern Merchants" 500
+		"set period" fleet "Large Southern Merchants" 1500
 		add fleet "Small Free Worlds" 700
 		add fleet "Large Free Worlds" 1000
 	system "Zeta Centauri"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 5600
-		add fleet "Large Southern Merchants" 11333
+		"set period" fleet "Small Southern Merchants" 700
+		"set period" fleet "Large Southern Merchants" 1700
 		add fleet "Small Free Worlds" 1200
 		add fleet "Large Free Worlds" 2000
-		add fleet "Small Southern Pirates" 6000
-		add fleet "Large Southern Pirates" 9000
+		"set period" fleet "Small Southern Pirates" 6000
+		"set period" fleet "Large Southern Pirates" 9000
 	system Hadar
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		add fleet "Large Southern Merchants" 1500
+		"set period" fleet "Large Southern Merchants" 600
 		add fleet "Small Free Worlds" 600
 		add fleet "Large Free Worlds" 1100
 	system Alkaid
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4800
-		add fleet "Large Southern Merchants" 20000
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 4000
 		add fleet "Small Free Worlds" 6000
 		add fleet "Large Free Worlds" 10000
-		add fleet "Small Southern Pirates" 4000
-		add fleet "Large Southern Pirates" 8000
+		"set period" fleet "Small Southern Pirates" 4000
+		"set period" fleet "Large Southern Pirates" 8000
 	system Zubeneschamali
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Large Southern Merchants" 3000
+		"set period" fleet "Large Southern Merchants" 1000
 		add fleet "Small Free Worlds" 1400
 		add fleet "Large Free Worlds" 2400
-		add fleet "Small Southern Pirates" 4000
-		add fleet "Large Southern Pirates" 5000
+		"set period" fleet "Small Southern Pirates" 4000
+		"set period" fleet "Large Southern Pirates" 5000
 	system Kochab
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 18000
-		add fleet "Large Southern Merchants" 30000
+		"set period" fleet "Small Southern Merchants" 1800
+		"set period" fleet "Large Southern Merchants" 5000
 		add fleet "Small Free Worlds" 5000
-		add fleet "Small Southern Pirates" 6000
+		"set period" fleet "Small Southern Pirates" 6000
 	system Ildaria
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 18000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 1800
 		add fleet "Small Free Worlds" 2200
 		add fleet "Large Free Worlds" 3600
-		add fleet "Small Southern Pirates" 4000
-		add fleet "Large Southern Pirates" 7000
+		"set period" fleet "Small Southern Pirates" 4000
+		"set period" fleet "Large Southern Pirates" 7000
 	
 	system Mora
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		remove fleet "Human Miners"
-		add fleet "Small Southern Merchants" 2800
-		add fleet "Large Southern Merchants" 5000
-		add fleet "Small Southern Pirates" 3000
-		add fleet "Large Southern Pirates" 4000
-		add fleet "Small Republic" 1052
+		"set period" fleet "Small Southern Merchants" 2800
+		"set period" fleet "Large Southern Merchants" 5000
+		"set period" fleet "Small Southern Pirates" 3000
+		"set period" fleet "Large Southern Pirates" 4000
+		"set period" fleet "Small Republic" 1000
 		add fleet "Large Republic" 2000
 		add fleet "Navy Surveillance" 1600
-		add fleet "Human Miners" 4000
+		"set period" fleet "Human Miners" 4000
 	system "Delta Velorum"
-		add fleet "Small Republic" 1846
+		"set period" fleet "Small Republic" 1600
 		add fleet "Large Republic" 2400
 		add fleet "Navy Surveillance" 1600
 	system Turais
@@ -401,15 +350,13 @@ event "initial deployment 2"
 		add fleet "Large Republic" 1800
 		add fleet "Navy Surveillance" 1600
 	system Gacrux
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Pirates" 2000
-		add fleet "Large Southern Pirates" 4000
-		add fleet "Small Republic" 2307
+		"set period" fleet "Small Southern Pirates" 2000
+		"set period" fleet "Large Southern Pirates" 4000
+		"set period" fleet "Small Republic" 2000
 		add fleet "Large Republic" 3000
 		add fleet "Navy Surveillance" 1600
 	system "Cor Caroli"
-		add fleet "Small Republic" 1363
+		"set period" fleet "Small Republic" 1200
 		add fleet "Large Republic" 1800
 		add fleet "Navy Surveillance" 1600
 	system Muhlifain
@@ -471,114 +418,90 @@ event "initial deployment 3"
 	system Zubenelgenubi
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Large Southern Merchants" 2250
+		"set period" fleet "Large Southern Merchants" 900
 		add fleet "Small Free Worlds" 800
 		add fleet "Large Free Worlds" 1000
-		add fleet "Small Southern Pirates" 5000
-		add fleet "Large Southern Pirates" 8000
+		"set period" fleet "Small Southern Pirates" 5000
+		"set period" fleet "Large Southern Pirates" 8000
 	system Unukalhai
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 12000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 3000
 		add fleet "Small Free Worlds" 3000
 		add fleet "Large Free Worlds" 6000
 	system Sabik
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Large Southern Merchants" 1800
+		"set period" fleet "Large Southern Merchants" 600
 		add fleet "Small Free Worlds" 1000
 		add fleet "Large Free Worlds" 1600
 	system Aldhibain
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Large Southern Merchants" 3000
+		"set period" fleet "Large Southern Merchants" 500
 		add fleet "Small Free Worlds" 600
 		add fleet "Large Free Worlds" 700
-		add fleet "Small Southern Pirates" 1400
-		add fleet "Large Southern Pirates" 3000
+		"set period" fleet "Small Southern Pirates" 1400
+		"set period" fleet "Large Southern Pirates" 3000
 	system Kornephoros
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		add fleet "Large Southern Merchants" 1680
-		add fleet "Small Southern Pirates" 5000
+		"set period" fleet "Large Southern Merchants" 700
+		"set period" fleet "Small Southern Pirates" 5000
 		add fleet "Small Free Worlds" 1000
 		add fleet "Large Free Worlds" 2000
 	
 	system Wei
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 800
-		add fleet "Large Southern Merchants" 2500
-		add fleet "Small Southern Pirates" 6000
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 2500
+		"set period" fleet "Small Southern Pirates" 6000
 		add fleet "Small Republic" 800
 		add fleet "Large Republic" 700
 		add fleet "Navy Surveillance" 1200
 	system Seginus
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 2700
-		add fleet "Small Southern Pirates" 8000
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 2700
+		"set period" fleet "Small Southern Pirates" 8000
 		add fleet "Small Republic" 1200
 		add fleet "Large Republic" 1400
 		add fleet "Navy Surveillance" 1200
 	system Alnasl
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1300
-		add fleet "Large Southern Merchants" 2500
-		add fleet "Small Southern Pirates" 6000
+		"set period" fleet "Small Southern Merchants" 1300
+		"set period" fleet "Large Southern Merchants" 2500
+		"set period" fleet "Small Southern Pirates" 6000
 		add fleet "Small Republic" 900
 		add fleet "Large Republic" 1100
 		add fleet "Navy Surveillance" 1200
 	system Eber
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1900
-		add fleet "Large Southern Merchants" 2900
-		add fleet "Small Southern Pirates" 3000
+		"set period" fleet "Small Southern Merchants" 1900
+		"set period" fleet "Large Southern Merchants" 2900
+		"set period" fleet "Small Southern Pirates" 3000
 		add fleet "Small Republic" 1000
 		add fleet "Large Republic" 1500
 		add fleet "Navy Surveillance" 1200
 	system "Alpha Arae"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 2100
-		add fleet "Large Southern Merchants" 8000
-		add fleet "Small Southern Pirates" 6000
-		add fleet "Large Southern Pirates" 13000
+		"set period" fleet "Small Southern Merchants" 2100
+		"set period" fleet "Large Southern Merchants" 8000
+		"set period" fleet "Small Southern Pirates" 6000
+		"set period" fleet "Large Southern Pirates" 13000
 		add fleet "Small Republic" 900
 		add fleet "Large Republic" 800
 		add fleet "Navy Surveillance" 1200
 	system "Kaus Borealis"
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 900
-		add fleet "Large Southern Merchants" 4000
-		add fleet "Small Southern Pirates" 8000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Pirates" 8000
 		add fleet "Small Republic" 1100
 		add fleet "Large Republic" 800
 		add fleet "Navy Surveillance" 1200
@@ -747,135 +670,112 @@ event "initial deployment 4"
 	system Sargas
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4200
-		add fleet "Large Southern Merchants" 15000
-		add fleet "Small Southern Pirates" 3000
-		add fleet "Large Southern Pirates" 5000
+		"set period" fleet "Small Southern Merchants" 600
+		"set period" fleet "Large Southern Merchants" 2500
+		"set period" fleet "Small Southern Pirates" 3000
+		"set period" fleet "Large Southern Pirates" 5000
 		add fleet "Small Free Worlds" 1000
 		add fleet "Large Free Worlds" 1500
 		add fleet "Navy Surveillance" 800
 	system Dschubba
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4000
-		add fleet "Large Southern Merchants" 19500
-		add fleet "Small Southern Pirates" 3000
-		add fleet "Large Southern Pirates" 6000
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 2600
+		"set period" fleet "Small Southern Pirates" 3000
+		"set period" fleet "Large Southern Pirates" 6000
 		add fleet "Small Free Worlds" 2000
 		add fleet "Large Free Worlds" 3000
 		add fleet "Navy Surveillance" 800
 	system Lesath
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4000
-		add fleet "Large Southern Merchants" 8000
-		add fleet "Small Southern Pirates" 3000
-		add fleet "Large Southern Pirates" 7000
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1600
+		"set period" fleet "Small Southern Pirates" 3000
+		"set period" fleet "Large Southern Pirates" 7000
 		add fleet "Small Free Worlds" 800
 		add fleet "Large Free Worlds" 1100
 		add fleet "Navy Surveillance" 800
 	system Atria
 		remove fleet "Small Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 2333
-		add fleet "Large Southern Merchants" 19500
-		add fleet "Small Southern Pirates" 5000
-		add fleet "Large Southern Pirates" 8000
+		"set period" fleet "Small Southern Merchants" 700
+		"set period" fleet "Large Southern Merchants" 2600
+		"set period" fleet "Small Southern Pirates" 5000
+		"set period" fleet "Large Southern Pirates" 8000
 		add fleet "Small Free Worlds" 1000
 		add fleet "Large Free Worlds" 2100
 	system Alniyat
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Large Southern Merchants" 4200
+		"set period" fleet "Large Southern Merchants" 600
 		add fleet "Small Free Worlds" 1500
 		add fleet "Large Free Worlds" 4000
 	system Han
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 4000
-		add fleet "Large Southern Merchants" 20000
-		add fleet "Small Southern Pirates" 2000
-		add fleet "Large Southern Pirates" 9000
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Pirates" 2000
+		"set period" fleet "Large Southern Pirates" 9000
 		add fleet "Small Free Worlds" 3000
 		add fleet "Large Free Worlds" 8000
 	system Pherkad
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Large Southern Merchants" 2333
+		"set period" fleet "Large Southern Merchants" 700
 		add fleet "Small Free Worlds" 900
 		add fleet "Large Free Worlds" 1700
-		add fleet "Small Southern Pirates" 2000
-		add fleet "Large Southern Pirates" 5181
+		"set period" fleet "Small Southern Pirates" 1000
+		"set period" fleet "Large Southern Pirates" 1900
 	system "Beta Lupi"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Small Southern Merchants" 4000
-		add fleet "Small Southern Pirates" 4125
-		add fleet "Large Southern Pirates" 4444
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Small Southern Pirates" 1100
+		"set period" fleet "Large Southern Pirates" 1600
 		add fleet "Small Free Worlds" 4000
 		add fleet "Large Free Worlds" 8000
 	system "Yed Prior"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
-		add fleet "Large Southern Merchants" 3520
-		add fleet "Small Southern Pirates" 2000
-		add fleet "Large Southern Pirates" 6000
+		"set period" fleet "Large Southern Merchants" 1100
+		"set period" fleet "Small Southern Pirates" 1000
+		"set period" fleet "Large Southern Pirates" 2000
 		add fleet "Small Free Worlds" 5000
 		add fleet "Large Free Worlds" 8000
 	system "Kappa Centauri"
 		remove fleet "Small Militia"
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 27000
-		add fleet "Small Southern Pirates" 8000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 2700
+		"set period" fleet "Small Southern Pirates" 1600
 		add fleet "Large Southern Pirates" 2000
 		add fleet "Small Free Worlds" 3000
 		add fleet "Large Free Worlds" 5000
 	
 	system Rastaban
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 1000
-		add fleet "Large Southern Merchants" 1900
-		add fleet "Small Southern Pirates" 4000
-		add fleet "Large Southern Pirates" 8000
+		"set period" fleet "Small Southern Merchants" 1000
+		"set period" fleet "Large Southern Merchants" 1900
+		"set period" fleet "Small Southern Pirates" 4000
+		"set period" fleet "Large Southern Pirates" 8000
 		add fleet "Small Republic" 900
 		add fleet "Large Republic" 700
 		add fleet "Navy Surveillance" 1200
 	system Sabik
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		add fleet "Small Southern Merchants" 600
-		add fleet "Large Southern Merchants" 800
-		add fleet "Small Free Worlds" 4000
-		add fleet "Large Free Worlds" 4800
+		"set period" fleet "Small Southern Merchants" 600
+		"set period" fleet "Large Southern Merchants" 800
+		"set period" fleet "Small Free Worlds" 800
+		"set period" fleet "Large Free Worlds" 1200
 		add fleet "Navy Surveillance" 800
 	system Aldhibain
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		add fleet "Small Southern Merchants" 600
-		add fleet "Large Southern Merchants" 800
-		add fleet "Large Free Worlds" 4200
+		"set period" fleet "Small Southern Merchants" 600
+		"set period" fleet "Large Southern Merchants" 800
+		"set period" fleet "Large Free Worlds" 600
 		add fleet "Navy Surveillance" 800
 	system Kornephoros
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		add fleet "Small Southern Merchants" 800
-		add fleet "Large Southern Merchants" 1000
-		add fleet "Small Free Worlds" 9000
-		add fleet "Large Free Worlds" 11333
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1000
+		"set period" fleet "Small Free Worlds" 900
+		"set period" fleet "Large Free Worlds" 1700
 		add fleet "Navy Surveillance" 800
 
 
@@ -884,23 +784,17 @@ event "capture of Kornephoros"
 	system Kornephoros
 		government Republic
 		remove fleet "Small Free Worlds"
-		remove fleet "Small Free Worlds"
 		remove fleet "Large Free Worlds"
-		remove fleet "Large Free Worlds"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 1400
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 1400
 		add fleet "Small Republic" 300
 		add fleet "Large Republic" 500
 	system Sabik
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 800
-		add fleet "Large Southern Merchants" 1000
-		add fleet "Small Free Worlds" 800
-		add fleet "Large Free Worlds" 1200
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1000
+		"set period" fleet "Small Free Worlds" 400
+		"set period" fleet "Large Free Worlds" 600
 	planet Clink
 		description `The mining outpost is swarming with Navy guards; they seem to have turned this moon into a temporary base of operations. The mine has been shut down, and no one is being allowed in or out of the mining outpost. It is not clear whether the miners are prisoners, or merely under a very tight watch.`
 		security 1
@@ -938,7 +832,12 @@ event "temporary ceasefire"
 
 event "prepare for battle of Kornephoros"
 	system "Kornephoros"
-		fleet "Small Free Worlds" 10000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		add fleet "Small Free Worlds" 10000
 
 
 
@@ -949,11 +848,11 @@ event "recapture of Kornephoros"
 		remove fleet "Navy Surveillance"
 	system Kornephoros
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1000
-		fleet "Small Free Worlds" 900
-		fleet "Large Free Worlds" 1700
-		fleet "Human Miners" 3000
+		add fleet "Small Southern Merchants" 800
+		add fleet "Large Southern Merchants" 1000
+		"set period" "Small Free Worlds" 900
+		add fleet "Large Free Worlds" 1700
+		"set period" fleet "Human Miners" 3000
 	planet Clink
 		description `About a decade ago, a mining corporation from Zug planted a colony on Clink for harvesting some rare earth minerals that are present in this moon's crust due to its unusually high rate of asteroid impacts. The atmosphere here is too thin to breathe without a respirator, and because of the low gravity, the dust raised by the mining operations hangs perpetually in the air.`
 		description `The miners who work here are a tight-knit group, since most of them were part of the original colonization team. They are not particularly open to outsiders, and the facilities here are so rudimentary that they do not even stock fuel for visiting ships.`
@@ -1047,14 +946,12 @@ event "plasma turret available"
 
 event "fw conservatory founded"
 	system "Yed Prior"
-		remove fleet "Small Southern Pirates"
-		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 1333
-		add fleet "Large Southern Merchants" 2933
-		add fleet "Small Southern Pirates" 1200
-		add fleet "Large Southern Pirates" 2400
-		add fleet "Small Free Worlds" 1250
-		add fleet "Large Free Worlds" 1846
+		"set period" fleet "Small Southern Merchants" 500
+		"set period" fleet "Large Southern Merchants" 800
+		"set period" fleet "Small Southern Pirates" 1200
+		"set period" fleet "Large Southern Pirates" 2400
+		"set period" fleet "Small Free Worlds" 1000
+		"set period" fleet "Large Free Worlds" 1500
 	planet Winter
 		add attributes research
 		add description `	Winter is home to the Free Worlds Conservatory, a new university that is focused on making terraforming technology and expertise available at a reasonable price, as well as on ecological protection and renewal.`
@@ -1064,20 +961,23 @@ event "fw conservatory founded"
 
 event "battle for Thule"
 	system Men
-		fleet "Small Southern Pirates" 10000
+		remove fleet "Large Southern Pirates"
+		remove fleet "Small Northern Pirates"
+		remove fleet "Large Northern Pirates"
+		"set period" fleet "Small Southern Pirates" 10000
 
 
 
 event "Thule becomes independent"
 	system Men
 		government Independent
-		fleet "Small Independent" 400
-		fleet "Large Independent" 600
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Southern Pirates" 2500
-		fleet "Large Southern Pirates" 5000
-		fleet "Large Free Worlds" 1500
+		add fleet "Small Independent" 400
+		add fleet "Large Independent" 600
+		add fleet "Small Southern Merchants" 2000
+		add fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Pirates" 2500
+		"set period" fleet "Large Southern Pirates" 5000
+		add fleet "Large Free Worlds" 1500
 	planet Thule
 		description `Thule is a mountainous world with a population of nearly a billion, settled in the early days of space exploration. When the colony was first established, the Earth government did not yet have the strength to control any system but its own, and when the Republic was formed, Thule did not join, and has repulsed all efforts to force them to do so.`
 		description `	Until recently, Thule was a well-known den of pirate activity, but the major tribal authorities have now forsworn piracy in the interest of keeping the Free Worlds from further meddling in their affairs. However, it is likely that all manner of illegal activity is still going on in secret here.`
@@ -1091,42 +991,50 @@ event "Thule becomes independent"
 event "fw suppressed Bloodsea"
 	system Antares
 		government "Free Worlds"
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1600
-		fleet "Small Southern Pirates" 4000
-		fleet "Large Southern Pirates" 8000
+		remove fleet "Large Militia"
+		add fleet "Small Free Worlds" 800
+		add fleet "Large Free Worlds" 1600
+		"set period" fleet "Small Southern Pirates" 4000
+		"set period" fleet "Large Southern Pirates" 8000
 
 
 
 event "fw abandoned Bloodsea"
 	system Antares
 		government Pirate
-		fleet "Small Southern Pirates" 1000
-		fleet "Large Southern Pirates" 2000
-		fleet "Large Free Worlds" 5000
+		remove fleet "Small Free Worlds"
+		"set period" fleet "Small Southern Pirates" 1000
+		"set period" fleet "Large Southern Pirates" 2000
+		"set period" fleet "Large Free Worlds" 5000
 
 
 
 event "fw suppressed Greenrock"
 	system Shaula
 		government "Free Worlds"
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 800
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 5000
+		remove fleet "Small Core Pirates"
+		remove fleet "Large Core Pirates"
+		remove fleet "Small Northern Pirates"
+		remove fleet "Large Northern Pirates"
+		remove fleet "Large Militia"
+		add fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 800
+		"set period" fleet "Small Southern Pirates" 3000
+		"set period" fleet "Large Southern Pirates" 5000
 
 
 
 event "fw abandoned Greenrock"
 	system Shaula
 		government Pirate
-		fleet "Small Southern Pirates" 500
-		fleet "Large Southern Pirates" 800
-		fleet "Small Core Pirates" 4000
-		fleet "Large Core Pirates" 7000
-		fleet "Small Northern Pirates" 5000
-		fleet "Large Northern Pirates" 9000
-		fleet "Large Free Worlds" 9000
+		remove fleet "Small Free Worlds"
+		"set period" fleet "Small Southern Pirates" 500
+		"set period" fleet "Large Southern Pirates" 800
+		add fleet "Small Core Pirates" 4000
+		add fleet "Large Core Pirates" 7000
+		add fleet "Small Northern Pirates" 5000
+		add fleet "Large Northern Pirates" 9000
+		"set period" fleet "Large Free Worlds" 9000
 
 
 
@@ -1138,41 +1046,33 @@ event "flamethrower available"
 
 event "navy occupying the south"
 	system Rastaban
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 2400
-		add fleet "Small Republic" 1125
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 2400
+		"set period" fleet "Small Republic" 500
 	system Girtab
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 900
-		add fleet "Large Southern Merchants" 2000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 2000
 		add fleet "Small Republic" 500
 		add fleet "Large Republic" 700
 	system Albaldah
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Militia"
 		remove fleet "Large Militia"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		add fleet "Small Southern Merchants" 1000
-		add fleet "Large Southern Merchants" 1200
+		"set period" fleet "Small Southern Merchants" 1000
+		"set period" fleet "Large Southern Merchants" 1200
 		add fleet "Small Republic" 500
 		add fleet "Large Republic" 700
 	system "Delta Sagittarii"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Militia"
 		remove fleet "Small Southern Pirates"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 4000
 		add fleet "Small Republic" 500
 		add fleet "Large Republic" 700
 
@@ -1297,13 +1197,13 @@ event "fw southern expansion"
 		add fleet "Navy Surveillance" 5000
 	system Rastaban
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 1200
-		fleet "Large Southern Merchants" 2400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 700
-		fleet "Small Southern Pirates" 3000
-		fleet "Large Southern Pirates" 7000
-		fleet "Navy Surveillance" 2000
+		add fleet "Small Southern Merchants" 1200
+		add fleet "Large Southern Merchants" 2400
+		"set period" fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 700
+		add fleet "Small Southern Pirates" 3000
+		add fleet "Large Southern Pirates" 7000
+		add fleet "Navy Surveillance" 2000
 	system Girtab
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
@@ -1333,8 +1233,8 @@ event "fw southern expansion"
 	system "Kaus Borealis"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Republic" 628
-		add fleet "Large Republic" 1333
+		"set period" fleet "Small Republic" 400
+		"set period" fleet "Large Republic" 500
 	planet "New Iceland"
 		add description `	In the wake of their defeat in the south, the Navy has begun to set up a massive new base here on New Iceland, in order to allow them to continue to have a strong presence in this sector.`
 
@@ -1344,22 +1244,18 @@ event "fw occupying the north"
 	system Alioth
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
-		remove fleet "Navy Surveillance"
 		add fleet "Small Free Worlds" 500
 		add fleet "Large Free Worlds" 800
-		add fleet "Small Republic" 5000
-		add fleet "Large Republic" 6000
-		add fleet "Navy Surveillance" 4000
+		"set period" fleet "Small Republic" 5000
+		"set period" fleet "Large Republic" 6000
+		"set period" fleet "Navy Surveillance" 4000
 	system Alphecca
 		remove fleet "Small Southern Pirates"
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		remove fleet "Navy Surveillance"
 		add fleet "Small Free Worlds" 1200
 		add fleet "Large Free Worlds" 2000
-		add fleet "Navy Surveillance" 6000
+		"set period" fleet "Navy Surveillance" 6000
 	system Boral
 		remove fleet "Small Southern Pirates"
 		remove fleet "Small Republic"
@@ -1369,22 +1265,18 @@ event "fw occupying the north"
 		add fleet "Large Free Worlds" 3800
 	system Seginus
 		remove fleet "Small Southern Pirates"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
-		remove fleet "Navy Surveillance"
 		add fleet "Small Free Worlds" 700
 		add fleet "Large Free Worlds" 1100
-		add fleet "Small Republic" 5000
-		add fleet "Large Republic" 6000
-		add fleet "Navy Surveillance" 4000
+		"set period" fleet "Small Republic" 5000
+		"set period" fleet "Large Republic" 6000
+		"set period" fleet "Navy Surveillance" 4000
 	system Wei
 		remove fleet "Small Southern Pirates"
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		remove fleet "Navy Surveillance"
 		add fleet "Small Free Worlds" 800
 		add fleet "Large Free Worlds" 1000
-		add fleet "Navy Surveillance" 4000
+		"set period" fleet "Navy Surveillance" 4000
 
 
 
@@ -1427,27 +1319,31 @@ mission "FW Clink Prison Closes"
 event "alphas capture Poisonwood"
 	system Graffias
 		government Pirate
-		fleet "Small Free Worlds" 10000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Human Miners"
+		add fleet "Small Free Worlds" 10000
 
 event "liberation of Poisonwood"
 	system Graffias
 		government Neutral
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Southern Pirates" 6000
-		fleet "Small Free Worlds" 700
-		fleet "Large Free Worlds" 1200
-		fleet "Human Miners" 2000
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Southern Pirates" 6000
+		"set period" fleet "Small Free Worlds" 700
+		add fleet "Large Free Worlds" 1200
+		add fleet "Human Miners" 2000
 
 event "Poisonwood reverts to Republic"
 	system Graffias
 		government Republic
-		fleet "Small Southern Merchants" 1000
-		fleet "Large Southern Merchants" 4000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Free Worlds" 1500
-		fleet "Large Free Worlds" 2600
-		fleet "Human Miners" 2000
+		add fleet "Small Southern Merchants" 1000
+		add fleet "Large Southern Merchants" 4000
+		add fleet "Small Southern Pirates" 4000
+		"set period" fleet "Small Free Worlds" 1500
+		add fleet "Large Free Worlds" 2600
+		add fleet "Human Miners" 2000
 
 event "death of nguyen"
 
@@ -1484,12 +1380,13 @@ event "bloodsea joins free worlds"
 		description `	Until recently, this was a pirate world, but as the Free Worlds continued to expand they saw the writing on the wall and decided to become a civilized world. The Free Worlds is building a new spaceport here, but that will take months, and in the meantime the old spaceport is still in use.`
 	system Antares
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 3000
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 5000
+		remove fleet "Large Milita"
+		add fleet "Small Southern Merchants" 700
+		add fleet "Large Southern Merchants" 1400
+		add fleet "Small Free Worlds" 500
+		"set period" fleet "Large Free Worlds" 3000
+		"set period" fleet "Small Southern Pirates" 2000
+		"set period" fleet "Large Southern Pirates" 5000
 
 
 
@@ -1504,21 +1401,24 @@ event "bloodsea spaceport completed"
 
 event "battle for bloodsea"
 	system Antares
-		fleet "Small Free Worlds" 4000
+		remove fleet "Large Militia"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		"set period" fleet "Large Free Worlds" 10000
 
 
 
 event "bloodsea independent"
 	system Antares
 		government Independent
-		fleet "Small Independent" 800
-		fleet "Large Independent" 1500
-		fleet "Small Southern Merchants" 2000
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 1600
-		fleet "Large Southern Pirates" 3000
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1500
+		add fleet "Small Independent" 800
+		add fleet "Large Independent" 1500
+		add fleet "Small Southern Merchants" 2000
+		add fleet "Large Southern Merchants" 2000
+		add fleet "Small Southern Pirates" 1600
+		add fleet "Large Southern Pirates" 3000
+		add fleet "Small Free Worlds" 800
+		"set period" fleet "Large Free Worlds" 1500
 	planet Bloodsea
 		description `Bloodsea is nearly uninhabited, except for a few small outposts. Its name comes from the planet's oceans, which are blood-red due to rhodophyte algae. Although the climate is temperate and there are many white sand beaches, no one comes here hoping to go swimming.`
 		description `	Until recently, this was a pirate world, but they are now officially "independent," forswearing support for piracy and other criminal activity as a result of being dominated by the Free Worlds militia. You get the feeling that most of the locals are not too fond of the Free Worlds, however.`
@@ -1531,19 +1431,23 @@ event "albatross joins free worlds"
 		description `	Recently, the Free Worlds has liberated Albatross from their pirate oppressors, but many of the locals remain skeptical, seeing the Free Worlds as little different from the other protection rackets that have held sway over them.`
 	system Nunki
 		government "Free Worlds"
-		fleet "Small Southern Merchants" 700
-		fleet "Large Southern Merchants" 1400
-		fleet "Small Free Worlds" 500
-		fleet "Large Free Worlds" 3000
-		fleet "Small Southern Pirates" 2000
-		fleet "Large Southern Pirates" 5000
+		remove fleet "Small Militia"
+		"set period" fleet "Small Southern Merchants" 700
+		add fleet "Large Southern Merchants" 1400
+		add fleet "Small Free Worlds" 500
+		add fleet "Large Free Worlds" 3000
+		"set period" fleet "Small Southern Pirates" 2000
+		"set period" fleet "Large Southern Pirates" 5000
 
 
 
 event "battle for zeta aquilae"
 	"reputation: Republic" = -1000
 	system "Zeta Aquilae"
-		fleet "Small Southern Merchants" 5000
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		"set period" fleet "Small Southern Merchants" 5000
 
 
 
@@ -1560,70 +1464,56 @@ event "fw expanded and cut"
 		government "Free Worlds"
 	system "Delta Sagittarii"
 		government Republic
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		remove fleet "Human Miners"
-		add fleet "Small Southern Merchants" 2000
-		add fleet "Large Southern Merchants" 6000
+		"set period" fleet "Small Southern Merchants" 2000
+		"set period" fleet "Large Southern Merchants" 6000
 		add fleet "Small Republic" 500
 		add fleet "Large Republic" 700
-		add fleet "Large Free Worlds" 3000
-		add fleet "Human Miners" 6000
+		"set period" fleet "Large Free Worlds" 3000
+		"set period" fleet "Human Miners" 6000
 	system Rastaban
 		government Republic
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 6000
-		add fleet "Large Southern Merchants" 4000
+		"set period" fleet "Small Southern Merchants" 1000
+		"set period" fleet "Large Southern Merchants" 4000
 		add fleet "Small Republic" 700
 		add fleet "Large Republic" 900
-		add fleet "Large Free Worlds" 2000
+		"set period" fleet "Large Free Worlds" 2000
 	system Girtab
 		government Republic
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 1000
-		add fleet "Large Southern Merchants" 3000
+		"set period" fleet "Small Southern Merchants" 1000
+		"set period" fleet "Large Southern Merchants" 3000
 		add fleet "Small Republic" 900
 		add fleet "Large Republic" 1200
-		add fleet "Large Free Worlds" 1800
+		"set period" fleet "Large Free Worlds" 1800
 	system Lesath
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Free Worlds"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 6000
-		add fleet "Large Southern Merchants" 9000
+		"set period" fleet "Small Southern Merchants" 6000
+		"set period" fleet "Large Southern Merchants" 9000
 		add fleet "Small Republic" 1000
 		add fleet "Large Republic" 1000
-		add fleet "Large Free Worlds" 2933
+		"set period" fleet "Large Free Worlds" 800
 	system "Alpha Arae"
-		remove fleet "Small Southern Merchants"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 5000
-		add fleet "Large Southern Merchants" 24000
-		add fleet "Small Republic" 800
-		add fleet "Large Republic" 1000
+		"set period" fleet "Small Southern Merchants" 5000
+		"set period" fleet "Large Southern Merchants" 6000
+		"set period" fleet "Small Republic" 800
+		"set period" fleet "Large Republic" 1000
 		add fleet "Large Free Worlds" 3000
 
 
@@ -1691,17 +1581,29 @@ event "deep sky tech available"
 
 
 
+event "fw empty gienah"
+	system Gienah
+		remove fleet "Large Syndicate"
+		remove fleet "Large Core Pirates"
+		"set period" fleet "Small Core Pirates" 5000
+
+event "fw restore gienah"
+	system Gienah
+		"set period" fleet "Small Core Pirates" 500
+		add fleet "Large Core Pirates" 800
+		add fleet "Large Syndicate" 5000
+
+
+
 event "navy out of rastaban"
 	system Rastaban
 		government "Free Worlds"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		add fleet "Small Southern Merchants" 1200
-		add fleet "Large Southern Merchants" 2400
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 2400
 		add fleet "Small Free Worlds" 500
-		add fleet "Large Free Worlds" 1076
+		"set period" fleet "Large Free Worlds" 700
 		add fleet "Small Southern Pirates" 3000
 		add fleet "Large Southern Pirates" 7000
 		add fleet "Navy Surveillance" 2000
@@ -1709,10 +1611,10 @@ event "navy out of rastaban"
 		government Neutral
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 6000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 2000
 		add fleet "Small Free Worlds" 1000
-		add fleet "Large Free Worlds" 30600
+		"set period" fleet "Large Free Worlds" 1700
 		add fleet "Small Southern Pirates" 3000
 		add fleet "Large Southern Pirates" 7000
 		add fleet "Navy Surveillance" 5000
@@ -1720,37 +1622,32 @@ event "navy out of rastaban"
 		government "Free Worlds"
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		add fleet "Small Southern Merchants" 3000
-		add fleet "Large Southern Merchants" 12000
+		"set period" fleet "Small Southern Merchants" 1200
+		"set period" fleet "Large Southern Merchants" 4000
 		add fleet "Small Free Worlds" 600
-		add fleet "Large Free Worlds" 1285
+		"set period" fleet "Large Free Worlds" 900
 		add fleet "Small Southern Pirates" 3000
 		add fleet "Large Southern Pirates" 7000
 		add fleet "Navy Surveillance" 3000
-		add fleet "Human Miners" 12000
+		"set period" fleet "Human Miners" 4000
 	system Lesath
-		remove fleet "Large Free Worlds"
-		remove fleet "Large Free Worlds"
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		add fleet "Small Southern Merchants" 923
-		add fleet "Large Southern Merchants" 1945
-		add fleet "Small Free Worlds" 800
-		add fleet "Large Free Worlds" 1100
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1600
+		"set period" fleet "Small Free Worlds" 800
+		"set period" fleet "Large Free Worlds" 1100
 		add fleet "Small Southern Pirates" 2000
 		add fleet "Large Southern Pirates" 5000
 		add fleet "Navy Surveillance" 4000
 	system "Alpha Arae"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Large Free Worlds"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
-		add fleet "Small Southern Merchants" 3620
-		add fleet "Large Southern Merchants" 8000
+		"set period" fleet "Small Southern Merchants" 2100
+		"set period" fleet "Large Southern Merchants" 8000
 		add fleet "Small Southern Pirates" 6000
 		add fleet "Large Southern Pirates" 13000
-		add fleet "Small Republic" 900
-		add fleet "Large Republic" 800
+		"set period" fleet "Small Republic" 900
+		"set period" fleet "Large Republic" 800
 		add fleet "Navy Surveillance" 1200
 
 
@@ -1767,16 +1664,12 @@ event "stack core for sale"
 
 event "syndicate occupies sol"
 	system Sol
-		remove fleet "Small Northern Merchants"
-		remove fleet "Large Northern Merchants"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
-		add fleet "Small Northern Merchants" 500
-		add fleet "Large Northern Merchants" 700
-		add fleet "Small Republic" 800
-		add fleet "Large Republic" 1200
-		add fleet "Small Core Merchants" 9000
-		add fleet "Large Core Merchants" 4666
+		"set period" fleet "Small Northern Merchants" 500
+		"set period" fleet "Large Northern Merchants" 700
+		"set period" fleet "Small Republic" 800
+		"set period" fleet "Large Republic" 1200
+		"set period" fleet "Small Core Merchants" 900
+		"set period" fleet "Large Core Merchants" 1400
 		add fleet "Small Syndicate" 400
 		add fleet "Large Syndicate" 600
 
@@ -1797,7 +1690,7 @@ event "pug invasion"
 	unvisit Peacock
 	system "Zeta Aquilae"
 		government Pug
-		add fleet "Small Southern Merchants" 1250
+		"set period" fleet "Small Southern Merchants" 1000
 		add fleet "Large Southern Merchants" 3000
 		add fleet "Small Pug" 1000
 		add fleet "Large Pug" 2000
@@ -1838,11 +1731,9 @@ event "pug invasion 2"
 	system Vega
 		government Pug
 		remove fleet "Small Republic"
-		remove fleet "Small Republic"
 		remove fleet "Large Republic"
-		remove fleet "Large Republic"
-		add fleet "Small Northern Merchants" 4000
-		add fleet "Large Northern Merchants" 12000
+		"set period" fleet "Small Northern Merchants" 800
+		"set period" fleet "Large Northern Merchants" 3000
 		add fleet "Small Pug" 800
 		add fleet "Large Pug" 1200
 	system Altair
@@ -1914,18 +1805,14 @@ event "pug invasion 4"
 	unvisit Diphda
 	unvisit Ankaa
 	system Sol
-		remove fleet "Small Core Merchants"
-		remove fleet "Small Core Merchants"
-		remove fleet "Large Core Merchants"
-		remove fleet "Large Core Merchants"
 		remove fleet "Small Syndicate"
 		remove fleet "Large Syndicate"
-		add fleet "Small Northern Merchants" 750
-		add fleet "Large Northern Merchants" 1750
-		add fleet "Small Republic" 2400
-		add fleet "Large Republic" 3600
-		add fleet "Small Core Merchants" 1000
-		add fleet "Large Core Merchants" 2000
+		"set period" fleet "Small Northern Merchants" 300
+		"set period" fleet "Large Northern Merchants" 500
+		"set period" fleet "Small Republic" 600
+		"set period" fleet "Large Republic" 900
+		"set period" fleet "Small Core Merchants" 1000
+		"set period" fleet "Large Core Merchants" 2000
 	system Diphda
 		government Pug
 		remove fleet "Small Syndicate"
@@ -1953,9 +1840,11 @@ event "fw syndicate welcoming"
 		bribe .08
 	system Algenib
 		government "Syndicate (Extremist)"
-		fleet "Small Core Pirates" 1500
-		fleet "Large Core Pirates" 2000
-		fleet "Syndicate Extremists" 200
+		remove fleet "Small Core Merchants"
+		remove fleet "Large Syndicate"
+		"set period" fleet "Small Core Pirates" 1500
+		"set period" fleet "Large Core Pirates" 2000
+		add fleet "Syndicate Extremists" 200
 
 
 
@@ -1968,13 +1857,11 @@ event "at war with the pug"
 			"Syndicate" -.01
 			"Syndicate (Extremist)" -.01
 	system "Delta Capricorni"
-		remove fleet "Small Core Merchants"
 		remove fleet "Large Core Merchants"
 		remove fleet "Small Pug"
 		remove fleet "Large Pug"
-		remove fleet "Human Miners"
-		add fleet "Small Core Merchants" 1500
-		add fleet "Human Miners" 6000
+		"set period" fleet "Small Core Merchants" 1500
+		"set period" fleet "Human Miners" 6000
 
 
 
@@ -1990,20 +1877,25 @@ event "reconnected delta capricorni"
 		add fleet "Large Core Merchants" 3000
 		add fleet "Small Pug" 2000
 		add fleet "Large Syndicate" 400
-		add fleet "Human Miners" 6000
+		"set period" fleet "Human Miners" 3000
 
 
 
 event "battle for altair"
 	system Altair
-		fleet "Small Core Merchants" 1500
+		remove fleet "Large Core Merchants"
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
+		"set period" fleet "Small Core Merchants" 1500
 
 
 
 event "liberation of altair"
 	system Altair
 		government Republic
-		add fleet "Small Core Merchants" 3000
+		"set period" fleet "Small Core Merchants" 1000
 		add fleet "Large Core Merchants" 2000
 		add fleet "Small Pug" 2000
 		add fleet "Large Syndicate" 800
@@ -2016,8 +1908,8 @@ event "reconnected altair"
 		government Republic
 		remove fleet "Small Pug"
 		remove fleet "Large Syndicate"
-		add fleet "Small Core Merchants" 4000
-		add fleet "Large Core Merchants" 3000
+		"set period" fleet "Small Core Merchants" 800
+		"set period" fleet "Large Core Merchants" 1200
 
 
 
@@ -2184,7 +2076,10 @@ event "battle of algenib"
 		"attitude toward"
 			"Syndicate (Extremist)" -.1
 	system Algenib
-		fleet "Small Syndicate" 5000
+		remove fleet "Small Core Pirates"
+		remove fleet "Large Core Pirates"
+		remove fleet "Syndicate Extremists"
+		add fleet "Small Syndicate" 5000
 	"reputation: Syndicate (Extremist)" <?= -1000
 
 
@@ -2192,35 +2087,46 @@ event "battle of algenib"
 event "navy occupies algenib"
 	system Algenib
 		government Republic
-		fleet "Small Republic" 500
-		fleet "Large Republic" 800
-		fleet "Large Syndicate" 800
+		remove fleet "Small Syndicate"
+		add fleet "Small Republic" 500
+		add fleet "Large Republic" 800
+		add fleet "Large Syndicate" 800
 	system Gienah
 		government Republic
-		fleet "Small Republic" 800
-		fleet "Large Republic" 1200
-		fleet "Large Syndicate" 1000
+		remove fleet "Small Core Pirates"
+		remove fleet "Large Core Pirates"
+		add fleet "Small Republic" 800
+		add fleet "Large Republic" 1200
+		"set period" fleet "Large Syndicate" 1000
 
 
 
 event "navy done with algenib"
 	system Algenib
 		government Pirate
-		fleet "Small Core Pirates" 300
-		fleet "Large Core Pirates" 500
-		fleet "Large Syndicate" 800
-		fleet "Small Core Merchants" 600
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Core Pirates" 300
+		add fleet "Large Core Pirates" 500
+		add fleet "Small Core Merchants" 600
 	system Gienah
 		government Pirate
-		fleet "Small Core Pirates" 500
-		fleet "Large Core Pirates" 800
-		fleet "Large Syndicate" 5000
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Core Pirates" 500
+		add fleet "Large Core Pirates" 800
+		"set period" fleet "Large Syndicate" 5000
 
 
 
 event "fwc southern battle"
 	system "Delta Sagittarii"
-		fleet "Large Free Worlds" 4000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Human Miners"
+		"set period" fleet "Large Free Worlds" 4000
 	system Rastaban
 		remove fleet "Small Republic"
 		remove fleet "Large Republic"
@@ -2238,15 +2144,14 @@ event "fwc southern liberation"
 		add fleet "Small Southern Merchants" 1200
 		add fleet "Large Southern Merchants" 4000
 		add fleet "Small Free Worlds" 600
-		add fleet "Large Free Worlds" 1161
+		"set period" fleet "Large Free Worlds" 900
 		add fleet "Small Southern Pirates" 3000
 		add fleet "Large Southern Pirates" 7000
 		add fleet "Large Republic" 3000
 		add fleet "Human Miners" 4000
 	system Rastaban
 		government "Free Worlds"
-		remove fleet "Small Southern Merchants"
-		add fleet "Small Southern Merchants" 1200
+		"set period" fleet "Small Southern Merchants" 1200
 		add fleet "Large Southern Merchants" 6000
 		add fleet "Small Free Worlds" 500
 		add fleet "Large Free Worlds" 700
@@ -2255,19 +2160,17 @@ event "fwc southern liberation"
 		add fleet "Large Republic" 3000
 	system Girtab
 		government Neutral
-		add fleet "Small Southern Merchants" 9000
-		add fleet "Large Southern Merchants" 6000
+		"set period" fleet "Small Southern Merchants" 900
+		"set period" fleet "Large Southern Merchants" 2000
 		add fleet "Small Free Worlds" 1000
 		add fleet "Large Free Worlds" 1700
 		add fleet "Small Southern Pirates" 3000
 		add fleet "Large Southern Pirates" 7000
 	system Lesath
-		remove fleet "Large Free Worlds"
-		remove fleet "Large Free Worlds"
-		add fleet "Small Southern Merchants" 923
-		add fleet "Large Southern Merchants" 1945
+		"set period" fleet "Small Southern Merchants" 800
+		"set period" fleet "Large Southern Merchants" 1600
 		add fleet "Small Free Worlds" 800
-		add fleet "Large Free Worlds" 1100
+		"set period" fleet "Large Free Worlds" 1100
 		add fleet "Small Southern Pirates" 2000
 		add fleet "Large Southern Pirates" 5000
 		add fleet "Navy Surveillance" 4000
@@ -2282,8 +2185,6 @@ event "fwc attack kaus borealis"
 	system "Kaus Borealis"
 		remove fleet "Small Southern Merchants"
 		remove fleet "Small Republic"
-		remove fleet "Small Republic"
-		remove fleet "Large Republic"
 		remove fleet "Large Republic"
 		add fleet "Large Free Worlds" 3000
 
@@ -2297,7 +2198,7 @@ event "fwc capture kaus borealis"
 		government "Free Worlds"
 		add fleet "Small Southern Merchants" 2000
 		add fleet "Small Free Worlds" 400
-		add fleet "Large Free Worlds" 461
+		"set period" fleet "Large Free Worlds" 400
 		add fleet "Large Republic" 2000
 	planet "New Iceland"
 		description `New Iceland is a perpetually hazy volcanic world, with a slightly caustic atmosphere but enough reserves of metal and petrochemicals to draw a large number of settlers. Some of those settlers also make a living as farmers, and a few well-developed factory towns produce goods for export to other worlds. Many of the inhabitants wear dust masks to avoid letting the particulate matter from the volcanoes accumulate in their lungs.`
@@ -2306,27 +2207,28 @@ event "fwc capture kaus borealis"
 
 event "fwc attack cebalrai"
 	system Cebalrai
-		fleet "Small Southern Merchants" 5000
-		fleet "Large Southern Merchants" 6000
+		remove fleet "Small Southern Pirates"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		"set period" fleet "Small Southern Merchants" 5000
+		"set period" fleet "Large Southern Merchants" 6000
 
 
 
 event "fwc capture cebalrai"
 	system Cebalrai
 		government "Free Worlds"
-		add fleet "Small Southern Merchants" 1250
-		add fleet "Large Southern Merchants" 2000
+		"set period" fleet "Small Southern Merchants" 1000
+		"set period" fleet "Large Southern Merchants" 1500
 		add fleet "Small Free Worlds" 400
 		add fleet "Large Free Worlds" 400
 		add fleet "Large Republic" 2000
 	system "Kaus Borealis"
 		government "Free Worlds"
-		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
-		remove fleet "Large Free Worlds"
 		remove fleet "Large Republic"
-		add fleet "Small Free Worlds" 600
-		add fleet "Large Free Worlds" 700
+		"set period" fleet "Small Free Worlds" 600
+		"set period" fleet "Large Free Worlds" 700
 
 
 
@@ -2338,7 +2240,11 @@ event "fwc solace has nukes"
 
 event "fwc defend cebalrai"
 	system Cebalrai
-		fleet "Large Free Worlds" 6000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Republic"
+		"set period" fleet "Large Free Worlds" 6000
 
 
 
@@ -2347,22 +2253,18 @@ event "fwc defended cebalrai"
 		add fleet "Small Southern Merchants" 1000
 		add fleet "Large Southern Merchants" 1500
 		add fleet "Small Free Worlds" 500
-		add fleet "Large Free Worlds" 666
+		"set period" fleet "Large Free Worlds" 600
 		add fleet "Large Republic" 5000
 	system Sargas
 		remove fleet "Navy Surveillance"
 	system Lesath
-		remove fleet "Small Southern Merchants"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Large Southern Merchants"
-		remove fleet "Large Southern Merchants"
 		remove fleet "Small Free Worlds"
 		remove fleet "Small Southern Pirates"
 		remove fleet "Large Southern Pirates"
 		remove fleet "Navy Surveillance"
-		add fleet "Small Southern Merchants" 6000
-		add fleet "Large Southern Merchants" 9000
-		add fleet "Large Free Worlds" 2933
+		"set period" fleet "Small Southern Merchants" 6000
+		"set period" fleet "Large Southern Merchants" 9000
+		"set period" fleet "Large Free Worlds" 800
 	system Dschubba
 		remove fleet "Navy Surveillance"
 	system Seginus
@@ -2395,14 +2297,19 @@ event "fwc defended cebalrai"
 
 event "fwc attack menkent"
 	system Menkent
-		fleet "Small Southern Merchants" 5000
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+		remove fleet "Human Miners"
+		"set period" fleet "Small Southern Merchants" 5000
 
 
 
 event "fwc capture menkent"
 	system Menkent
 		government "Free Worlds"
-		add fleet "Small Southern Merchants" 813
+		"set period" fleet "Small Southern Merchants" 700
 		add fleet "Large Southern Merchants" 1900
 		add fleet "Small Free Worlds" 300
 		add fleet "Large Free Worlds" 400
@@ -2415,7 +2322,12 @@ event "fwc capture menkent"
 
 event "fwc attack vega"
 	system Vega
-		fleet "Small Southern Merchants" 50000
+		remove fleet "Small Northern Merchants"
+		remove fleet "Large Northern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		remove fleet "Human Miners"
+		add fleet "Small Southern Merchants" 50000
 
 
 
@@ -2442,7 +2354,7 @@ event "fwc pug invasion"
 			"Free Worlds" -.01
 	system "Zeta Aquilae"
 		government Pug
-		add fleet "Small Southern Merchants" 1250
+		"set period" fleet "Small Southern Merchants" 1000
 		add fleet "Large Southern Merchants" 3000
 		add fleet "Small Pug" 1000
 		add fleet "Large Pug" 2000
@@ -2525,18 +2437,15 @@ event "fwc navy retakes cebalrai"
 	system Cebalrai
 		government Republic
 		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
-		remove fleet "Large Free Worlds"
 		add fleet "Small Republic" 500
-		add fleet "Large Republic" 681
-		add fleet "Large Free Worlds" 5000
+		"set period" fleet "Large Republic" 600
+		"set period" fleet "Large Free Worlds" 5000
 	system Menkent
 		government Republic
 		remove fleet "Small Free Worlds"
-		remove fleet "Large Free Worlds"
 		add fleet "Small Republic" 300
-		add fleet "Large Republic" 500
-		add fleet "Large Free Worlds" 2000
+		"set period" fleet "Large Republic" 400
+		"set period" fleet "Large Free Worlds" 2000
 
 
 
@@ -2590,7 +2499,10 @@ event "fwc peace with the navy"
 event "fwc battle for rasalhague"
 	link Rasalhague Cebalrai
 	system Rasalhague
-		fleet "Small Southern Merchants" 10000
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Pug"
+		remove fleet "Large Pug"
+		"set period" fleet "Small Southern Merchants" 10000
 	government Pug
 		"attitude toward"
 			"Free Worlds" -.01
@@ -2602,7 +2514,7 @@ event "fwc battle for rasalhague"
 event "fwc liberation of rasalhague"
 	system Rasalhague
 		government "Free Worlds"
-		add fleet "Small Southern Merchants" 1764
+		"set period" fleet "Small Southern Merchants" 1500
 		add fleet "Large Southern Merchants" 2000
 		add fleet "Small Republic" 400
 		add fleet "Large Republic" 600
@@ -2631,8 +2543,8 @@ event "fwc liberation of rasalhague"
 		remove fleet "Large Pug"
 	system Deneb
 		add fleet "Small Core Merchants" 10000
-		add fleet "Small Pug" 133
-		add fleet "Large Pug" 111
+		"set period" fleet "Small Pug" 100
+		"set period" fleet "Large Pug" 100
 
 
 
@@ -2645,9 +2557,7 @@ event "fwc reconnect zeta aquilae"
 	link "Zeta Aquilae" Ascella
 	system "Zeta Aquilae"
 		government "Free Worlds"
-		remove fleet "Small Southern Merchants"
-		remove fleet "Small Southern Merchants"
-		add fleet "Small Southern Merchants" 1500
+		"set period" fleet "Small Southern Merchants" 1500
 		add fleet "Large Southern Merchants" 6000
 		add fleet "Small Republic" 400
 		add fleet "Large Republic" 600
