@@ -597,7 +597,7 @@ void Engine::Step(bool isActive)
 		}
 	}
 	
-	// Draw crosshairs on all the selected ships. check if this needs haslanded.
+	// Draw crosshairs on all the selected ships.
 	for(const weak_ptr<Ship> &selected : player.SelectedShips())
 	{
 		shared_ptr<Ship> ship = selected.lock();

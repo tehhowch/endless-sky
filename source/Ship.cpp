@@ -1794,7 +1794,7 @@ void Ship::Restore()
 // Check if this ship has been destroyed.
 bool Ship::IsDestroyed() const
 {
-	return (hull < 0.);// && !hasLanded;// may not be needed
+	return (hull < 0.);
 }
 
 
@@ -2601,6 +2601,7 @@ void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool 
 		doPatrol = repeatTravel;
 		this->waypoints = waypoints;
 		destinationSystem = waypoints[waypoint];
+		PrepareSurvey();
 	}
 	else
 		destinationSystem = nullptr;
@@ -2641,8 +2642,8 @@ void Ship::EraseWaypoint(const System *system)
 
 
 
-// Instruct the ship to stay in this system for a set amount of time before obeying its
-// next jump instruction. Default to 2 seconds per StellarObject in the system (6 if patrol).
+// Instruct the ship to stay in its target waypoint for a set amount of time.
+// Default to 2 seconds per StellarObject in the system (6 if patrol).
 void Ship::PrepareSurvey(const int surveyDuration)
 {
 	int surveyTargets = 1;
