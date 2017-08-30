@@ -27,8 +27,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "System.h"
 #include "UI.h"
 
-#include <vector>
-
 using namespace std;
 
 
@@ -414,8 +412,16 @@ bool NPC::HasFailed() const
 			return true;
 	
 		// If we still need to perform an action that requires the NPC ship be
-		// alive, then that ship being destroyed should cause the mission to fail.
+		// alive, then that ship being destroyed or landed causes the mission to fail.
 		if((~it.second & succeedIf) && (it.second & (ShipEvent::DESTROY | ShipEvent::LAND)))
+			return true;
+			
+		// If this ship has landed permanently, the NPC has failed if
+		// 1) it must accompany and is not in the destination system, or
+		// 2) it must evade, and is in the destination system.
+		if((it.second & ShipEvent::LAND) && !doVisit && it.first->GetSystem()
+				&& ((mustAccompany && it.first->GetSystem() != destination)
+					|| (mustEvade && it.first->GetSystem() == destination)))
 			return true;
 	}
 	
@@ -471,7 +477,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	}
 	else if(needsWaypoint)
 		result.waypoints.push_back(result.destination);
-	else if(waypointFilters.size())
+	else if(!waypointFilters.empty())
 	{
 		// NPC waypoint filters are incremental, to provide some sense of direction to the pathing.
 		size_t index = result.waypoints.size();
@@ -499,7 +505,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 	
 	if(needsStopover)
 		result.stopovers.push_back(destinationPlanet);
-	else if(stopoverFilters.size())
+	else if(!stopoverFilters.empty())
 	{
 		// NPC stopover filters are incremental, to provide some sense of direction to the pathing.
 		size_t index = result.stopovers.size();

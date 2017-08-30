@@ -18,10 +18,11 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "LocationFilter.h"
 #include "Personality.h"
 
-#include <string>
 #include <list>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 class DataNode;
 class DataWriter;

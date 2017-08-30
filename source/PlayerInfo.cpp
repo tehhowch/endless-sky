@@ -923,7 +923,7 @@ void PlayerInfo::Land(UI *ui)
 			++it; 
 	}
 	// Check for NPCs that have been destroyed without their destruction being
-	// registered, e.g. by self-destruct: (Do we need a HasLanded check here?)
+	// registered, e.g. by self-destruct:
 	for(Mission &mission : missions)
 		for(const NPC &npc : mission.NPCs())
 			for(const shared_ptr<Ship> &ship : npc.Ships())
