@@ -991,7 +991,7 @@ void Engine::CalculateStep()
 			// docked with its mothership. Report it destroyed or landed as needed.
 			if((*it)->IsDestroyed())
 				eventQueue.emplace_back(nullptr, *it, ShipEvent::DESTROY);
-			else if((*it)->HasLanded())
+			else if((*it)->HasLanded() && (*it)->IsSpecial())
 				eventQueue.emplace_back(nullptr, *it, ShipEvent::LAND);
 			it = ships.erase(it);
 		}

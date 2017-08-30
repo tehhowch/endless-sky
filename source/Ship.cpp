@@ -476,7 +476,7 @@ void Ship::Save(DataWriter &out) const
 			out.Write("planet", landingPlanet->Name());
 		if(targetSystem && !targetSystem->Name().empty())
 			out.Write("destination system", targetSystem->Name());
-		if(waypoint > 0)
+		if(waypoint > 0 && waypoint <= waypoints.size())
 			out.Write("waypoint index", waypoint);
 		if(isParked)
 			out.Write("parked");
@@ -1038,8 +1038,8 @@ bool Ship::Move(list<Effect> &effects, list<shared_ptr<Flotsam>> &flotsam)
 					SetTargetStellar(nullptr);
 					landingPlanet = nullptr;
 				}
-				// NPCs which are "fleeing" delete themselves on landing, unless they have an
-				// incomplete travel directive.
+				// NPCs which are "fleeing" delete themselves on landing,
+				// unless they have an incomplete travel directive.
 				else if(!isSpecial || (personality.IsFleeing() && !HasTravelDirective()))
 				{
 					hasLanded = true;
@@ -2600,7 +2600,13 @@ void Ship::SetWaypoints(const std::vector<const System *> waypoints, const bool 
 	{
 		doPatrol = repeatTravel;
 		this->waypoints = waypoints;
-		destinationSystem = waypoints[waypoint];
+		if(targetSystem && personality.IsEntering())
+		{
+			--waypoint;
+			destinationSystem = targetSystem;
+		}
+		else
+			destinationSystem = waypoints[waypoint];
 		PrepareSurvey();
 	}
 	else
