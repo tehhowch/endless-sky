@@ -18,10 +18,11 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "LocationFilter.h"
 #include "Personality.h"
 
-#include <string>
 #include <list>
 #include <map>
 #include <memory>
+#include <string>
+#include <vector>
 
 class DataNode;
 class DataWriter;
@@ -56,7 +57,7 @@ public:
 	
 	// Create a copy of this NPC but with the fleets replaced by the actual
 	// ships they represent, wildcards in the conversation text replaced, etc.
-	NPC Instantiate(std::map<std::string, std::string> &subs, const System *origin, const System *destination) const;
+	NPC Instantiate(std::map<std::string, std::string> &subs, const System *origin, const Planet *destinationPlanet) const;
 	
 	
 private:
@@ -67,7 +68,21 @@ private:
 	// Start out in a location matching this filter, or in a particular system:
 	LocationFilter location;
 	const System *system = nullptr;
+	const System *destination;
 	bool isAtDestination = false;
+	
+	// NPCs may have been given a waypoint or stopover.
+	std::vector<const System *> waypoints;
+	std::vector<const Planet *> stopovers;
+	bool needsWaypoint = false;
+	bool needsStopover = false;
+	std::list<LocationFilter> waypointFilters;
+	std::list<LocationFilter> stopoverFilters;
+	// Default behavior is to travel once through the waypoints.
+	bool doPatrol = false;
+	// Default behavior is to permanently land on the destination planet.
+	bool doVisit = false;
+	size_t destinationQueue = 0;
 	
 	// Dialog or conversation to show when all requirements for this NPC are met:
 	std::string dialogText;

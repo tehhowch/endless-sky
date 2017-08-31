@@ -93,7 +93,7 @@ void AI::IssueShipTarget(const PlayerInfo &player, const std::shared_ptr<Ship> &
 	Orders newOrders;
 	bool isEnemy = target->GetGovernment()->IsEnemy();
 	newOrders.type = (!isEnemy ? Orders::GATHER
-		: target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK); 
+		: target->IsDisabled() ? Orders::FINISH_OFF : Orders::ATTACK);
 	newOrders.target = target;
 	string description = (isEnemy ? "focusing fire on" : "following") + (" \"" + target->Name() + "\".");
 	IssueOrders(player, newOrders, description);
@@ -376,6 +376,8 @@ void AI::Step(const PlayerInfo &player)
 		// Special actions when a ship is near death:
 		if(health < 1.)
 		{
+			if(!Random::Int(120))
+				it->AbortSurvey();
 			if(parent && personality.IsCoward())
 			{
 				// Cowards abandon their fleets.
@@ -417,6 +419,10 @@ void AI::Step(const PlayerInfo &player)
 			AimTurrets(*it, command, it->IsYours() ? opportunisticEscorts : personality.IsOpportunistic());
 			AutoFire(*it, command);
 		}
+		
+		// Update any orders NPCs may have been given by their associated mission.
+		if(it->IsSpecial() && !it->IsYours() && it->HasTravelDirective())
+			IssueNPCOrders(*it, it->GetDestinationSystem(), it->GetStopovers());
 		
 		// If recruited to assist a ship, follow through on the commitment
 		// instead of ignoring it due to other personality traits.
@@ -595,8 +601,8 @@ void AI::Step(const PlayerInfo &player)
 		}
 		else if(FollowOrders(*it, command))
 		{
-			// If this is an escort and it has orders to follow, no need for the
-			// AI to figure out what action it must perform.
+			// If this is an NPC or escort and it has orders to follow, no
+			// need for the AI to figure out what action it must perform.
 		}
 		// Hostile "escorts" (i.e. NPCs that are trailing you) only revert to
 		// escort behavior when in a different system from you. Otherwise,
@@ -607,7 +613,8 @@ void AI::Step(const PlayerInfo &player)
 			MoveIndependent(*it, command);
 		else if(parent->GetSystem() != it->GetSystem())
 		{
-			if(personality.IsStaying() || !it->Attributes().Get("fuel capacity"))
+			// NPCs needing to perform StellarObject flybys (surveying) need to use MoveIndependent.
+			if(it->IsSurveying() || personality.IsStaying() || !it->Attributes().Get("fuel capacity"))
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -618,7 +625,7 @@ void AI::Step(const PlayerInfo &player)
 		{
 			// If your parent is your enemy, move toward them until you have
 			// selected a target to fight. Then, fight it.
-			if(target || !parent->IsTargetable())
+			if(target || !parent->IsTargetable() || it->IsSurveying())
 				MoveIndependent(*it, command);
 			else
 				MoveEscort(*it, command);
@@ -632,7 +639,7 @@ void AI::Step(const PlayerInfo &player)
 			else
 				it->SetShipToAssist(parent);
 		}
-		else if(personality.IsStaying())
+		else if(personality.IsStaying() || it->IsSurveying())
 			MoveIndependent(*it, command);
 		// This is a friendly escort. If the parent is getting ready to
 		// jump, always follow.
@@ -932,7 +939,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 	}
 	
 	// Run away if your target is not disabled and you are badly damaged.
-	if(!isDisabled && target && (person.IsFleeing() || 
+	if(!isDisabled && target && (person.IsFleeing() ||
 			(.5 * ship.Shields() + ship.Hull() < 1.
 				&& !person.IsHeroic() && !person.IsStaying() && !parentIsEnemy)))
 	{
@@ -968,11 +975,12 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 		return false;
 	
 	int type = it->second.type;
+	const bool isTravelOrder = (type == Orders::MOVE_TO || type == Orders::TRAVEL_TO || type == Orders::LAND_ON);
 	
 	// If your parent is jumping or absent, that overrides your orders unless
-	// your orders are to hold position.
+	// your orders are to hold position, or a travel directive.
 	shared_ptr<Ship> parent = ship.GetParent();
-	if(parent && type != Orders::HOLD_POSITION && type != Orders::MOVE_TO)
+	if(parent && type != Orders::HOLD_POSITION && !isTravelOrder)
 	{
 		if(parent->GetSystem() != ship.GetSystem())
 			return false;
@@ -981,12 +989,32 @@ bool AI::FollowOrders(Ship &ship, Command &command) const
 	}
 	
 	shared_ptr<Ship> target = it->second.target.lock();
-	if(type == Orders::MOVE_TO && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
+	if(type == Orders::LAND_ON && it->second.targetPlanet)
+	{
+		// LAND_ON would not be issued unless the planet was in this system.
+		ship.SetTargetStellar(ship.GetSystem()->FindStellar(it->second.targetPlanet));
+		command |= Command::LAND;
+		MoveIndependent(ship, command);
+	}
+	else if(isTravelOrder && it->second.targetSystem && ship.GetSystem() != it->second.targetSystem)
 	{
 		// The desired position is in a different system.
 		DistanceMap distance(ship, it->second.targetSystem);
-		const System *to = distance.Route(ship.GetSystem());
-		ship.SetTargetSystem(to);
+		const System *from = ship.GetSystem();
+		const System *to = distance.Route(from);
+		// This system may be entirely inaccessible, or behind an accessible wormhole.
+		if(to && to->Neighbors().count(from) == 0)
+		{
+			for(const StellarObject &object : from->Objects())
+				if(object.GetPlanet() && object.GetPlanet()->WormholeDestination(from) == to)
+				{
+					ship.SetTargetStellar(&object);
+					ship.SetTargetSystem(nullptr);
+					break;
+				}
+		}
+		else
+			ship.SetTargetSystem(to);
 		return false;
 	}
 	else if(type == Orders::MOVE_TO && ship.Position().Distance(it->second.point) > 20.)
@@ -1067,10 +1095,13 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		}
 		return;
 	}
-	
+
+	// A ship has restricted movement options if it has 'staying' or is hostile to its parent.
 	const bool shouldStay = ship.GetPersonality().IsStaying()
-			||  (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
-	if(!ship.GetTargetSystem() && !ship.GetTargetStellar() && !shouldStay)
+			|| (ship.GetParent() && ship.GetParent()->GetGovernment()->IsEnemy(ship.GetGovernment()));
+	// Ships should choose a random system to jump to or a random planet to land on if they
+	// do not already have a system or planet in mind, and also are free to move about.
+	if(!(ship.GetTargetSystem() || ship.GetTargetStellar()) && !shouldStay && !ship.IsSurveying())
 	{
 		int jumps = ship.JumpsRemaining();
 		// Each destination system has an average priority of 10.
@@ -1146,30 +1177,42 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 		}
 	}
 	
-	if(ship.GetTargetSystem())
+	if(ship.GetTargetSystem() && !ship.IsSurveying())
 	{
-		PrepareForHyperspace(ship, command);
-		bool mustWait = false;
-		if(ship.BaysFree(false) || ship.BaysFree(true))
-			for(const weak_ptr<Ship> &escort : ship.GetEscorts())
-			{
-				shared_ptr<const Ship> locked = escort.lock();
-				mustWait |= locked && locked->CanBeCarried() && !locked->IsDisabled();
-			}
-		
-		if(!mustWait)
-			command |= Command::JUMP;
+		// Refuel if able to now, but unable to in the destination system.
+		if(!ship.JumpsRemaining() || (ship.JumpsRemaining() == 1 && ship.GetSystem()->HasFuelFor(ship)
+				&& !ship.GetTargetSystem()->HasFuelFor(ship)))
+			Refuel(ship, command);
+		else
+		{
+			PrepareForHyperspace(ship, command);
+			bool mustWait = false;
+			if(ship.BaysFree(false) || ship.BaysFree(true))
+				for(const weak_ptr<Ship> &escort : ship.GetEscorts())
+				{
+					shared_ptr<const Ship> locked = escort.lock();
+					mustWait |= locked && locked->CanBeCarried() && !locked->IsDisabled();
+				}
+			
+			if(!mustWait)
+				command |= Command::JUMP;
+		}
 	}
 	else if(ship.GetTargetStellar())
 	{
 		MoveToPlanet(ship, command);
-		if(!shouldStay && ship.Attributes().Get("fuel capacity")
-				&& ship.GetTargetStellar()->GetPlanet() && ship.GetTargetStellar()->GetPlanet()->CanLand(ship))
+		// Ships should land on their destination planet if they are free to
+		// move about, or have a travel directive indicating they should land.
+		bool forceLanding = ship.HasTravelDirective() && ship.GetTargetStellar()->GetPlanet()
+				&& ship.GetTargetStellar()->GetPlanet()->CanLand(ship);
+		if(!ship.IsSurveying() && (!shouldStay || forceLanding ) && ship.Attributes().Get("fuel capacity"))
 			command |= Command::LAND;
 		else if(ship.Position().Distance(ship.GetTargetStellar()->Position()) < 100.)
 			ship.SetTargetStellar(nullptr);
 	}
-	else if(shouldStay && !ship.GetSystem()->Objects().empty())
+	// Ships which are not free to move about should patrol this system (e.g. seek a target ship).
+	// This behavior is also exhibited by mission NPCs that are performing a survey in a waypoint.
+	else if((shouldStay || ship.IsSurveying()) && !ship.GetSystem()->Objects().empty())
 	{
 		unsigned i = Random::Int(ship.GetSystem()->Objects().size());
 		ship.SetTargetStellar(&ship.GetSystem()->Objects()[i]);
@@ -1192,7 +1235,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 	// "parent" to land (because the parent may not be planning on landing).
 	if(hasFuelCapacity && systemHasFuel && !ship.JumpsRemaining())
 		Refuel(ship, command);
-	else if(!parentIsHere && !isStaying)
+	else if((!parentIsHere && !isStaying) || ship.GetDestinationSystem())
 	{
 		// If this ship has already refuelled, and its parent has left the
 		// system, no need to land on a planet again.
@@ -1222,7 +1265,9 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 			// Only set a target system if there is no wormhole route to that system.
 			if(!ship.GetTargetStellar())
 			{
-				ship.SetTargetSystem(to);
+				// If the NPC/escort had already been given a destination, do not overwrite it.
+				if(!ship.GetDestinationSystem())
+					ship.SetTargetSystem(to);
 				// Check if we need to refuel. Wormhole travel does not require fuel.
 				if(to && systemHasFuel && !to->HasFuelFor(ship) && ship.JumpsRemaining() == 1)
 					Refuel(ship, command);
@@ -1257,9 +1302,11 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 		Stop(ship, command, .2);
 	else if(parent.Commands().Has(Command::JUMP) && parent.GetTargetSystem() && !isStaying)
 	{
+		// If the NPC/escort does not already have a travel target, follow the parent.
 		DistanceMap distance(ship, parent.GetTargetSystem());
 		const System *dest = distance.Route(ship.GetSystem());
-		ship.SetTargetSystem(dest);
+		if(!ship.GetDestinationSystem())
+			ship.SetTargetSystem(dest);
 		if(!dest)
 			// This ship has no route to the parent's destination system, so protect it until it jumps away.
 			KeepStation(ship, command, parent);
@@ -3042,4 +3089,65 @@ void AI::IssueOrders(const PlayerInfo &player, const Orders &newOrders, const st
 		for(const Ship *ship : ships)
 			orders.erase(ship);
 	}
+}
+
+
+
+// Job/Mission NPC blocks may use keywords (waypoint, patrol, visit, land) to define travel plans.
+void AI::IssueNPCOrders(Ship &npcShip, const System *waypoint, const std::map<const Planet *, bool> stopovers)
+{
+	Orders newOrders;
+	const bool isSurveying = npcShip.IsSurveying();
+	const System *from = npcShip.GetSystem();
+	if(waypoint)
+	{
+		DistanceMap distance(npcShip, waypoint);
+		if(!distance.HasRoute(waypoint))
+			npcShip.EraseWaypoint(waypoint);
+		else
+		{
+			newOrders.type = Orders::TRAVEL_TO;
+			newOrders.targetSystem = waypoint;
+			if(from == waypoint)
+			{
+				// Rather than make immediate jumps from system to system (which make it
+				// impossible for the player to catch up), travelling NPCs "survey" each
+				// waypoint's StellarObjects.
+				if(isSurveying)
+					npcShip.DoSurvey();
+				else
+				{
+					// Travel to the next destination, if it exists.
+					npcShip.SetTargetStellar(nullptr);
+					const System *nextSystem = npcShip.NextWaypoint();
+					if(nextSystem)
+					{
+						newOrders.targetSystem = nextSystem;
+						npcShip.PrepareSurvey();
+					}
+					else
+						newOrders.type = 0;
+				}
+			}
+		}
+	}
+	
+	// If there is a directive to visit or land on planet in this system, it
+	// supercedes the order to travel to the next waypoint (unless already visited).
+	if(!stopovers.empty() && !isSurveying)
+	{
+		for(const auto &it : stopovers)
+			if(!it.second && it.first->IsInSystem(from))
+			{
+				newOrders.type = Orders::LAND_ON;
+				newOrders.targetPlanet = it.first;
+				break;
+			}
+	}
+	
+	// Update the NPC's orders.
+	Orders &existing = orders[&npcShip];
+	existing = newOrders;
+	if(existing.type == 0)
+		orders.erase(&npcShip);
 }

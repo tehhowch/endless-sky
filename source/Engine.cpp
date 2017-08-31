@@ -162,7 +162,7 @@ void Engine::Place()
 			for(const shared_ptr<Ship> &ship : npc.Ships())
 			{
 				// Skip ships that have been destroyed.
-				if(ship->IsDestroyed() || ship->IsDisabled())
+				if(ship->IsDestroyed() || ship->IsDisabled() || ship->HasLanded())
 					continue;
 				
 				if(ship->BaysFree(false))
@@ -175,8 +175,8 @@ void Engine::Place()
 			
 			for(const shared_ptr<Ship> &ship : npc.Ships())
 			{
-				// Skip ships that have been destroyed.
-				if(ship->IsDestroyed())
+				// Skip ships that have been destroyed or permanently landed.
+				if(ship->IsDestroyed() || ship->HasLanded())
 					continue;
 				// Avoid the exploit where the player can wear down an NPC's
 				// crew by attrition over the course of many days.
@@ -405,8 +405,8 @@ void Engine::Step(bool isActive)
 		{
 			if(!it->GetGovernment() || it->GetSystem() != currentSystem || it->Cloaking() == 1.)
 				continue;
-			// Don't show status for dead ships.
-			if(it->IsDestroyed())
+			// Don't show status for dead or permanently landed ships.
+			if(it->IsDestroyed() || it->HasLanded())
 				continue;
 			
 			bool isEnemy = it->GetGovernment()->IsEnemy();
@@ -985,12 +985,14 @@ void Engine::CalculateStep()
 		if(!(*it)->Move(effects, flotsam))
 		{
 			// If Move() returns false, it means the ship should be removed from
-			// play. That may be because it was destroyed, because it is an
-			// ordinary ship that has been out of system for long enough to be
-			// "forgotten," or because it is a fighter that just docked with its
-			// mothership. Report it destroyed if that's really what happened:
+			// play. That may be because it was destroyed or permanently landed,
+			// because it is an ordinary ship that has been out of the system for
+			// long enough to be "forgotten," or because it is a fighter that just
+			// docked with its mothership. Report it destroyed or landed as needed.
 			if((*it)->IsDestroyed())
 				eventQueue.emplace_back(nullptr, *it, ShipEvent::DESTROY);
+			else if((*it)->HasLanded() && (*it)->IsSpecial())
+				eventQueue.emplace_back(nullptr, *it, ShipEvent::LAND);
 			it = ships.erase(it);
 		}
 		else
