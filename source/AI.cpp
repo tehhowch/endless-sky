@@ -892,7 +892,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 				range += 5000. * it->IsDisabled();
 			else
 			{
-				bool hasBoarded = Has(ship, it, ShipEvent::BOARD);
+				bool hasBoarded = Has(ship, it, ShipEvent::BOARD) || !ship.Cargo().Free();
 				// Don't plunder unless there are no "live" enemies nearby.
 				range += 2000. * (2 * it->IsDisabled() - !hasBoarded);
 			}
@@ -904,7 +904,7 @@ shared_ptr<Ship> AI::FindTarget(const Ship &ship) const
 					isArmed = true;
 					break;
 				}
-			// Prefer to go after armed targets, expecially if you're not a pirate.
+			// Prefer to go after armed targets, especially if you're not a pirate.
 			range += 1000. * (!isArmed * (1 + !person.Plunders()));
 			// Focus on nearly dead ships.
 			range += 500. * (it->Shields() + it->Hull());
@@ -1279,7 +1279,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 			MoveToPlanet(ship, command);
 			command |= Command::LAND;
 		}
-		else if(ship.GetTargetSystem())
+		else if(ship.GetTargetSystem() && ship.JumpsRemaining())
 		{
 			PrepareForHyperspace(ship, command);
 			command |= Command::JUMP;
@@ -1289,7 +1289,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 			Refuel(ship, command);
 		else
 			// This ship has no route to the parent's system, so park at the system's center.
-			MoveTo(ship, command, Point(), Point(), 40., 0.);
+			MoveTo(ship, command, Point(), Point(), 40., 0.1);
 	}
 	else if(parent.Commands().Has(Command::LAND) && parentIsHere && planetIsHere && parentPlanet->CanLand(ship))
 	{
@@ -1312,6 +1312,8 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 			KeepStation(ship, command, parent);
 		else if(systemHasFuel && !dest->HasFuelFor(ship) && ship.JumpsRemaining() == 1)
 			Refuel(ship, command);
+		else if(!ship.JumpsRemaining())
+			MoveTo(ship, command, Point(), Point(), 40., 0.1);
 		else
 		{
 			PrepareForHyperspace(ship, command);
@@ -2286,7 +2288,7 @@ void AI::AutoFire(const Ship &ship, Command &command, bool secondary) const
 		currentTarget.reset();
 	
 	// Only fire on disabled targets if you don't want to plunder them.
-	bool spareDisabled = (ship.GetPersonality().Disables() || ship.GetPersonality().Plunders());
+	bool spareDisabled = (ship.GetPersonality().Disables() || (ship.GetPersonality().Plunders() && ship.Cargo().Free()));
 	
 	// Find the longest range of any of your non-homing weapons. Homing weapons
 	// that don't consume ammo may also fire in non-homing mode.
@@ -2821,18 +2823,18 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 		AutoFire(ship, command, false);
 	if(keyHeld)
 	{
+		if(keyHeld.Has(Command::FORWARD))
+			command |= Command::FORWARD;
 		if(keyHeld.Has(Command::RIGHT | Command::LEFT))
 			command.SetTurn(keyHeld.Has(Command::RIGHT) - keyHeld.Has(Command::LEFT));
-		else if(keyHeld.Has(Command::BACK))
+		if(keyHeld.Has(Command::BACK))
 		{
-			if(ship.Attributes().Get("reverse thrust"))
+			if(!keyHeld.Has(Command::FORWARD) && ship.Attributes().Get("reverse thrust"))
 				command |= Command::BACK;
-			else
+			else if(!keyHeld.Has(Command::RIGHT | Command::LEFT))
 				command.SetTurn(TurnBackward(ship));
 		}
 		
-		if(keyHeld.Has(Command::FORWARD))
-			command |= Command::FORWARD;
 		if(keyHeld.Has(Command::PRIMARY))
 		{
 			int index = 0;

@@ -188,7 +188,16 @@ void NPC::Load(const DataNode &node)
 			{
 				fleets.push_back(Fleet());
 				fleets.back().Load(child);
+				if(child.Size() >= 2)
+				{
+					// Copy the custom fleet in lieu of reparsing the same DataNode.
+					size_t numAdded = child.Value(1);
+					for(size_t i = 1; i < numAdded; ++i)
+						fleets.push_back(fleets.back());
+				}
 			}
+			else if(child.Size() >= 3 && child.Value(2) > 1.)
+				stockFleets.insert(stockFleets.end(), child.Value(2), GameData::Fleets().Get(child.Token(1)));
 			else if(child.Size() >= 2)
 				stockFleets.push_back(GameData::Fleets().Get(child.Token(1)));
 		}
@@ -323,6 +332,10 @@ void NPC::Do(const ShipEvent &event, PlayerInfo &player, UI *ui, bool isVisible)
 	// Check if this NPC is already in the succeeded state.
 	bool hasSucceeded = HasSucceeded(player.GetSystem());
 	bool hasFailed = HasFailed();
+	
+	// Scan events only count if originated by the player.
+	if(!event.ActorGovernment()->IsPlayer())
+		type &= ~(ShipEvent::SCAN_CARGO | ShipEvent::SCAN_OUTFITS);
 	
 	// Apply this event to the ship and any ships it is carrying.
 	actions[ship.get()] |= type;
@@ -547,7 +560,7 @@ NPC NPC::Instantiate(map<string, string> &subs, const System *origin, const Plan
 		ship->SetGovernment(result.government);
 		ship->SetIsSpecial();
 		ship->SetPersonality(result.personality);
-		result.ships.back()->FinishLoading(true);
+		ship->FinishLoading(true);
 		// Use the destinations stored in the NPC copy, in case they were auto-generated.
 		if(!result.stopovers.empty())
 			ship->SetStopovers(result.stopovers, result.doVisit);
