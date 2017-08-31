@@ -1799,6 +1799,13 @@ bool Ship::IsDestroyed() const
 
 
 
+void Ship::Land()
+{
+	hasLanded = true;
+}
+
+
+
 // Check if this ship has permanently landed.
 bool Ship::HasLanded() const
 {

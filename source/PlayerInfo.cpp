@@ -923,18 +923,25 @@ void PlayerInfo::Land(UI *ui)
 			++it; 
 	}
 	// Check for NPCs that have been destroyed without their destruction being
-	// registered, e.g. by self-destruct:
+	// registered, e.g. by self-destruct, or landed due to the player landing.
 	for(Mission &mission : missions)
 		for(const NPC &npc : mission.NPCs())
 			for(const shared_ptr<Ship> &ship : npc.Ships())
+			{
 				if(ship->IsDestroyed())
 					mission.Do(ShipEvent(nullptr, ship, ShipEvent::DESTROY), *this, ui);
-	
+				else if(ship->GetSystem() == system && !ship->IsDisabled()
+						&& ship->GetStopovers().count(planet) && !ship->GetStopovers().at(planet))
+				{
+					ship->Land();
+					mission.Do(ShipEvent(nullptr, ship, ShipEvent::LAND), *this, ui);
+				}
+			}
 	// "Unload" all fighters, so they will get recharged, etc.
 	for(const shared_ptr<Ship> &ship : ships)
 		ship->UnloadBays();
 	
-	// Recharge any ships that are landed with you on the planet.
+	// Recharge any of your ships that are landed with you on the planet.
 	bool hasSpaceport = planet->HasSpaceport() && planet->CanUseServices();
 	UpdateCargoCapacities();
 	for(const shared_ptr<Ship> &ship : ships)
