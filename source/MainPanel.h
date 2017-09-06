@@ -17,6 +17,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Command.h"
 #include "Engine.h"
+#include "ReportData.h"
 
 class PlayerInfo;
 class ShipEvent;
@@ -57,6 +58,7 @@ private:
 	PlayerInfo &player;
 	
 	Engine engine;
+	ReportData rd;
 	
 	Command show;
 	

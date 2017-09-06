@@ -37,6 +37,7 @@ class Minable;
 class Phrase;
 class Planet;
 class Projectile;
+class ReportData;
 class StellarObject;
 class System;
 
@@ -343,6 +344,7 @@ public:
 	std::shared_ptr<Ship> GetParent() const;
 	const std::vector<std::weak_ptr<Ship>> &GetEscorts() const;
 	
+	void SetLogger(ReportData &logger);
 	
 private:
 	// Add or remove a ship from this ship's list of escorts.
@@ -473,6 +475,8 @@ private:
 	// Links between escorts and parents.
 	std::vector<std::weak_ptr<Ship>> escorts;
 	std::weak_ptr<Ship> parent;
+	
+	ReportData *logger = nullptr;
 };
 
 

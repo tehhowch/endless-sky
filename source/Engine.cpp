@@ -33,6 +33,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "PointerShader.h"
 #include "Preferences.h"
 #include "Random.h"
+#include "ReportData.h"
 #include "RingShader.h"
 #include "Screen.h"
 #include "Sprite.h"
@@ -144,12 +145,17 @@ void Engine::Place()
 	// Add the player's flagship and escorts to the list of ships. The TakeOff()
 	// code already took care of loading up fighters and assigning parents.
 	for(const shared_ptr<Ship> &ship : player.Ships())
+	{
 		if(!ship->IsParked() && ship->GetSystem())
 		{
 			ships.push_back(ship);
+			ship->SetLogger(*logger);
 			if(it == ships.end())
 				--it;
 		}
+		else if(!ship->IsParked())
+			ship->SetLogger(*logger);
+	}
 	
 	// Add NPCs to the list of ships. Fighters have to be assigned to carriers,
 	// and all but "uninterested" ships should follow the player.
@@ -183,6 +189,7 @@ void Engine::Place()
 				ship->AddCrew(max(0, ship->RequiredCrew() - ship->Crew()));
 				if(!ship->IsDisabled())
 					ship->Recharge();
+				ship->SetLogger(*logger);
 				
 				if(ship->CanBeCarried())
 				{
@@ -250,6 +257,7 @@ void Engine::Place()
 		ship->Place(pos, ship->IsDisabled() ? Point() : velocity, angle);
 	}
 	
+	logger->Reset();
 	player.SetPlanet(nullptr);
 }
 
@@ -812,6 +820,13 @@ void Engine::SelectGroup(int group, bool hasShift, bool hasControl)
 	groupSelect = group;
 	this->hasShift = hasShift;
 	this->hasControl = hasControl;
+}
+
+
+
+void Engine::SetLogger(ReportData &logger)
+{
+	this->logger = &logger;
 }
 
 
@@ -1428,6 +1443,7 @@ void Engine::CalculateStep()
 					
 					shared_ptr<Ship> ship = reinterpret_cast<Ship *>(body)->shared_from_this();
 					int eventType = ship->TakeDamage(projectile, ship != hit);
+					logger->RecordHit(projectile.GetGovernment(), body->GetGovernment());
 					if(eventType)
 						eventQueue.emplace_back(
 							projectile.GetGovernment(), ship, eventType);
@@ -1441,6 +1457,7 @@ void Engine::CalculateStep()
 					
 					shared_ptr<Ship> ship = reinterpret_cast<Ship *>(body)->shared_from_this();
 					int eventType = ship->TakeDamage(projectile, ship != hit);
+					logger->RecordHit(projectile.GetGovernment(), body->GetGovernment());
 					if(eventType)
 						eventQueue.emplace_back(
 							projectile.GetGovernment(), ship, eventType);
@@ -1449,6 +1466,7 @@ void Engine::CalculateStep()
 			else if(hit)
 			{
 				int eventType = hit->TakeDamage(projectile);
+				logger->RecordHit(projectile.GetGovernment(), hit->GetGovernment());
 				if(eventType)
 					eventQueue.emplace_back(
 						projectile.GetGovernment(), hit, eventType);

@@ -176,6 +176,12 @@ void Files::Init(const char * const *argv)
 		if(str != nullptr)
 			SDL_free(str);
 	}
+	// Create the "battlelogs" directory if it does not yet exist.
+	{
+		char *str = SDL_GetPrefPath("endless-sky", "battlelogs");
+		if(str != nullptr)
+			SDL_free(str);
+	}
 	
 	// Check that all the directories exist.
 	if(!Exists(data) || !Exists(images) || !Exists(sounds))

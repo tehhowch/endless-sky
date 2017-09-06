@@ -45,9 +45,10 @@ using namespace std;
 
 
 MainPanel::MainPanel(PlayerInfo &player)
-	: player(player), engine(player), load(0.), loadSum(0.), loadCount(0)
+	: player(player), engine(player), rd(player), load(0.), loadSum(0.), loadCount(0)
 {
 	SetIsFullScreen(true);
+	engine.SetLogger(rd);
 }
 
 
@@ -80,6 +81,7 @@ void MainPanel::Step()
 		GetUI()->Push(new PlanetPanel(player, bind(&MainPanel::OnCallback, this)));
 		player.Land(GetUI());
 		isActive = false;
+		rd.WriteData();
 	}
 	const Ship *flagship = player.Flagship();
 	if(flagship)
@@ -97,6 +99,7 @@ void MainPanel::Step()
 	}
 	
 	engine.Step(isActive);
+	rd.Step(isActive);
 	
 	for(const ShipEvent &event : engine.Events())
 	{

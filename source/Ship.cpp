@@ -24,6 +24,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Planet.h"
 #include "Projectile.h"
 #include "Random.h"
+#include "ReportData.h"
 #include "ShipEvent.h"
 #include "System.h"
 
@@ -1517,6 +1518,7 @@ bool Ship::Fire(list<Projectile> &projectiles, list<Effect> &effects)
 		return false;
 	
 	antiMissileRange = 0.;
+	int fireCount = 0;
 	
 	const vector<Hardpoint> &weapons = armament.Get();
 	for(unsigned i = 0; i < weapons.size(); ++i)
@@ -1527,11 +1529,16 @@ bool Ship::Fire(list<Projectile> &projectiles, list<Effect> &effects)
 			if(outfit->AntiMissile())
 				antiMissileRange = max(antiMissileRange, outfit->Velocity() + weaponRadius);
 			else if(commands.HasFire(i))
+			{
 				armament.Fire(i, *this, projectiles, effects);
+				++fireCount;
+			}
 		}
 	}
 	
 	armament.Step(*this);
+	if(fireCount && logger)
+		logger->RecordFire(this, GetTargetShip(), fireCount);
 	
 	return antiMissileRange;
 }
@@ -2104,6 +2111,13 @@ int Ship::TakeDamage(const Projectile &projectile, bool isBlast)
 		shieldFraction = 0.;
 	else if(shieldDamage > shields)
 		shieldFraction = min(shieldFraction, shields / shieldDamage);
+	vector<double> damageDealt(7);
+	damageDealt[0] = shieldDamage * shieldFraction;
+	damageDealt[1] = hullDamage * (1. - shieldFraction);
+	damageDealt[2] = heatDamage * (1. - .5 * shieldFraction);
+	damageDealt[3] = ionDamage * (1. - .5 * shieldFraction);
+	damageDealt[4] = disruptionDamage * (1. - .5 * shieldFraction);
+	damageDealt[5] = slowingDamage * (1. - .5 * shieldFraction);
 	shields -= shieldDamage * shieldFraction;
 	hull -= hullDamage * (1. - shieldFraction);
 	heat += heatDamage * (1. - .5 * shieldFraction);
@@ -2133,6 +2147,8 @@ int Ship::TakeDamage(const Projectile &projectile, bool isBlast)
 			&& !personality.IsPacifist() && (shieldDamage > 0. || hullDamage > 0.))
 		type |= ShipEvent::PROVOKE;
 	
+	if(logger)
+		logger->RecordDamage(this, damageDealt, ionization, disruption, slowness);
 	return type;
 }
 
@@ -2559,6 +2575,13 @@ const vector<weak_ptr<Ship>> &Ship::GetEscorts() const
 void Ship::AddEscort(Ship &ship)
 {
 	escorts.push_back(ship.shared_from_this());
+}
+
+
+
+void Ship::SetLogger(ReportData &logger)
+{
+	this->logger = &logger;
 }
 
 

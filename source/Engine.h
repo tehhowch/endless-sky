@@ -38,6 +38,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 class Government;
 class Outfit;
 class PlayerInfo;
+class ReportData;
 
 
 
@@ -75,6 +76,7 @@ public:
 	void RClick(const Point &point);
 	void SelectGroup(int group, bool hasShift, bool hasControl);
 	
+	void SetLogger(ReportData &logger);
 	
 private:
 	void EnterSystem();
@@ -112,6 +114,7 @@ private:
 	PlayerInfo &player;
 	
 	AI ai;
+	ReportData *logger = nullptr;
 	
 	std::thread calcThread;
 	std::condition_variable condition;
