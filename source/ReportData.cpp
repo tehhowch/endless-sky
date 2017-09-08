@@ -32,19 +32,31 @@ namespace {
 		out << "Ship: " << name << '\n'
 			<< "System" << '\t'
 			<< "X" << '\t' << "Y" << '\t' << "Vx" << '\t' << "Vy" << '\t'
-			<< "Speed" << '\t' << "Facing" << '\t' << "Hull %" << '\t'
-			<< "Shield %" << '\t' << "Energy %" << '\t' << "Heat %" << '\t'
-			<< "Fuel %" << '\t' << "Hull" << '\t' << "Shields" << '\t'
+			<< "Speed" << '\t' << "Facing" << '\t' << "%Hull" << '\t'
+			<< "%Shield" << '\t' << "%Energy" << '\t' << "%Heat" << '\t'
+			<< "%Fuel" << '\t' << "Hull" << '\t' << "Shields" << '\t'
 			<< "Energy" << '\t' << "Temp." << '\t' << "Fuel" << '\t'
 			<< "Target" << '\t' << "Ioniz." << '\t' << "Disrupt." << '\t'
 			<< "Slowing"
 			;
+		out << '\n';
 		return out.str();
 	}
+	
 	string GetShipDataString(const shared_ptr<Ship> ship)
 	{
 		ostringstream out;
-		if(ship->GetSystem())
+		if(ship->IsDestroyed())
+		{
+			out << "destroyed" << '\t'
+				<< "" << '\t'
+				<< "" << '\t'
+				<< "" << '\t'
+				<< "" << '\t'
+				<< "" << '\t'
+				<< "" << '\t';
+		}
+		else if(ship->GetSystem())
 		{
 			out << ship->GetSystem()->Name() << '\t'
 				<< ship->Position().X() << '\t'
@@ -81,6 +93,7 @@ namespace {
 			;
 		return out.str();
 	}
+	
 	// Ensure the ship has a valid logging filename. It will use the same
 	// filename through every reset, since loggedShips is only cleared by
 	// loading a new save (i.e. a new ReportData instance).
@@ -100,6 +113,14 @@ namespace {
 				name += c;
 		
 		return name;
+	}
+	
+	void Write(string &path, string &data)
+	{
+		// ES does not have 'append' as an opening method.
+		if(Files::Exists(path))
+			data = Files::Read(path) + '\n' + data;
+		Files::Write(path, data);
 	}
 }
 
@@ -137,9 +158,8 @@ ReportData::ReportData(const PlayerInfo &player)
 	// logs, and thus the needed suffix for non-overwriting logfiles.
 	if(--fileCount)
 		// This is not this player's first use of logging.
-		suffix = to_string(fileCount) + "~" + suffix;
+		suffix = to_string(++fileCount) + "~" + suffix;
 	logSuffix = "~" + suffix;
-	cerr << logSuffix << endl;
 	
 	/* Written files:
 		bl~shipDamage:
@@ -217,7 +237,8 @@ void ReportData::WriteData()
 		}
 		if(!govtOutput.empty())
 		{
-			cerr << govtOutput << endl;
+			string fileName = directoryPath + "bl~governmentHits" + logSuffix;
+			Write(fileName, govtOutput);
 		}
 		
 		// Write the summary data: ship hits/damagetaken
@@ -277,19 +298,21 @@ void ReportData::WriteData()
 		}
 		if(!shipSummary.empty())
 		{
-			cerr << shipSummary << endl;
+			string fileName = directoryPath + "bl~shipDamage" + logSuffix;
+			Write(fileName, govtOutput);
 		}
 		
 		// Write the many ships' time-dependent data.
 		for(const auto &sit : loggedShips)
 		{
 			const shared_ptr<Ship> &ship = sit.first;
-			const string &file = sit.second;
-			cerr << file << endl;
 			// Assemble data into a string for the filewrite.
 			string output;
 			for(const auto &ts : timeData)
 			{
+				// Log 6 times each second rather than 60.
+				if(ts.first % 10)
+					continue;
 				output += to_string(ts.first) + '\t';
 				const auto shipIt = ts.second.Ships().find(ship);
 				if(shipIt != ts.second.Ships().end())
@@ -305,13 +328,11 @@ void ReportData::WriteData()
 					output += '\t' + to_string(slowIt->second);
 				output += '\n';
 			}
-			// Get the file.
-			cerr << output << endl;
-			// Append to the file.
 			//	if file is empty, start with the header. Otherwise, just add data.
-			string header = ShipDataHeader(ship->Name());
-			
-			// Close the file.
+			string fileName = directoryPath + "bl~timeData~" + sit.second + logSuffix;
+			if(!Files::Exists(fileName))
+				output = ShipDataHeader(ship->Name()) + output;
+			Write(fileName, output);
 		}
 	}
 	// Now that all the data has been written, wipe it from memory.
