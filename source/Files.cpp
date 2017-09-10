@@ -482,12 +482,12 @@ string Files::Name(const string &path)
 
 
 
-FILE *Files::Open(const string &path, bool write)
+FILE *Files::Open(const string &path, bool write, bool append)
 {
 #if defined _WIN32
-	return _wfopen(ToUTF16(path).c_str(), write ? L"w" : L"rb");
+	return _wfopen(ToUTF16(path).c_str(), append ? L"a+" : (write ? L"w" : L"rb"));
 #else
-	return fopen(path.c_str(), write ? "wb" : "rb");
+	return fopen(path.c_str(), append ? "ab" : (write ? "wb" : "rb"));
 #endif
 }
 
@@ -536,6 +536,24 @@ void Files::Write(const string &path, const string &data)
 
 
 void Files::Write(FILE *file, const string &data)
+{
+	if(!file)
+		return;
+	
+	fwrite(&data[0], 1, data.size(), file);
+}
+
+
+
+void Files::Append(const string &path, const string &data)
+{
+	File file(path, true, true);
+	Append(file, data);
+}
+
+
+
+void Files::Append(FILE *file, const string &data)
 {
 	if(!file)
 		return;

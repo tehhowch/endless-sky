@@ -18,9 +18,9 @@ using namespace std;
 
 
 
-File::File(const string &path, bool write)
+File::File(const string &path, bool write, bool append)
 {
-	file = Files::Open(path, write);
+	file = Files::Open(path, write, append);
 }
 
 

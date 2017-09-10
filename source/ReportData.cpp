@@ -21,7 +21,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "System.h"
 
 #include <cmath>
-#include <iostream>
 #include <sstream>
 
 using namespace std;
@@ -118,10 +117,7 @@ namespace {
 	
 	void Write(string &path, string &data)
 	{
-		// ES does not have 'append' as an opening method.
-		if(Files::Exists(path))
-			data = Files::Read(path) + '\n' + data;
-		Files::Write(path, data);
+		Files::Append(path, data);
 	}
 }
 
@@ -238,6 +234,7 @@ void ReportData::WriteData()
 		}
 		if(!govtOutput.empty())
 		{
+			govtOutput += '\n';
 			string fileName = directoryPath + "bl~governmentHits" + logSuffix;
 			Write(fileName, govtOutput);
 		}
@@ -299,8 +296,9 @@ void ReportData::WriteData()
 		}
 		if(!shipSummary.empty())
 		{
+			shipSummary += '\n';
 			string fileName = directoryPath + "bl~shipDamage" + logSuffix;
-			Write(fileName, govtOutput);
+			Write(fileName, shipSummary);
 		}
 		
 		// Write the many ships' time-dependent data.
