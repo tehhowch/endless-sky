@@ -30,7 +30,7 @@ namespace {
 	{
 		ostringstream out;
 		out << "Ship: " << name << '\n'
-			<< "System" << '\t'
+			<< "Step" << '\t' << "System" << '\t'
 			<< "X" << '\t' << "Y" << '\t' << "Vx" << '\t' << "Vy" << '\t'
 			<< "Speed" << '\t' << "Facing" << '\t' << "%Hull" << '\t'
 			<< "%Shield" << '\t' << "%Energy" << '\t' << "%Heat" << '\t'
@@ -58,7 +58,7 @@ namespace {
 		}
 		else if(ship->GetSystem())
 		{
-			out << ship->GetSystem()->Name() << '\t'
+			out << "'" + ship->GetSystem()->Name() + "'" << '\t'
 				<< ship->Position().X() << '\t'
 				<< ship->Position().Y() << '\t'
 				<< ship->Velocity().X() << '\t'
@@ -69,7 +69,7 @@ namespace {
 		else
 		{
 			const shared_ptr<Ship> &parent = ship->GetParent();
-			out << "Carried: " + parent->Name() << '\t'
+			out << "Carried: '" + parent->Name() + "'" << '\t'
 				<< parent->Position().X() << '\t'
 				<< parent->Position().Y() << '\t'
 				<< parent->Velocity().X() << '\t'
@@ -88,7 +88,8 @@ namespace {
 			<< ship->Mass() * 100 * ship->Heat() << '\t'
 			<< ship->Attributes().Get("fuel capacity") * ship->Fuel() << '\t'
 			<< (ship->GetTargetShip() ? (!ship->GetTargetShip()->Name().empty() ?
-				ship->GetTargetShip()->Name() : ship->GetTargetShip()->GetGovernment()->GetName() + " ship")
+				"'" + ship->GetTargetShip()->Name() + "'"
+				: ship->GetTargetShip()->GetGovernment()->GetName() + " ship")
 				: "No target") << '\t'
 			;
 		return out.str();
@@ -312,19 +313,26 @@ void ReportData::WriteData()
 				// Log 6 times each second rather than 60.
 				if(ts.first % 10)
 					continue;
-				output += to_string(ts.first) + '\t';
 				const auto shipIt = ts.second.Ships().find(ship);
-				if(shipIt != ts.second.Ships().end())
-					output += shipIt->second;
+				if(shipIt == ts.second.Ships().end())
+					continue;
+				
+				output += to_string(ts.first) + '\t' + shipIt->second;
 				const auto ionIt = ts.second.ShipIonization().find(ship);
 				if(ionIt != ts.second.ShipIonization().end())
 					output += '\t' + to_string(ionIt->second);
+				else
+					output += "\t0";
 				const auto disIt = ts.second.ShipDisruption().find(ship);
 				if(disIt != ts.second.ShipDisruption().end())
 					output += '\t' + to_string(disIt->second);
+				else
+					output += "\t0";
 				const auto slowIt = ts.second.ShipSlowness().find(ship);
 				if(slowIt != ts.second.ShipSlowness().end())
 					output += '\t' + to_string(slowIt->second);
+				else
+					output += "\t0";
 				output += '\n';
 			}
 			//	if file is empty, start with the header. Otherwise, just add data.

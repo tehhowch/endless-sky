@@ -186,6 +186,7 @@ void MainPanel::OnCallback()
 	engine.Go();
 	engine.Wait();
 	engine.Step(true);
+	rd.Step(true);
 	// Start the next step of the simulatip because Step() above still thinks
 	// the planet panel is up and therefore will not start it.
 	engine.Go();
