@@ -16,10 +16,10 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "PlayerInfo.h"
 
 #include <cstdint>
-#include <list>
 #include <map>
 #include <memory>
 #include <string>
+#include <utility>
 #include <vector>
 
 class Government;
@@ -50,7 +50,7 @@ public:
 	// Called from Ship::Fire.
 	void RecordFire(const Ship *actor, const std::shared_ptr<Ship> targeted, int timesFired);
 	// Called from Ship::TakeDamage.
-	void RecordDamage(const Ship *hit, const std::vector<double> damageValues, double ion, double disrupt, double slow);
+	void RecordDamage(const Ship *hit, const Government *source, const std::vector<double> damageValues, double ion, double disrupt, double slow);
 
 private:
 	// Reset the internal loggers.
@@ -95,6 +95,7 @@ private:
 	std::map<const Government *, int> gotHit;
 	std::map<const Government *, std::map<const Government *, int>> hitGotHit;
 	std::map<const Ship *, std::map<int, double>> damageReceived;
+	std::map<const Ship *, std::map<const Government *, std::map<int, std::pair<double, int>>>> dmgReceivedByGovt;
 	// Holds a ptr to even 'common' ships so that they can be ID'd at writing time.
 	// After writing, the pointer will be released.
 	std::map<std::shared_ptr<Ship>, int> firedAt;

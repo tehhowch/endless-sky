@@ -2111,7 +2111,7 @@ int Ship::TakeDamage(const Projectile &projectile, bool isBlast)
 		shieldFraction = 0.;
 	else if(shieldDamage > shields)
 		shieldFraction = min(shieldFraction, shields / shieldDamage);
-	vector<double> damageDealt(7);
+	vector<double> damageDealt(6);
 	damageDealt[0] = shieldDamage * shieldFraction;
 	damageDealt[1] = hullDamage * (1. - shieldFraction);
 	damageDealt[2] = heatDamage * (1. - .5 * shieldFraction);
@@ -2148,7 +2148,7 @@ int Ship::TakeDamage(const Projectile &projectile, bool isBlast)
 		type |= ShipEvent::PROVOKE;
 	
 	if(logger)
-		logger->RecordDamage(this, damageDealt, ionization, disruption, slowness);
+		logger->RecordDamage(this, projectile.GetGovernment(), damageDealt, ionization, disruption, slowness);
 	return type;
 }
 

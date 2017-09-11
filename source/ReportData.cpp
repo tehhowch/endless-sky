@@ -26,15 +26,17 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 using namespace std;
 
 namespace {
-	string ShipDataHeader(string name)
+	string ShipDataHeader(string name, string model, string govt)
 	{
 		ostringstream out;
-		out << "Ship: " << name << '\n'
+		out << "Ship: " << '\t' << "'" + name + "'" << "\t\t"
+			<< "Model: " << '\t' << "'" + model + "'" << "\t\t"
+			<< "Gov't: " << '\t' << "'" + govt + "'" << '\n'
 			<< "Step" << '\t' << "System" << '\t'
 			<< "X" << '\t' << "Y" << '\t' << "Vx" << '\t' << "Vy" << '\t'
-			<< "Speed" << '\t' << "Facing" << '\t' << "%Hull" << '\t'
-			<< "%Shield" << '\t' << "%Energy" << '\t' << "%Heat" << '\t'
-			<< "%Fuel" << '\t' << "Hull" << '\t' << "Shields" << '\t'
+			<< "Speed" << '\t' << "Facing" << '\t' << "%Shields" << '\t'
+			<< "%Hull" << '\t' << "%Energy" << '\t' << "%Heat" << '\t'
+			<< "%Fuel" << '\t' << "Shields" << '\t' << "Hull" << '\t'
 			<< "Energy" << '\t' << "Temp." << '\t' << "Fuel" << '\t'
 			<< "Target" << '\t' << "Ioniz." << '\t' << "Disrupt." << '\t'
 			<< "Slowing"
@@ -77,20 +79,20 @@ namespace {
 				<< parent->Velocity().Length() << '\t'
 				<< parent->Facing().Degrees() << '\t';
 		}
-		out << ship->Hull() * 100 << '\t'
-			<< ship->Shields() * 100 << '\t'
+		out << ship->Shields() * 100 << '\t'
+			<< ship->Hull() * 100 << '\t'
 			<< ship->Energy() * 100 << '\t'
 			<< ship->Heat() * 100 << '\t'
 			<< ship->Fuel() * 100 << '\t'
-			<< ship->Attributes().Get("hull") * ship->Hull() << '\t'
 			<< ship->Attributes().Get("shields") * ship->Shields() << '\t'
+			<< ship->Attributes().Get("hull") * ship->Hull() << '\t'
 			<< ship->Attributes().Get("energy capacity") *ship->Energy() << '\t'
 			<< ship->Mass() * 100 * ship->Heat() << '\t'
 			<< ship->Attributes().Get("fuel capacity") * ship->Fuel() << '\t'
 			<< (ship->GetTargetShip() ? (!ship->GetTargetShip()->Name().empty() ?
 				"'" + ship->GetTargetShip()->Name() + "'"
-				: ship->GetTargetShip()->GetGovernment()->GetName() + " ship")
-				: "No target") << '\t'
+				: "'" + ship->GetTargetShip()->GetGovernment()->GetName() + " ship'")
+				: "'No target'")
 			;
 		return out.str();
 	}
@@ -205,34 +207,132 @@ void ReportData::WriteData()
 		{
 			govtOutput += "Timestep:\t" + to_string(step) + "\nSource Gov't\tHits Given\tHits Taken\n";
 			for(const auto &govt : didHit)
-				govtTable.emplace(govt.first, govt.first->GetName() + '\t' + to_string(govt.second));
+				govtTable.emplace(govt.first, "'" + govt.first->GetName() + "'\t" + to_string(govt.second));
 		}
 		if(!gotHit.empty())
 		{
 			if(govtOutput.empty())
 				govtOutput += "Timestep:\t" + to_string(step) + "\nSource Gov't\tHits Given\tHits Taken\n";
-			// Some governments may have gotten hit, but not attacked anyone.
 			for(const auto &govt : gotHit)
-				govtTable.emplace(govt.first, govt.first->GetName() + '\t' + to_string(0));
-			// For all hit governments, add the number of times they were hit.
-			for(const auto &govt : gotHit)
+			{
+				// Some governments may have gotten hit, but not attacked anyone.
+				govtTable.emplace(govt.first, "'" + govt.first->GetName() + "'\t0");
+				// For all hit governments, add the number of times they were hit.
 				govtTable[govt.first] += '\t' + to_string(govt.second) + '\n';
+			}
 			// Some governments may have attacked others, but not been hit.
 			for(auto &govt : govtTable)
 			{
 				if(govt.second.back() != '\n')
 					govt.second += "\t0\n";
+				
+				// Construct the data output from the summary map.
 				govtOutput += govt.second;
 			}
 			govtOutput += '\n';
 		}
+		// Tally the ship damage received by the source of the damage (e.g. MVP gov't = ?).
+		//   Damaged gov't          Attacking gov't      type      total      hits
+		// map<const Government *, map<const Government *, map<int, pair<double, int>>>> govtDamage;
+		//   Attacking gov't        Damaged gov't        type      total      hits
+		map<const Government *, map<const Government *, map<int, pair<double, int>>>> govtAttacks;
+		// map<const Government *, map<const Government *, string>> govtDamageString;
+		map<const Government *, map<const Government *, string>> govtAttacksString;
+		map<const Ship *, map<const Government *, string>> shipShotTable;
+		string shipShotOutput;
+		if(!dmgReceivedByGovt.empty())
+		{
+			shipShotOutput += "Ship\tAttacking Gov't\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\tAvg Shield/Shot\tAvg Hull/Shot\tAvg Heat/Shot\tAvg Ion/Shot\tAvg Disrupt/Shot\tAvg Slow/Shot\n";
+			// Assess the available governments with ship damage data.
+			for(const auto &ship : dmgReceivedByGovt)
+			{
+				const Government *gov = ship.first->GetGovernment();
+				for(const auto &govt : ship.second)
+				{
+					const Government *attacker = govt.first;
+					string &str = shipShotTable[ship.first][attacker];
+					str += (!ship.first->Name().empty() ? "'" + ship.first->Name() + "'"
+							: "'Unnamed " + gov->GetName() + " ship'") + "\t'" + attacker->GetName() + "'";
+					for(const auto &damage : govt.second)
+					{
+						const int &dt = damage.first;
+						const double &damageDealt = damage.second.first;
+						const int &hits = damage.second.second;
+						// govtDamage[gov][attacker][dt].first += damageDealt;
+						// govtDamage[gov][attacker][dt].second += hits;
+						govtAttacks[attacker][gov][dt].first += damageDealt;
+						govtAttacks[attacker][gov][dt].second += hits;
+						str += '\t' + to_string(damageDealt);
+					}
+					for(const auto &damage : govt.second)
+					{
+						str += '\t' + (!damage.second.second ? "n/a"
+								: to_string(damage.second.first / damage.second.second));
+					}
+					shipShotOutput += str + '\n';
+				}
+			}
+			shipShotOutput += '\n';
+			// for(const auto &def : govtDamage)
+			// 	for(const auto &off : def.second)
+			// 	{
+			// 		for(const auto &d : off.second)
+			// 			govtDamageString[def.first][off.first] += '\t' + to_string(d.second.first);
+			// 		for(const auto &d : off.second)
+			// 		{
+			// 			govtDamageString[def.first][off.first] += '\t' + (d.second.second ?
+			// 					to_string(d.second.first / d.second.second) : "n/a");
+			// 		}
+			// 		govtDamageString[def.first][off.first] += '\n';
+			// 	}
+			for(const auto &off : govtAttacks)
+				for(const auto &def : off.second)
+				{
+					for(const auto &d : def.second)
+						govtAttacksString[off.first][def.first] += '\t' + to_string(d.second.first);
+					for(const auto &d : def.second)
+					{
+						govtAttacksString[off.first][def.first] += '\t' + (d.second.second ?
+								to_string(d.second.first / d.second.second) : "n/a");
+					}
+					govtAttacksString[off.first][def.first] += '\n';
+				}
+		}
 		if(!hitGotHit.empty())
 		{
-			govtOutput += "Source Gov't\tTarget Gov't\tSuccessful Hits\n";
-			for(const auto &source : hitGotHit)
-				for(const auto &target : source.second)
-					govtOutput += source.first->GetName() + '\t' + target.first->GetName() + '\t' + to_string(target.second) + '\n';
+			govtOutput += "Source Govt\tTarget Govt\tSuccessful Hits";
+			if(dmgReceivedByGovt.empty())
+			{
+				govtOutput += '\n';
+				for(const auto &source : hitGotHit)
+					for(const auto &target : source.second)
+						govtOutput += "'" + source.first->GetName() + "'\t'" + target.first->GetName() + "'\t" + to_string(target.second) + '\n';
+			}
+			else
+			{
+				govtOutput += "\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\tAvg Shield/Shot\tAvg Hull/Shot\tAvg Heat/Shot\tAvg Ion/Shot\tAvg Disrupt/Shot\tAvg Slow/Shot\n";
+				for(const auto &source : hitGotHit)
+					for(const auto &target : source.second)
+					{
+						govtOutput += "'" + source.first->GetName() + "'\t'" + target.first->GetName() + "'\t"
+								+ to_string(target.second) + govtAttacksString[source.first][target.first];
+						if(govtOutput.back() != '\n')
+							govtOutput += "\t0\t0\t0\t0\t0\t0\tn/a\tn/a\tn/a\tn/a\tn/a\tn/a\n";
+					}
+			}
+			govtOutput += '\n';
 		}
+		// if(!govtDamageString.empty())
+		// {
+		// 	govtOutput += "Target Govt\tSource Govt\tTotal Shield\tTotal Hull\tTotal Heat\tTotal Ion\tTotal Disruption\tTotal Slowing\tAvg Shield\tAvg Hull\tAvg Heat\tAvg Ion\tAvg Disruption\tAvg Slowing\n";
+		// 	for(const auto &target : govtDamageString)
+		// 		for(const auto &source : target.second)
+		// 		{
+		// 			govtOutput += "'" + target.first->GetName() + "'\t'" + source.first->GetName() + "'"
+		// 					+ govtDamageString[target.first][source.first];
+		// 		}
+		// 	govtOutput += '\n';
+		// }
 		if(!govtOutput.empty())
 		{
 			govtOutput += '\n';
@@ -245,26 +345,33 @@ void ReportData::WriteData()
 		map<const Ship *, string> shipTable;
 		if(!shotsFired.empty())
 		{
-			shipSummary += "Timestep:\t" + to_string(step) + "\t\t\t\t\tReceived:"
-				+ "\nShip\tModel\tShots Fired\tShots Fired At\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
+			shipSummary += "Timestep:\t" + to_string(step) + "\t\t\t\t\tTotal received:"
+				+ "\nShip\tModel\tGovernment\tShots Fired\tFrames Targeted\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
 			for(const auto &ship : shotsFired)
-				shipTable.emplace(ship.first,
-						(ship.first->Name().empty() ? "Unnamed " + ship.first->GetGovernment()->GetName() : ship.first->Name())
-						+ '\t' + ship.first->ModelName() + '\t' + to_string(ship.second));
+				shipTable.emplace(ship.first, (ship.first->Name().empty()
+						? "'Unnamed " + ship.first->GetGovernment()->GetName() + " ship'"
+							: "'" + ship.first->Name() + "'")
+						+ '\t' + "'" + ship.first->ModelName() + "'"
+						+ '\t' + "'" + ship.first->GetGovernment()->GetName() + "'"
+						+ '\t' + to_string(ship.second));
 		}
 		if(!firedAt.empty())
 		{
 			if(shipSummary.empty())
 				shipSummary += "Timestep:\t" + to_string(step) + "\t\t\t\t\t"
-					+ "\nShip\tModel\tShots Fired\tShots Fired At\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
-			// Some ships may have not fired any shots, but been targeted anyway.
+					+ "\nShip\tModel\tGovernment\tShots Fired\tFrames Targeted\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
 			for(const auto &ship : firedAt)
-				shipTable.emplace(ship.first.get(),
-						(ship.first->Name().empty() ? "Unnamed " + ship.first->GetGovernment()->GetName() : ship.first->Name())
-						+ '\t' + ship.first->ModelName() + "\t0");
-			// For all targeted ships, indicate how many times they were targeted.
-			for(const auto &ship : firedAt)
+			{
+				// Some ships may have not fired any shots, but been targeted anyway.
+				shipTable.emplace(ship.first.get(), (ship.first->Name().empty()
+						? "'Unnamed " + ship.first->GetGovernment()->GetName() + " ship'"
+							: "'" + ship.first->Name() + "'")
+						+ '\t' + "'" + ship.first->ModelName() + "'"
+						+ '\t' + "'" + ship.first->GetGovernment()->GetName() + "'"
+						+ "\t0");
+				// For all targeted ships, indicate how many times they were targeted.
 				shipTable[ship.first.get()] += '\t' + to_string(ship.second) + '\t';
+			}
 			// Some ships may have attacked others, but not been targeted.
 			for(auto &ship : shipTable)
 				if(ship.second.back() != '\t')
@@ -274,17 +381,20 @@ void ReportData::WriteData()
 		{
 			if(shipSummary.empty())
 				shipSummary += "Timestep:\t" + to_string(step) + "\t\t\t\t\t"
-					+ "\nShip\tModel\tShots Fired\tShots Fired At\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
-			// Some ships may have been damaged, but not targeted nor attacked others.
-			for(const auto &ship : damageReceived)
-				shipTable.emplace(ship.first,
-						(ship.first->Name().empty() ? "Unnamed " + ship.first->GetGovernment()->GetName() : ship.first->Name())
-						+ '\t' + ship.first->ModelName() + "\t0\t0\t");
-			// For all ships which took damage, record the total damage taken.
+					+ "\nShip\tModel\tGovernment\tShots Fired\tFrames Targeted\t\tShield Dmg\tHull Dmg\tHeat Dmg\tIon Dmg\tDisruption Dmg\tSlowing Dmg\n";
 			for(const auto &ship : damageReceived)
 			{
+				// Some ships may have been damaged, but not targeted nor attacked others.
+				shipTable.emplace(ship.first, (ship.first->Name().empty()
+						? "'Unnamed " + ship.first->GetGovernment()->GetName() + " ship'"
+							: "'" + ship.first->Name() + "'")
+						+ '\t' + "'" + ship.first->ModelName() + "'"
+						+ '\t' + "'" + ship.first->GetGovernment()->GetName() + "'"
+						+ "\t0\t0\t");
+				// For all ships which took damage, record the total damage taken.
 				for(const auto &damage : ship.second)
 					shipTable[ship.first] += '\t' + to_string(lround(damage.second));
+				
 				shipTable[ship.first] += '\n';
 			}
 			// Some ships may not have been targeted or taken damage, but fired shots.
@@ -292,12 +402,14 @@ void ReportData::WriteData()
 			{
 				if(ship.second.back() != '\n')
 					ship.second += "\t0\t0\t0\t0\t0\t0\n";
+				
+				// Construct the data output from the summary map.
 				shipSummary += ship.second;
 			}
 		}
 		if(!shipSummary.empty())
 		{
-			shipSummary += '\n';
+			shipSummary += '\n' + shipShotOutput + '\n';
 			string fileName = directoryPath + "bl~shipDamage" + logSuffix;
 			Write(fileName, shipSummary);
 		}
@@ -338,7 +450,7 @@ void ReportData::WriteData()
 			//	if file is empty, start with the header. Otherwise, just add data.
 			string fileName = directoryPath + "bl~timeData~" + sit.second + logSuffix;
 			if(!Files::Exists(fileName))
-				output = ShipDataHeader(ship->Name()) + output;
+				output = ShipDataHeader(ship->Name(), ship->ModelName(), ship->GetGovernment()->GetName()) + output;
 			Write(fileName, output);
 		}
 	}
@@ -388,7 +500,7 @@ void ReportData::RecordFire(const Ship *actor, const shared_ptr<Ship> targeted, 
 
 
 // Only called for special ships.
-void ReportData::RecordDamage(const Ship *hit, const vector<double> damageValues, double ion, double disrupt, double slow)
+void ReportData::RecordDamage(const Ship *hit, const Government *source, const vector<double> damageValues, double ion, double disrupt, double slow)
 {
 	// ints declared in class Weapon:
 	// static const int SHIELD_DAMAGE = 0;
@@ -398,7 +510,16 @@ void ReportData::RecordDamage(const Ship *hit, const vector<double> damageValues
 	// static const int DISRUPTION_DAMAGE = 4;
 	// static const int SLOWING_DAMAGE = 5;
 	for(size_t i = 0; i < damageValues.size(); ++i)
+	{
 		damageReceived[hit][i] += damageValues[i];
+		// Log the amount of damage and number of hits from the attacking government.
+		if(source)
+		{
+			dmgReceivedByGovt[hit][source][i].first += damageValues[i];
+			if(damageValues[i])
+				++dmgReceivedByGovt[hit][source][i].second;
+		}
+	}
 	
 	// Will throw out-of-range if step doesn't exist yet.
 	TimeStepLog &ts = timeData.at(step);
