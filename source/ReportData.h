@@ -31,12 +31,11 @@ class Ship;
 class ReportData {
 public:
 	explicit ReportData(const PlayerInfo &player);
-	// ~ReportData();
 	
 	// Set the output directory for the given player. Numerous files are made.
 	void Init(const PlayerInfo &player);
 	// Update the logger with the ships to be logged.
-	void Reset();//const std::list<std::shared_ptr<Ship>> ships);
+	void Reset();
 	// Append the recorded data to the output files (and reset the internal loggers).
 	// This should be called every time the Engine::Ships list may be changed (i.e.
 	// on TakeOff and after boarding/assisting missions insert ships).

@@ -232,11 +232,8 @@ void ReportData::WriteData()
 			govtOutput += '\n';
 		}
 		// Tally the ship damage received by the source of the damage (e.g. MVP gov't = ?).
-		//   Damaged gov't          Attacking gov't      type      total      hits
-		// map<const Government *, map<const Government *, map<int, pair<double, int>>>> govtDamage;
 		//   Attacking gov't        Damaged gov't        type      total      hits
 		map<const Government *, map<const Government *, map<int, pair<double, int>>>> govtAttacks;
-		// map<const Government *, map<const Government *, string>> govtDamageString;
 		map<const Government *, map<const Government *, string>> govtAttacksString;
 		map<const Ship *, map<const Government *, string>> shipShotTable;
 		string shipShotOutput;
@@ -258,8 +255,6 @@ void ReportData::WriteData()
 						const int &dt = damage.first;
 						const double &damageDealt = damage.second.first;
 						const int &hits = damage.second.second;
-						// govtDamage[gov][attacker][dt].first += damageDealt;
-						// govtDamage[gov][attacker][dt].second += hits;
 						govtAttacks[attacker][gov][dt].first += damageDealt;
 						govtAttacks[attacker][gov][dt].second += hits;
 						str += '\t' + to_string(damageDealt);
@@ -273,18 +268,6 @@ void ReportData::WriteData()
 				}
 			}
 			shipShotOutput += '\n';
-			// for(const auto &def : govtDamage)
-			// 	for(const auto &off : def.second)
-			// 	{
-			// 		for(const auto &d : off.second)
-			// 			govtDamageString[def.first][off.first] += '\t' + to_string(d.second.first);
-			// 		for(const auto &d : off.second)
-			// 		{
-			// 			govtDamageString[def.first][off.first] += '\t' + (d.second.second ?
-			// 					to_string(d.second.first / d.second.second) : "n/a");
-			// 		}
-			// 		govtDamageString[def.first][off.first] += '\n';
-			// 	}
 			for(const auto &off : govtAttacks)
 				for(const auto &def : off.second)
 				{
@@ -322,17 +305,6 @@ void ReportData::WriteData()
 			}
 			govtOutput += '\n';
 		}
-		// if(!govtDamageString.empty())
-		// {
-		// 	govtOutput += "Target Govt\tSource Govt\tTotal Shield\tTotal Hull\tTotal Heat\tTotal Ion\tTotal Disruption\tTotal Slowing\tAvg Shield\tAvg Hull\tAvg Heat\tAvg Ion\tAvg Disruption\tAvg Slowing\n";
-		// 	for(const auto &target : govtDamageString)
-		// 		for(const auto &source : target.second)
-		// 		{
-		// 			govtOutput += "'" + target.first->GetName() + "'\t'" + source.first->GetName() + "'"
-		// 					+ govtDamageString[target.first][source.first];
-		// 		}
-		// 	govtOutput += '\n';
-		// }
 		if(!govtOutput.empty())
 		{
 			govtOutput += '\n';
