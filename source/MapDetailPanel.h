@@ -18,9 +18,13 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Point.h"
 
 #include <map>
+#include <memory>
+#include <vector>
 
 class Planet;
 class PlayerInfo;
+class Ship;
+class System;
 
 
 
@@ -28,6 +32,7 @@ class PlayerInfo;
 // stars based on attitude towards the player, government, or commodity price.
 // This panel also lets you view what planets are in each system, and you can
 // click on a planet to view its description.
+// Ships in the system are drawn with PointerShader.
 class MapDetailPanel : public MapPanel {
 public:
 	explicit MapDetailPanel(PlayerInfo &player, const System *system = nullptr);
@@ -47,6 +52,8 @@ private:
 	void DrawKey();
 	void DrawInfo();
 	void DrawOrbits();
+	void DrawShips(const Point &center, const double &scale);
+	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> GetSystemShipsDrawList();
 	
 	// Set the commodity coloring, and update the player info as well.
 	void SetCommodity(int index);

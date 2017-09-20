@@ -14,6 +14,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Color.h"
 #include "Command.h"
+#include "Engine.h"
 #include "Font.h"
 #include "FontSet.h"
 #include "Format.h"
@@ -42,7 +43,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <cmath>
 #include <set>
 #include <utility>
-#include <vector>
 
 using namespace std;
 
@@ -70,6 +70,9 @@ namespace {
 		// Return the angle, plus the length as a tie-breaker.
 		return make_pair(angle, length);
 	}
+	
+	// Instantiated map of where the player knows (special) ship's locations.
+	map<const System *, vector<shared_ptr<const Ship>>> shipSystems;
 }
 
 
@@ -77,6 +80,7 @@ namespace {
 MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
 	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
 {
+	shipSystems = GetSystemShipsDrawList();
 }
 
 
@@ -86,6 +90,7 @@ MapDetailPanel::MapDetailPanel(const MapPanel &panel)
 {
 	// Use whatever map coloring is specified in the PlayerInfo.
 	commodity = player.MapColoring();
+	shipSystems = GetSystemShipsDrawList();
 }
 
 
@@ -579,6 +584,7 @@ void MapDetailPanel::DrawOrbits()
 		Color(.2, .2, .2, 1.),
 		Color(1., 1., 1., 1.)
 	};
+	// TODO: Why is this iterated again? Can it be moved into the above iteration?
 	for(const StellarObject &object : selectedSystem->Objects())
 	{
 		if(object.Radius() <= 0.)
@@ -628,6 +634,88 @@ void MapDetailPanel::DrawOrbits()
 	Point namePos(Screen::Right() - width - 5., Screen::Top() + 293.);
 	Color nameColor(.6, .6);
 	font.Draw(name, namePos, nameColor);
+	
+	// Draw any known ships in this system.
+	DrawShips(orbitCenter, scale);
+}
+
+
+// Draw ships in the selected system as mission pointers, if the player has or
+// knows of at least one ship in this system.
+// TODO: Hook to the Engine instance to also draw non-special NPCs.
+void MapDetailPanel::DrawShips(const Point &center, const double &scale)
+{
+	if(shipSystems.empty())
+		return;
+	
+	const auto &it = shipSystems.find(selectedSystem);
+	if(it == shipSystems.end())
+		return;
+	
+	const vector<shared_ptr<const Ship>> &shipList = it->second;
+	for(const shared_ptr<const Ship> &ship : shipList)
+	{
+		if(ship->IsParked())
+			continue;
+		
+		Point facing = ship->Facing().Unit();
+		Point pos = center + (!ship->GetPlanet() ? ship->Position()
+				: selectedSystem->FindStellar(ship->GetPlanet())->Position()) * scale;
+		// Ship sprite radii range from 18 (Combat Drone) to 180 (World-Ship).
+		// Scale the pointer by the sprite size, into the range (6 - 15).
+		// TODO: Mod ships or new content may be larger than the World-Ship,
+		// so this scaling equation should perhaps be dynamic or nonlinear.
+		double pointerSize = 5 + ship->Radius() / 18;
+		
+		// If ships move outside the planetary orbits, draw the pointers at the edge
+		// and dim them in accordance with how far from the edge they are.
+		double alpha = 1.;
+		if((pos - center).Length() > 115.)
+		{
+			alpha = 115. / (pos - center).Length();
+			pos = alpha * (pos - center) + center;
+		}
+		
+		// Use the ship's radar colors, after darkening and saturating.
+		// Ships beyond the display radius are more translucent and less saturated.
+		const float *rgb = Radar::GetColor(Engine::RadarType(*ship, 1)).Get();
+		Color color(max(0., rgb[0] * 1.2 - .2), max(0., rgb[1] * 1.2 - .2), max(0., rgb[2] * 1.2 - .2), alpha);
+		color = color.Transparent(alpha);
+		// The pointer offset is half its height to center the body of the pointer with the body of the ship.
+		PointerShader::Draw(pos, facing, pointerSize, pointerSize, pointerSize / 2, color);
+	}
+	
+}
+
+
+
+// Find player ships and ships with personality escort. For systems with these
+// ships, also find any other NPCs. Used to help color systems based on known ship locations.
+// TODO: Hook to Engine in order to find even non-special NPCs in these known systems.
+map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShipsDrawList()
+{
+	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
+	for(const shared_ptr<const Ship> &ship : player.Ships())
+		if(ship->GetSystem())
+			knownShipSystems[ship->GetSystem()].emplace_back(ship);
+	for(const Mission &mission : player.Missions())
+		for(const NPC &npc : mission.NPCs())
+			for(const shared_ptr<const Ship> &ship : npc.Ships())
+				if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
+					knownShipSystems[ship->GetSystem()].emplace_back(ship);
+	
+	// Add non-escort NPCs that are in "known" systems to the drawlist vectors.
+	for(const Mission &mission : player.Missions())
+		for(const NPC &npc : mission.NPCs())
+			for(const shared_ptr<const Ship> &ship : npc.Ships())
+				if(ship->GetSystem() && !ship->IsDestroyed() && !ship->GetPersonality().IsEscort())
+				{
+					auto it = knownShipSystems.find(ship->GetSystem());
+					if(it != knownShipSystems.end())
+						it->second.emplace_back(ship);
+				}
+	
+	return knownShipSystems;
 }
 
 

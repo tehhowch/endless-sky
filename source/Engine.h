@@ -75,6 +75,8 @@ public:
 	void RClick(const Point &point);
 	void SelectGroup(int group, bool hasShift, bool hasControl);
 	
+	// Return the Radar color for a given ship on the given timestep.
+	static int RadarType(const Ship &ship, int step);
 	
 private:
 	void EnterSystem();
