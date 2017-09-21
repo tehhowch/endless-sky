@@ -20,7 +20,9 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Point.h"
 
 #include <map>
+#include <memory>
 #include <string>
+#include <vector>
 
 class Angle;
 class Government;
@@ -44,6 +46,7 @@ public:
 	static const int SHOW_SPECIAL = -4;
 	static const int SHOW_GOVERNMENT = -5;
 	static const int SHOW_REPUTATION = -6;
+	static const int SHOW_SHIP_LOCATIONS = -7;
 	
 	static const double OUTER;
 	static const double INNER;
@@ -69,6 +72,7 @@ protected:
 	static Color MapColor(double value);
 	static Color ReputationColor(double reputation, bool canLand, bool hasDominated);
 	static Color GovernmentColor(const Government *government);
+	static Color ShipColor(int64_t ownedCost, int64_t hostileCost, int64_t totalCost);
 	static Color UninhabitedColor();
 	static Color UnexploredColor();
 	
@@ -105,6 +109,8 @@ protected:
 	std::string buttonCondition;
 	
 	std::map<const Government *, double> closeGovernments;
+	// Map of where the player knows ships' location.
+	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> shipSystems;
 	
 	
 private:

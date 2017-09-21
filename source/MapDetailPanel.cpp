@@ -70,9 +70,6 @@ namespace {
 		// Return the angle, plus the length as a tie-breaker.
 		return make_pair(angle, length);
 	}
-	
-	// Instantiated map of where the player knows (special) ship's locations.
-	map<const System *, vector<shared_ptr<const Ship>>> shipSystems;
 }
 
 
@@ -270,7 +267,10 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 		if(selectedShip && player.Flagship() && newTargetShip.get() != player.Flagship())
 			player.Flagship()->SetTargetShip(newTargetShip);
 		if(selectedShip)
+		{
+			SetCommodity(SHOW_SHIP_LOCATIONS);
 			selectedPlanet = nullptr;
+		}
 		if(selectedPlanet && player.Flagship())
 			player.SetTravelDestination(selectedPlanet);
 		
@@ -317,9 +317,10 @@ void MapDetailPanel::DrawKey()
 		"You have visited:",
 		"", // Special should never be active in this mode.
 		"Government:",
-		"System:"
+		"System:",
+		"System Fleets:"
 	};
-	const string &header = HEADER[-min(0, max(-6, commodity))];
+	const string &header = HEADER[-min(0, max(-7, commodity))];
 	font.Draw(header, pos + headerOff, bright);
 	pos.Y() += 20.;
 	
@@ -400,6 +401,38 @@ void MapDetailPanel::DrawKey()
 		RingShader::Draw(pos, OUTER, INNER, ReputationColor(0., false, true));
 		font.Draw("Dominated", pos + textOff, dim);
 		pos.Y() += 20.;
+	}
+	else if(commodity == SHOW_SHIP_LOCATIONS)
+	{
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(1, 0, 1));
+		font.Draw("Escort only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(3, 0, 4));
+		RingShader::Draw(pos + Point(9.,0.), OUTER, INNER, ShipColor(3, 2, 6));
+		RingShader::Draw(pos + Point(18.,0.), OUTER, INNER, ShipColor(3, 3, 6));
+		RingShader::Draw(pos + Point(27.,0.), OUTER, INNER, ShipColor(2, 3, 6));
+		RingShader::Draw(pos + Point(36.,0.), OUTER, INNER, ShipColor(0, 3, 4));
+		font.Draw("Mixed", pos + textOff + Point(36., 0.), dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 1, 1));
+		font.Draw("Hostile only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 0, 1));
+		font.Draw("Neutral only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 0, 0));
+		font.Draw("Unknown", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, UnexploredColor());
+		font.Draw("Unexplored", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		return;
 	}
 	
 	RingShader::Draw(pos, OUTER, INNER, UninhabitedColor());
@@ -724,9 +757,6 @@ void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 	const vector<shared_ptr<const Ship>> &shipList = it->second;
 	for(const shared_ptr<const Ship> &ship : shipList)
 	{
-		if(ship->IsParked())
-			continue;
-		
 		Point facing = ship->Facing().Unit();
 		Point pos = center + (!ship->GetPlanet() ? ship->Position()
 				: selectedSystem->FindStellar(ship->GetPlanet())->Position()) * scale;
@@ -773,7 +803,7 @@ map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShi
 {
 	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
 	for(const shared_ptr<const Ship> &ship : player.Ships())
-		if(ship->GetSystem())
+		if(ship->GetSystem() && !ship->IsParked())
 			knownShipSystems[ship->GetSystem()].emplace_back(ship);
 	for(const Mission &mission : player.Missions())
 		for(const NPC &npc : mission.NPCs())

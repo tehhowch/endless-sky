@@ -388,6 +388,38 @@ Color MapPanel::GovernmentColor(const Government *government)
 
 
 
+// Show different colors based on the relative strength of escorts, hostiles,
+// and other ships.
+Color MapPanel::ShipColor(int64_t escortCost, int64_t hostileCost, int64_t totalCost)
+{
+	if(!totalCost)
+		return UninhabitedColor();
+	else if(escortCost == hostileCost)
+		// Evenly matched fleets show as blue. More neutral ships shifts grey.
+		return Color(0., .35 + .5 * escortCost / totalCost, .6, .4);
+	
+	if(hostileCost > escortCost)
+	{
+		double foes = static_cast<double>(hostileCost) / totalCost;
+		return Color(
+			.6,
+			.4 * (1. - foes + .01),
+			.6 * (1. - foes),
+			.4);
+	}
+	else
+	{
+		double friends = static_cast<double>(escortCost) / totalCost;
+		return Color(
+			.1 * (1. - friends + .01),
+			.6,
+			.6 * (1. - friends),
+			.4);
+	}
+}
+
+
+
 Color MapPanel::UninhabitedColor()
 {
 	return Color(.2, 0.);
@@ -722,7 +754,8 @@ void MapPanel::DrawSystems()
 		Color color = UninhabitedColor();
 		if(!player.HasVisited(&system))
 			color = UnexploredColor();
-		else if(system.IsInhabited(player.Flagship()) || commodity == SHOW_SPECIAL)
+		else if(system.IsInhabited(player.Flagship()) || commodity == SHOW_SPECIAL
+				|| commodity == SHOW_SHIP_LOCATIONS)
 		{
 			if(commodity >= SHOW_SPECIAL)
 			{
@@ -784,6 +817,28 @@ void MapPanel::DrawSystems()
 					closeGovernments[gov] = distance;
 				else
 					it->second = min(it->second, distance);
+			}
+			else if(commodity == SHOW_SHIP_LOCATIONS)
+			{
+				auto it = shipSystems.find(&system);
+				if(it == shipSystems.end())
+					color = UninhabitedColor();
+				else
+				{
+					// Tally the known ships by allegiance and viability.
+					int64_t total = 0;
+					int64_t owned = 0;
+					int64_t hostile = 0;
+					for(const shared_ptr<const Ship> &ship : (*it).second)
+					{
+						total += ship->Cost();
+						if(ship->GetGovernment()->Reputation() < 0.)
+							hostile += (1 - .9 * ship->IsDisabled()) * ship->Cost();
+						else if(ship->IsYours() || ship->GetPersonality().IsEscort())
+							owned += (1 - .9 * ship->IsDisabled()) * ship->Cost();
+					}
+					color = ShipColor(owned, hostile, total);
+				}
 			}
 			else
 			{
