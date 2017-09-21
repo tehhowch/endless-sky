@@ -65,6 +65,7 @@ private:
 	
 	std::map<const Planet *, int> planetY;
 	std::map<const Planet *, Point> planets;
+	std::map<std::shared_ptr<const Ship>, Point> drawnShips;
 };
 
 

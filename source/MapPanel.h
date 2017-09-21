@@ -97,6 +97,7 @@ protected:
 	const System *selectedSystem;
 	const System *specialSystem;
 	const Planet *selectedPlanet = nullptr;
+	const Ship *selectedShip = nullptr;
 	
 	Point center;
 	int commodity;

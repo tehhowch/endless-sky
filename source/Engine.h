@@ -138,7 +138,7 @@ private:
 	Information info;
 	std::vector<Target> targets;
 	Point targetAngle;
-	Point targetUnit;
+	Point targetUnit = Point(0, -1);
 	EscortDisplay escorts;
 	std::vector<Status> statuses;
 	std::vector<PlanetLabel> labels;

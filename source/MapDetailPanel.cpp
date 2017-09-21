@@ -240,8 +240,11 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 	}
 	else if(x >= Screen::Right() - 240 && y >= Screen::Top() + 280 && y <= Screen::Top() + 520)
 	{
+		// The player clicked within the orbits scene. Select either a
+		// planet or a ship, depending which is closest.
 		Point click = Point(x, y);
 		selectedPlanet = nullptr;
+		selectedShip = nullptr;
 		double distance = numeric_limits<double>::infinity();
 		for(const auto &it : planets)
 		{
@@ -252,6 +255,22 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 				selectedPlanet = it.first;
 			}
 		}
+		shared_ptr<Ship> newTargetShip;
+		for(const auto &shipIt : drawnShips)
+		{
+			double d = click.Distance(shipIt.second);
+			if(d < distance)
+			{
+				distance = d;
+				selectedShip = shipIt.first.get();
+				newTargetShip = const_cast<Ship *>(&*shipIt.first)->shared_from_this();
+			}
+		}
+		// Set the clicked ship as the player's new targeted ship.
+		if(selectedShip && player.Flagship() && newTargetShip.get() != player.Flagship())
+			player.Flagship()->SetTargetShip(newTargetShip);
+		if(selectedShip)
+			selectedPlanet = nullptr;
 		if(selectedPlanet && player.Flagship())
 			player.SetTravelDestination(selectedPlanet);
 		
@@ -271,6 +290,8 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 	MapPanel::Click(x, y, clicks);
 	if(selectedPlanet && !selectedPlanet->IsInSystem(selectedSystem))
 		selectedPlanet = nullptr;
+	if(selectedShip && selectedShip->GetSystem() != selectedSystem)
+		selectedShip = nullptr;
 	return true;
 }
 
@@ -531,7 +552,13 @@ void MapDetailPanel::DrawInfo()
 		uiPoint.Y() += 20.;
 	}
 	
-	if(selectedPlanet && !selectedPlanet->Description().empty() && player.HasVisited(selectedPlanet))
+	// Display the selected ship or planet's description, if known.
+	const string emptyString;
+	const string &fillText = selectedShip ?
+			(selectedShip->Description().empty() ? emptyString : selectedShip->Description())
+			: (selectedPlanet && !selectedPlanet->Description().empty() && player.HasVisited(selectedPlanet)
+			? selectedPlanet->Description() : emptyString);
+	if(!fillText.empty())
 	{
 		const Sprite *panelSprite = SpriteSet::Get("ui/description panel");
 		Point pos(Screen::Right() - .5 * panelSprite->Width(),
@@ -542,7 +569,7 @@ void MapDetailPanel::DrawInfo()
 		text.SetFont(FontSet::Get(14));
 		text.SetAlignment(WrappedText::JUSTIFIED);
 		text.SetWrapWidth(480);
-		text.Wrap(selectedPlanet->Description());
+		text.Wrap(fillText);
 		text.Draw(Point(Screen::Right() - 500, Screen::Top() + 20), closeColor);
 	}
 	
@@ -627,8 +654,9 @@ void MapDetailPanel::DrawOrbits()
 		RingShader::Draw(pos, object.Radius() * scale + 1., 0., color);
 	}
 	
-	// Draw the name of the selected planet.
-	const string &name = selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name();
+	// Draw the name of the selected planet or ship.
+	const string &name = selectedShip ? selectedShip->Name()
+			: (selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name());
 	int width = font.Width(name);
 	width = (width / 2) + 75;
 	Point namePos(Screen::Right() - width - 5., Screen::Top() + 293.);
@@ -647,6 +675,9 @@ void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 {
 	if(shipSystems.empty())
 		return;
+	
+	// The player may have selected a new system with no known ships present.
+	drawnShips.clear();
 	
 	const auto &it = shipSystems.find(selectedSystem);
 	if(it == shipSystems.end())
@@ -675,23 +706,27 @@ void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 			alpha = 115. / (pos - center).Length();
 			pos = alpha * (pos - center) + center;
 		}
+		// Allow clicking this ship to know its name:
+		drawnShips[ship] = pos;
 		
 		// Use the ship's radar colors, after darkening and saturating.
 		// Ships beyond the display radius are more translucent and less saturated.
-		const float *rgb = Radar::GetColor(Engine::RadarType(*ship, 1)).Get();
+		const float *rgb = Radar::GetColor(Engine::RadarType(*ship, step)).Get();
 		Color color(max(0., rgb[0] * 1.2 - .2), max(0., rgb[1] * 1.2 - .2), max(0., rgb[2] * 1.2 - .2), alpha);
 		color = color.Transparent(alpha);
 		// The pointer offset is half its height to center the body of the pointer with the body of the ship.
 		PointerShader::Draw(pos, facing, pointerSize, pointerSize, pointerSize / 2, color);
+		
+		if(selectedShip && ship.get() == selectedShip)
+			RingShader::Draw(pos, pointerSize, pointerSize - 1., color);
 	}
-	
 }
 
 
 
 // Find player ships and ships with personality escort. For systems with these
 // ships, also find any other NPCs. Used to help color systems based on known ship locations.
-// TODO: Hook to Engine in order to find even non-special NPCs in these known systems.
+// TODO: Hook to the Engine instance to find non-special NPCs in these known systems.
 map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShipsDrawList()
 {
 	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
