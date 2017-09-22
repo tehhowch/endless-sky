@@ -77,7 +77,8 @@ public:
 	
 	// Return the Radar color for a given ship on the given timestep.
 	static int RadarType(const Ship &ship, int step);
-	
+	// Return a read-only list of the currently placed ships.
+	const std::list<std::shared_ptr<Ship>> &Ships() const;
 private:
 	void EnterSystem();
 	

@@ -28,7 +28,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "MapShipyardPanel.h"
 #include "Mission.h"
 #include "MissionPanel.h"
-#include "Person.h"
 #include "Planet.h"
 #include "PlayerInfo.h"
 #include "PointerShader.h"
@@ -55,12 +54,13 @@ const double MapPanel::INNER = 3.5;
 
 
 
-MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special)
+MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special, const list<shared_ptr<Ship>> &allShips)
 	: player(player), distance(player),
 	playerSystem(player.GetSystem()),
 	selectedSystem(special ? special : player.GetSystem()),
 	specialSystem(special),
-	commodity(commodity)
+	commodity(commodity),
+	ships(allShips)
 {
 	SetIsFullScreen(true);
 	SetInterruptible(false);
@@ -997,39 +997,31 @@ void MapPanel::DrawPointer(Point position, Angle &angle, const Color &color, boo
 
 // Find player ships and ships with personality escort. For systems with these
 // ships, also find any other NPCs. Used to help color systems based on known ship locations.
-// TODO: Hook to the Engine instance to find non-special NPCs in these known systems.
 map<const System *, vector<shared_ptr<const Ship>>> MapPanel::GetSystemShipsDrawList()
 {
 	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
-	for(const shared_ptr<const Ship> &ship : player.Ships())
-		if(ship->GetSystem() && !ship->IsParked())
-			knownShipSystems[ship->GetSystem()].emplace_back(ship);
-	for(const Mission &mission : player.Missions())
-		for(const NPC &npc : mission.NPCs())
-			for(const shared_ptr<const Ship> &ship : npc.Ships())
-				if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
-					knownShipSystems[ship->GetSystem()].emplace_back(ship);
-	
-	// Add non-escort NPCs that are in "known" systems to the ship vectors.
-	for(const Mission &mission : player.Missions())
-		for(const NPC &npc : mission.NPCs())
-			for(const shared_ptr<const Ship> &ship : npc.Ships())
-				if(ship->GetSystem() && !ship->IsDestroyed() && ship->Cloaking() < 1.
-						&& !ship->GetPersonality().IsEscort())
-				{
-					auto it = knownShipSystems.find(ship->GetSystem());
-					if(it != knownShipSystems.end())
-						it->second.emplace_back(ship);
-				}
-	
-	// Also add persons that are also in known systems.
-	for(const auto &pit : GameData::Persons())
-		if(!pit.second.IsDestroyed() && pit.second.GetShip()->GetSystem())
-		{
-			auto it = knownShipSystems.find(pit.second.GetShip()->GetSystem());
-			if(it != knownShipSystems.end())
-				it->second.emplace_back(pit.second.GetShip());
-		}
+	if(!ships.empty())
+	{
+		for(const shared_ptr<const Ship> &ship : player.Ships())
+			if(ship->GetSystem() && !ship->IsParked())
+				knownShipSystems[ship->GetSystem()].emplace_back(ship);
+		for(const Mission &mission : player.Missions())
+			for(const NPC &npc : mission.NPCs())
+				for(const shared_ptr<const Ship> &ship : npc.Ships())
+					if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
+						knownShipSystems[ship->GetSystem()].emplace_back(ship);
+		
+		// Check through every ship in the passed Engine::Ships list to determine
+		// if any are in systems under observation by the player.
+		for(const shared_ptr<const Ship> &ship : ships)
+			if(ship->GetSystem() && !ship->IsYours() && !ship->IsDestroyed() && ship->Cloaking() < 1.
+					&& !ship->GetPersonality().IsEscort())
+			{
+				auto it = knownShipSystems.find(ship->GetSystem());
+				if(it != knownShipSystems.end())
+					it->second.emplace_back(ship);
+			}
+	}
 	
 	return knownShipSystems;
 }

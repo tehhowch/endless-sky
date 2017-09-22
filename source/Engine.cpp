@@ -816,6 +816,12 @@ int Engine::RadarType(const Ship &ship, int step)
 
 
 
+const list<shared_ptr<Ship>> &Engine::Ships() const
+{
+	return ships;
+}
+
+
 void Engine::EnterSystem()
 {
 	ai.Clean();

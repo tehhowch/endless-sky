@@ -75,8 +75,8 @@ namespace {
 
 
 
-MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
-	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
+MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system, const list<shared_ptr<Ship>> &allShips)
+	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system, allShips)
 {
 }
 

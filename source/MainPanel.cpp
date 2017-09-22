@@ -61,7 +61,7 @@ void MainPanel::Step()
 	
 	if(show.Has(Command::MAP))
 	{
-		GetUI()->Push(new MapDetailPanel(player));
+		GetUI()->Push(new MapDetailPanel(player, nullptr, engine.Ships()));
 		isActive = false;
 	}
 	else if(show.Has(Command::INFO))

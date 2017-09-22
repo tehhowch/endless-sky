@@ -17,6 +17,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Point.h"
 
+#include <list>
 #include <map>
 #include <memory>
 
@@ -34,7 +35,7 @@ class System;
 // Ships in the system are drawn with PointerShader.
 class MapDetailPanel : public MapPanel {
 public:
-	explicit MapDetailPanel(PlayerInfo &player, const System *system = nullptr);
+	explicit MapDetailPanel(PlayerInfo &player, const System *system = nullptr, const std::list<std::shared_ptr<Ship>> &allShips = std::list<std::shared_ptr<Ship>>());
 	explicit MapDetailPanel(const MapPanel &panel);
 	
 	virtual void Draw() override;
