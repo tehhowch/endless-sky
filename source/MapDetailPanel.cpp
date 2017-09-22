@@ -731,6 +731,14 @@ void MapDetailPanel::DrawOrbits()
 		double scale = min(.5, min((HEIGHT - 2.) / shipSprite->Height(), (HEIGHT - 2.) / shipSprite->Width()));
 		SpriteShader::Draw(boxSprite, boxPos);
 		SpriteShader::Draw(shipSprite, shipPos, scale, selectedShip->GetSwizzle());
+		// Draw the ship's hardpoint sprites (pointing forward only).
+		for(const Hardpoint &weapon : selectedShip->Weapons())
+			if(weapon.GetOutfit() && weapon.GetOutfit()->HardpointSprite().HasSprite())
+				SpriteShader::Draw(
+					weapon.GetOutfit()->HardpointSprite().GetSprite(),
+					shipPos + 2 * scale * weapon.GetPoint(),
+					scale
+				);
 		
 		// Draw the ship's shields and hull as rings, as the targets interface does in-flight.
 		const bool isEnemy = selectedShip->GetGovernment()->Reputation() < 0.;
