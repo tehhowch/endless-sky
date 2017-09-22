@@ -78,7 +78,20 @@ namespace {
 MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
 	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
 {
+	// Set the list of ships which should be shown in the orbits scene.
 	shipSystems = GetSystemShipsDrawList();
+	if(commodity == SHOW_SHIP_LOCATIONS && !specialSystem && player.Flagship()
+			&& player.Flagship()->GetTargetShip() && player.Flagship()->GetTargetShip()->GetSystem())
+	{
+		const auto &systemIt = shipSystems.find(player.Flagship()->GetTargetShip()->GetSystem());
+		if(systemIt != shipSystems.end())
+		{
+			const auto shipIt = find(systemIt->second.cbegin(), systemIt->second.cend(),
+					player.Flagship()->GetTargetShip());
+			if(shipIt != systemIt->second.cend());
+				selectedShip = player.Flagship()->GetTargetShip().get();
+		}
+	}
 }
 
 
@@ -88,6 +101,7 @@ MapDetailPanel::MapDetailPanel(const MapPanel &panel)
 {
 	// Use whatever map coloring is specified in the PlayerInfo.
 	commodity = player.MapColoring();
+	// Set the list of ships which should be shown in the orbits scene.
 	shipSystems = GetSystemShipsDrawList();
 }
 

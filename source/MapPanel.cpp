@@ -67,6 +67,13 @@ MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special)
 	// bought a map since the last time they viewed the map.
 	FogShader::Redraw();
 	
+	// If the player has a targeted ship and is using the orbits scene, start
+	// the map on the target ship's system, provided the target is not cloaked.
+	if(commodity == SHOW_SHIP_LOCATIONS && !specialSystem && player.Flagship()
+			&& player.Flagship()->GetTargetShip() && player.Flagship()->GetTargetShip()->GetSystem())
+		if(player.Flagship()->GetTargetShip()->Cloaking() < 1.)
+			selectedSystem = player.Flagship()->GetTargetShip()->GetSystem();
+	
 	if(selectedSystem)
 		center = Point(0., 0.) - selectedSystem->Position();
 }
