@@ -14,6 +14,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Color.h"
 #include "Command.h"
+#include "Engine.h"
 #include "Font.h"
 #include "FontSet.h"
 #include "Format.h"
@@ -74,8 +75,8 @@ namespace {
 
 
 
-MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
-	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
+MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system, const list<shared_ptr<Ship>> &allShips)
+	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system, allShips)
 {
 }
 
@@ -235,8 +236,11 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 	}
 	else if(x >= Screen::Right() - 240 && y >= Screen::Top() + 280 && y <= Screen::Top() + 520)
 	{
+		// The player clicked within the orbits scene. Select either a
+		// planet or a ship, depending which is closest.
 		Point click = Point(x, y);
 		selectedPlanet = nullptr;
+		selectedShip = nullptr;
 		double distance = numeric_limits<double>::infinity();
 		for(const auto &it : planets)
 		{
@@ -246,6 +250,25 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 				distance = d;
 				selectedPlanet = it.first;
 			}
+		}
+		shared_ptr<Ship> newTargetShip;
+		for(const auto &shipIt : drawnShips)
+		{
+			double d = click.Distance(shipIt.second);
+			if(d < distance)
+			{
+				distance = d;
+				selectedShip = shipIt.first.get();
+				newTargetShip = const_cast<Ship *>(&*shipIt.first)->shared_from_this();
+			}
+		}
+		// Set the clicked ship as the player's new targeted ship.
+		if(selectedShip && player.Flagship() && newTargetShip.get() != player.Flagship())
+			player.Flagship()->SetTargetShip(newTargetShip);
+		if(selectedShip)
+		{
+			SetCommodity(SHOW_SHIP_LOCATIONS);
+			selectedPlanet = nullptr;
 		}
 		if(selectedPlanet && player.Flagship())
 			player.SetTravelDestination(selectedPlanet);
@@ -266,6 +289,8 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 	MapPanel::Click(x, y, clicks);
 	if(selectedPlanet && !selectedPlanet->IsInSystem(selectedSystem))
 		selectedPlanet = nullptr;
+	if(selectedShip && selectedShip->GetSystem() != selectedSystem)
+		selectedShip = nullptr;
 	return true;
 }
 
@@ -291,9 +316,10 @@ void MapDetailPanel::DrawKey()
 		"You have visited:",
 		"", // Special should never be active in this mode.
 		"Government:",
-		"System:"
+		"System:",
+		"Present Fleets:"
 	};
-	const string &header = HEADER[-min(0, max(-6, commodity))];
+	const string &header = HEADER[-min(0, max(-7, commodity))];
 	font.Draw(header, pos + headerOff, bright);
 	pos.Y() += 20.;
 	
@@ -374,6 +400,38 @@ void MapDetailPanel::DrawKey()
 		RingShader::Draw(pos, OUTER, INNER, ReputationColor(0., false, true));
 		font.Draw("Dominated", pos + textOff, dim);
 		pos.Y() += 20.;
+	}
+	else if(commodity == SHOW_SHIP_LOCATIONS)
+	{
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(1, 0, 1));
+		font.Draw("Escort only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(3, 0, 4));
+		RingShader::Draw(pos + Point(9.,0.), OUTER, INNER, ShipColor(3, 2, 6));
+		RingShader::Draw(pos + Point(18.,0.), OUTER, INNER, ShipColor(3, 3, 6));
+		RingShader::Draw(pos + Point(27.,0.), OUTER, INNER, ShipColor(2, 3, 6));
+		RingShader::Draw(pos + Point(36.,0.), OUTER, INNER, ShipColor(0, 3, 4));
+		font.Draw("Mixed", pos + textOff + Point(36., 0.), dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 1, 1));
+		font.Draw("Hostile only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 0, 1));
+		font.Draw("Neutral only", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, ShipColor(0, 0, 0));
+		font.Draw("Unknown", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		RingShader::Draw(pos, OUTER, INNER, UnexploredColor());
+		font.Draw("Unexplored", pos + textOff, dim);
+		pos.Y() += 20.;
+		
+		return;
 	}
 	
 	RingShader::Draw(pos, OUTER, INNER, UninhabitedColor());
@@ -526,7 +584,25 @@ void MapDetailPanel::DrawInfo()
 		uiPoint.Y() += 20.;
 	}
 	
-	if(selectedPlanet && !selectedPlanet->Description().empty() && player.HasVisited(selectedPlanet))
+	// Display the selected ship or planet's description, if known.
+	string fillText;
+	if(selectedShip)
+	{
+		const Government *gov = selectedShip->GetGovernment();
+		fillText += selectedShip->ModelName() + ": '" + selectedShip->Name() + "'\n";
+		fillText += selectedShip->IsYours() ? (selectedShip == player.Flagship()
+				? "You are flying this ship." : "This is a member of your fleet.")
+				: "Allegiance: " + gov->GetName() + (gov->Reputation() < 0. ? " (hostile)" : "");
+		fillText += "\n\n";
+		// Newly instantiated ships will properly display their description, but any ships loaded from
+		// a savegame can only show a base model found in the store (i.e. the game loses track of
+		// variant-specific descriptions). To fix this requires altering how ships are loaded/saved.
+		fillText += "\t" + (!selectedShip->Description().empty() ? selectedShip->Description()
+				: GameData::Ships().Get(selectedShip->ModelName())->Description());
+	}
+	else if(selectedPlanet && !selectedPlanet->Description().empty() && player.HasVisited(selectedPlanet))
+		fillText = selectedPlanet->Description();
+	if(!fillText.empty())
 	{
 		const Sprite *panelSprite = SpriteSet::Get("ui/description panel");
 		Point pos(Screen::Right() - .5 * panelSprite->Width(),
@@ -537,7 +613,7 @@ void MapDetailPanel::DrawInfo()
 		text.SetFont(FontSet::Get(14));
 		text.SetAlignment(WrappedText::JUSTIFIED);
 		text.SetWrapWidth(480);
-		text.Wrap(selectedPlanet->Description());
+		text.Wrap(fillText);
 		text.Draw(Point(Screen::Right() - 500, Screen::Top() + 20), closeColor);
 	}
 	
@@ -579,6 +655,8 @@ void MapDetailPanel::DrawOrbits()
 		Color(.2, .2, .2, 1.),
 		Color(1., 1., 1., 1.)
 	};
+	// Draw orbital rings for each StellarObject, and a selection ring for the
+	// selected planet, if any.
 	for(const StellarObject &object : selectedSystem->Objects())
 	{
 		if(object.Radius() <= 0.)
@@ -606,6 +684,7 @@ void MapDetailPanel::DrawOrbits()
 	}
 	
 	planets.clear();
+	// Shade the interior of any known landable planet.
 	for(const StellarObject &object : selectedSystem->Objects())
 	{
 		if(object.Radius() <= 0.)
@@ -621,13 +700,106 @@ void MapDetailPanel::DrawOrbits()
 		RingShader::Draw(pos, object.Radius() * scale + 1., 0., color);
 	}
 	
-	// Draw the name of the selected planet.
-	const string &name = selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name();
+	// Draw the name of the selected planet or ship in the orbits scene label.
+	const string &name = font.TruncateMiddle(selectedShip ? selectedShip->Name()
+			: (selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name()), 150);
 	int width = font.Width(name);
 	width = (width / 2) + 75;
 	Point namePos(Screen::Right() - width - 5., Screen::Top() + 293.);
 	Color nameColor(.6, .6);
 	font.Draw(name, namePos, nameColor);
+	
+	// Draw any known ships in this system.
+	DrawShips(orbitCenter, scale);
+	
+	// Draw the selected ship's sprite attached to the orbits panel.
+	if(selectedShip && selectedShip->HasSprite())
+	{
+		static const double HEIGHT = 90.;
+		static const double PAD = 9.;
+		static const Color *overlayColors[4] = {
+			GameData::Colors().Get("overlay friendly shields"),
+			GameData::Colors().Get("overlay hostile shields"),
+			GameData::Colors().Get("overlay friendly hull"),
+			GameData::Colors().Get("overlay hostile hull")
+		};
+		const Sprite *boxSprite = SpriteSet::Get("ui/thumb box");
+		const Sprite *shipSprite = selectedShip->GetSprite();
+		Point boxPos(Screen::Right() - orbitSprite->Width() - .5 * boxSprite->Width() + PAD, orbitCenter.Y());
+		Point shipPos(Screen::Right() - orbitSprite->Width() - .5 * HEIGHT + 5., boxPos.Y());
+		// Scale to fit the sprite inside the 90x90 thumb box.
+		double scale = min(.5, min((HEIGHT - 2.) / shipSprite->Height(), (HEIGHT - 2.) / shipSprite->Width()));
+		SpriteShader::Draw(boxSprite, boxPos);
+		SpriteShader::Draw(shipSprite, shipPos, scale, selectedShip->GetSwizzle());
+		// Draw the ship's hardpoint sprites (pointing forward only).
+		for(const Hardpoint &weapon : selectedShip->Weapons())
+			if(weapon.GetOutfit() && weapon.GetOutfit()->HardpointSprite().HasSprite())
+				SpriteShader::Draw(
+					weapon.GetOutfit()->HardpointSprite().GetSprite(),
+					shipPos + 2 * scale * weapon.GetPoint(),
+					scale
+				);
+		
+		// Draw the ship's shields and hull as rings, as the targets interface does in-flight.
+		const bool isEnemy = selectedShip->GetGovernment()->Reputation() < 0.;
+		RingShader::Draw(shipPos, .5 * HEIGHT + 3., 1.5, selectedShip->Shields(), *overlayColors[isEnemy], 0.);
+		RingShader::Draw(shipPos, .5 * HEIGHT, 1.5, selectedShip->Hull(), *overlayColors[2 + isEnemy], 20.);
+	}
+}
+
+
+// Draw ships in the selected system as pointers, if the player owns or
+// is escorting at least one ship in this system.
+void MapDetailPanel::DrawShips(const Point &center, const double &scale)
+{
+	if(shipSystems.empty())
+		return;
+	
+	// The player may have selected a new system with no known ships present.
+	drawnShips.clear();
+	
+	const auto &it = shipSystems.find(selectedSystem);
+	if(it == shipSystems.end())
+		return;
+	
+	const vector<shared_ptr<const Ship>> &shipList = it->second;
+	for(const shared_ptr<const Ship> &ship : shipList)
+	{
+		Point facing = ship->Facing().Unit();
+		Point pos = center + (!ship->GetPlanet() ? ship->Position()
+				: selectedSystem->FindStellar(ship->GetPlanet())->Position()) * scale;
+		// Ship sprite radii range from 18 (Combat Drone) to 180 (World-Ship).
+		// Scale the pointer by the sprite size, into the range (6 - 15).
+		// TODO: Mod ships or new content may be larger than the World-Ship,
+		// so this scaling equation should perhaps be dynamic or nonlinear.
+		double size = 5 + ship->Radius() / 18;
+		
+		// If ships move outside the planetary orbits, draw the pointers at the edge
+		// and dim them in accordance with how far from the edge they are.
+		double alpha = 1.;
+		if((pos - center).Length() > 115.)
+		{
+			alpha = 115. / (pos - center).Length();
+			pos = alpha * (pos - center) + center;
+		}
+		// Allow clicking this ship to display information about it:
+		drawnShips[ship] = pos;
+		
+		// Use the ship's radar colors, after darkening and saturating. Ships
+		// beyond the display radius are more translucent and less saturated.
+		const float *rgb = Radar::GetColor(Engine::RadarType(*ship, step)).Get();
+		const Color color(max(0., rgb[0] * 1.2 - .2) * alpha, max(0., rgb[1] * 1.2 - .2) * alpha,
+				max(0., rgb[2] * 1.2 - .2) * alpha, alpha);
+		static const Color back(0., .85);
+		// The pointer offset is half its height to center the body of the pointer
+		// with the body of the ship. Outline each pointer with black for visibility.
+		double edge = ship.get() == player.Flagship() ? 4. : 2.;
+		PointerShader::Draw(pos, facing, size + edge, size + edge, (size + edge) / 2, back);
+		PointerShader::Draw(pos, facing, size, size, size / 2, color);
+		
+		if(selectedShip && ship.get() == selectedShip)
+			RingShader::Draw(pos, size, size - 1., color);
+	}
 }
 
 

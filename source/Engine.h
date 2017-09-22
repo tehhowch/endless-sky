@@ -75,7 +75,10 @@ public:
 	void RClick(const Point &point);
 	void SelectGroup(int group, bool hasShift, bool hasControl);
 	
-	
+	// Return the Radar color for a given ship on the given timestep.
+	static int RadarType(const Ship &ship, int step);
+	// Return a read-only list of the currently placed ships.
+	const std::list<std::shared_ptr<Ship>> &Ships() const;
 private:
 	void EnterSystem();
 	
@@ -136,7 +139,7 @@ private:
 	Information info;
 	std::vector<Target> targets;
 	Point targetAngle;
-	Point targetUnit;
+	Point targetUnit = Point(0, -1);
 	EscortDisplay escorts;
 	std::vector<Status> statuses;
 	std::vector<PlanetLabel> labels;

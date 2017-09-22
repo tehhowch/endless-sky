@@ -19,8 +19,11 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "DistanceMap.h"
 #include "Point.h"
 
+#include <list>
 #include <map>
+#include <memory>
 #include <string>
+#include <vector>
 
 class Angle;
 class Government;
@@ -44,13 +47,14 @@ public:
 	static const int SHOW_SPECIAL = -4;
 	static const int SHOW_GOVERNMENT = -5;
 	static const int SHOW_REPUTATION = -6;
+	static const int SHOW_SHIP_LOCATIONS = -7;
 	
 	static const double OUTER;
 	static const double INNER;
 	
 	
 public:
-	explicit MapPanel(PlayerInfo &player, int commodity = SHOW_REPUTATION, const System *special = nullptr);
+	explicit MapPanel(PlayerInfo &player, int commodity = SHOW_REPUTATION, const System *special = nullptr, const std::list<std::shared_ptr<Ship>> &allShips = std::list<std::shared_ptr<Ship>>());
 	
 	virtual void Draw() override;
 	
@@ -69,6 +73,7 @@ protected:
 	static Color MapColor(double value);
 	static Color ReputationColor(double reputation, bool canLand, bool hasDominated);
 	static Color GovernmentColor(const Government *government);
+	static Color ShipColor(int64_t ownedCost, int64_t hostileCost, int64_t totalCost);
 	static Color UninhabitedColor();
 	static Color UnexploredColor();
 	
@@ -97,6 +102,7 @@ protected:
 	const System *selectedSystem;
 	const System *specialSystem;
 	const Planet *selectedPlanet = nullptr;
+	const Ship *selectedShip = nullptr;
 	
 	Point center;
 	int commodity;
@@ -104,6 +110,9 @@ protected:
 	std::string buttonCondition;
 	
 	std::map<const Government *, double> closeGovernments;
+	// Map of where the player knows ships' location.
+	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> shipSystems;
+	std::list<std::shared_ptr<Ship>> ships;
 	
 	
 private:
@@ -115,6 +124,7 @@ private:
 	void DrawMissions();
 	void DrawPointer(const System *system, Angle &angle, const Color &color, bool bigger = false);
 	static void DrawPointer(Point position, Angle &angle, const Color &color, bool drawBack = true, bool bigger = false);
+	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> GetSystemShipsDrawList();
 };
 
 

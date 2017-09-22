@@ -54,18 +54,39 @@ const double MapPanel::INNER = 3.5;
 
 
 
-MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special)
+MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special, const list<shared_ptr<Ship>> &allShips)
 	: player(player), distance(player),
 	playerSystem(player.GetSystem()),
 	selectedSystem(special ? special : player.GetSystem()),
 	specialSystem(special),
-	commodity(commodity)
+	commodity(commodity),
+	ships(allShips)
 {
 	SetIsFullScreen(true);
 	SetInterruptible(false);
 	// Recalculate the fog each time the map is opened, just in case the player
 	// bought a map since the last time they viewed the map.
 	FogShader::Redraw();
+	
+	// Set the list of ships which should be shown in the orbits scene.
+	shipSystems = GetSystemShipsDrawList();
+	// If the player has a targeted ship and is using the orbits scene to inspect ships,
+	// start the map on the target ship's system, with it selected (if possible).
+	if(commodity == SHOW_SHIP_LOCATIONS && !specialSystem && player.Flagship()
+			&& player.Flagship()->GetTargetShip())
+	{
+		const shared_ptr<const Ship> &targetShip = player.Flagship()->GetTargetShip();
+		const System *targetSystem = targetShip->GetSystem();
+		if(targetSystem && shipSystems.find(targetSystem) != shipSystems.end())
+		{
+			const vector<shared_ptr<const Ship>> &shipList = shipSystems.at(targetSystem);
+			if(find(shipList.begin(), shipList.end(), targetShip) != shipList.end())
+			{
+				selectedShip = targetShip.get();
+				selectedSystem = targetSystem;
+			}
+		}
+	}
 	
 	if(selectedSystem)
 		center = Point(0., 0.) - selectedSystem->Position();
@@ -384,6 +405,38 @@ Color MapPanel::GovernmentColor(const Government *government)
 		.6 * government->GetColor().Get()[1],
 		.6 * government->GetColor().Get()[2],
 		.4);
+}
+
+
+
+// Show different colors based on the relative strength of escorts, hostiles,
+// and other ships.
+Color MapPanel::ShipColor(int64_t escortCost, int64_t hostileCost, int64_t totalCost)
+{
+	if(!totalCost)
+		return UninhabitedColor();
+	else if(escortCost == hostileCost)
+		// Evenly matched fleets show as blue. More neutral ships shifts grey.
+		return Color(0., .35 + .5 * escortCost / totalCost, .6, .4);
+	
+	if(hostileCost > escortCost)
+	{
+		double foes = static_cast<double>(hostileCost) / totalCost;
+		return Color(
+			.6,
+			.4 * (1. - foes + .01),
+			.6 * (1. - foes),
+			.4);
+	}
+	else
+	{
+		double friends = static_cast<double>(escortCost) / totalCost;
+		return Color(
+			.1 * (1. - friends + .01),
+			.6,
+			.6 * (1. - friends),
+			.4);
+	}
 }
 
 
@@ -722,7 +775,8 @@ void MapPanel::DrawSystems()
 		Color color = UninhabitedColor();
 		if(!player.HasVisited(&system))
 			color = UnexploredColor();
-		else if(system.IsInhabited(player.Flagship()) || commodity == SHOW_SPECIAL)
+		else if(system.IsInhabited(player.Flagship()) || commodity == SHOW_SPECIAL
+				|| commodity == SHOW_SHIP_LOCATIONS)
 		{
 			if(commodity >= SHOW_SPECIAL)
 			{
@@ -784,6 +838,28 @@ void MapPanel::DrawSystems()
 					closeGovernments[gov] = distance;
 				else
 					it->second = min(it->second, distance);
+			}
+			else if(commodity == SHOW_SHIP_LOCATIONS)
+			{
+				auto it = shipSystems.find(&system);
+				if(it == shipSystems.end())
+					color = UninhabitedColor();
+				else
+				{
+					// Tally the known ships by allegiance and viability.
+					int64_t total = 0;
+					int64_t owned = 0;
+					int64_t hostile = 0;
+					for(const shared_ptr<const Ship> &ship : (*it).second)
+					{
+						total += ship->Cost();
+						if(ship->GetGovernment()->Reputation() < 0.)
+							hostile += (1 - .9 * ship->IsDisabled()) * ship->Cost();
+						else if(ship->IsYours() || ship->GetPersonality().IsEscort())
+							owned += (1 - .9 * ship->IsDisabled()) * ship->Cost();
+					}
+					color = ShipColor(owned, hostile, total);
+				}
 			}
 			else
 			{
@@ -915,4 +991,37 @@ void MapPanel::DrawPointer(Point position, Angle &angle, const Color &color, boo
 	if(drawBack)
 		PointerShader::Draw(position, angle.Unit(), 14. + bigger, 19. + 2 * bigger, -4., black);
 	PointerShader::Draw(position, angle.Unit(), 8. + bigger, 15. + 2 * bigger, -6., color);
+}
+
+
+
+// Find player ships and ships with personality escort. For systems with these
+// ships, also find any other NPCs. Used to help color systems based on known ship locations.
+map<const System *, vector<shared_ptr<const Ship>>> MapPanel::GetSystemShipsDrawList()
+{
+	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
+	if(!ships.empty())
+	{
+		for(const shared_ptr<const Ship> &ship : player.Ships())
+			if(ship->GetSystem() && !ship->IsParked())
+				knownShipSystems[ship->GetSystem()].emplace_back(ship);
+		for(const Mission &mission : player.Missions())
+			for(const NPC &npc : mission.NPCs())
+				for(const shared_ptr<const Ship> &ship : npc.Ships())
+					if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
+						knownShipSystems[ship->GetSystem()].emplace_back(ship);
+		
+		// Check through every ship in the passed Engine::Ships list to determine
+		// if any are in systems under observation by the player.
+		for(const shared_ptr<const Ship> &ship : ships)
+			if(ship->GetSystem() && !ship->IsYours() && !ship->IsDestroyed() && ship->Cloaking() < 1.
+					&& !ship->GetPersonality().IsEscort())
+			{
+				auto it = knownShipSystems.find(ship->GetSystem());
+				if(it != knownShipSystems.end())
+					it->second.emplace_back(ship);
+			}
+	}
+	
+	return knownShipSystems;
 }
