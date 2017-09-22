@@ -28,6 +28,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "MapShipyardPanel.h"
 #include "Mission.h"
 #include "MissionPanel.h"
+#include "Person.h"
 #include "Planet.h"
 #include "PlayerInfo.h"
 #include "PointerShader.h"
@@ -67,12 +68,25 @@ MapPanel::MapPanel(PlayerInfo &player, int commodity, const System *special)
 	// bought a map since the last time they viewed the map.
 	FogShader::Redraw();
 	
-	// If the player has a targeted ship and is using the orbits scene, start
-	// the map on the target ship's system, provided the target is not cloaked.
+	// Set the list of ships which should be shown in the orbits scene.
+	shipSystems = GetSystemShipsDrawList();
+	// If the player has a targeted ship and is using the orbits scene to inspect ships,
+	// start the map on the target ship's system, with it selected (if possible).
 	if(commodity == SHOW_SHIP_LOCATIONS && !specialSystem && player.Flagship()
-			&& player.Flagship()->GetTargetShip() && player.Flagship()->GetTargetShip()->GetSystem())
-		if(player.Flagship()->GetTargetShip()->Cloaking() < 1.)
-			selectedSystem = player.Flagship()->GetTargetShip()->GetSystem();
+			&& player.Flagship()->GetTargetShip())
+	{
+		const shared_ptr<const Ship> &targetShip = player.Flagship()->GetTargetShip();
+		const System *targetSystem = targetShip->GetSystem();
+		if(targetSystem && shipSystems.find(targetSystem) != shipSystems.end())
+		{
+			const vector<shared_ptr<const Ship>> &shipList = shipSystems.at(targetSystem);
+			if(find(shipList.begin(), shipList.end(), targetShip) != shipList.end())
+			{
+				selectedShip = targetShip.get();
+				selectedSystem = targetSystem;
+			}
+		}
+	}
 	
 	if(selectedSystem)
 		center = Point(0., 0.) - selectedSystem->Position();
@@ -977,4 +991,45 @@ void MapPanel::DrawPointer(Point position, Angle &angle, const Color &color, boo
 	if(drawBack)
 		PointerShader::Draw(position, angle.Unit(), 14. + bigger, 19. + 2 * bigger, -4., black);
 	PointerShader::Draw(position, angle.Unit(), 8. + bigger, 15. + 2 * bigger, -6., color);
+}
+
+
+
+// Find player ships and ships with personality escort. For systems with these
+// ships, also find any other NPCs. Used to help color systems based on known ship locations.
+// TODO: Hook to the Engine instance to find non-special NPCs in these known systems.
+map<const System *, vector<shared_ptr<const Ship>>> MapPanel::GetSystemShipsDrawList()
+{
+	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
+	for(const shared_ptr<const Ship> &ship : player.Ships())
+		if(ship->GetSystem() && !ship->IsParked())
+			knownShipSystems[ship->GetSystem()].emplace_back(ship);
+	for(const Mission &mission : player.Missions())
+		for(const NPC &npc : mission.NPCs())
+			for(const shared_ptr<const Ship> &ship : npc.Ships())
+				if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
+					knownShipSystems[ship->GetSystem()].emplace_back(ship);
+	
+	// Add non-escort NPCs that are in "known" systems to the ship vectors.
+	for(const Mission &mission : player.Missions())
+		for(const NPC &npc : mission.NPCs())
+			for(const shared_ptr<const Ship> &ship : npc.Ships())
+				if(ship->GetSystem() && !ship->IsDestroyed() && ship->Cloaking() < 1.
+						&& !ship->GetPersonality().IsEscort())
+				{
+					auto it = knownShipSystems.find(ship->GetSystem());
+					if(it != knownShipSystems.end())
+						it->second.emplace_back(ship);
+				}
+	
+	// Also add persons that are also in known systems.
+	for(const auto &pit : GameData::Persons())
+		if(!pit.second.IsDestroyed() && pit.second.GetShip()->GetSystem())
+		{
+			auto it = knownShipSystems.find(pit.second.GetShip()->GetSystem());
+			if(it != knownShipSystems.end())
+				it->second.emplace_back(pit.second.GetShip());
+		}
+	
+	return knownShipSystems;
 }

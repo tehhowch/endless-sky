@@ -19,7 +19,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <map>
 #include <memory>
-#include <vector>
 
 class Planet;
 class PlayerInfo;
@@ -48,12 +47,10 @@ protected:
 	
 	
 private:
-	void DoFind(const std::string &text);
 	void DrawKey();
 	void DrawInfo();
 	void DrawOrbits();
 	void DrawShips(const Point &center, const double &scale);
-	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> GetSystemShipsDrawList();
 	
 	// Set the commodity coloring, and update the player info as well.
 	void SetCommodity(int index);

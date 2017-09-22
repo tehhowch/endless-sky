@@ -122,6 +122,7 @@ private:
 	void DrawMissions();
 	void DrawPointer(const System *system, Angle &angle, const Color &color, bool bigger = false);
 	static void DrawPointer(Point position, Angle &angle, const Color &color, bool drawBack = true, bool bigger = false);
+	std::map<const System *, std::vector<std::shared_ptr<const Ship>>> GetSystemShipsDrawList();
 };
 
 

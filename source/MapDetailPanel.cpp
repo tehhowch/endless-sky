@@ -23,7 +23,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "MapOutfitterPanel.h"
 #include "MapShipyardPanel.h"
 #include "pi.h"
-#include "Person.h"
 #include "Planet.h"
 #include "PlayerInfo.h"
 #include "PointerShader.h"
@@ -44,6 +43,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <cmath>
 #include <set>
 #include <utility>
+#include <vector>
 
 using namespace std;
 
@@ -78,20 +78,6 @@ namespace {
 MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
 	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
 {
-	// Set the list of ships which should be shown in the orbits scene.
-	shipSystems = GetSystemShipsDrawList();
-	if(commodity == SHOW_SHIP_LOCATIONS && !specialSystem && player.Flagship()
-			&& player.Flagship()->GetTargetShip() && player.Flagship()->GetTargetShip()->GetSystem())
-	{
-		const auto &systemIt = shipSystems.find(player.Flagship()->GetTargetShip()->GetSystem());
-		if(systemIt != shipSystems.end())
-		{
-			const auto shipIt = find(systemIt->second.cbegin(), systemIt->second.cend(),
-					player.Flagship()->GetTargetShip());
-			if(shipIt != systemIt->second.cend());
-				selectedShip = player.Flagship()->GetTargetShip().get();
-		}
-	}
 }
 
 
@@ -101,8 +87,6 @@ MapDetailPanel::MapDetailPanel(const MapPanel &panel)
 {
 	// Use whatever map coloring is specified in the PlayerInfo.
 	commodity = player.MapColoring();
-	// Set the list of ships which should be shown in the orbits scene.
-	shipSystems = GetSystemShipsDrawList();
 }
 
 
@@ -333,7 +317,7 @@ void MapDetailPanel::DrawKey()
 		"", // Special should never be active in this mode.
 		"Government:",
 		"System:",
-		"System Fleets:"
+		"Present Fleets:"
 	};
 	const string &header = HEADER[-min(0, max(-7, commodity))];
 	font.Draw(header, pos + headerOff, bright);
@@ -606,11 +590,13 @@ void MapDetailPanel::DrawInfo()
 	{
 		const Government *gov = selectedShip->GetGovernment();
 		fillText += selectedShip->ModelName() + ": '" + selectedShip->Name() + "'\n";
-		fillText += "Allegiance: " + (selectedShip->IsYours() ? "yours" : gov->GetName());
-		fillText += (gov->Reputation() < 0. ? " (hostile)\n" : "\n");
+		fillText += selectedShip->IsYours() ? (selectedShip == player.Flagship()
+				? "You are flying this ship." : "This is a member of your fleet.")
+				: "Allegiance: " + gov->GetName() + (gov->Reputation() < 0. ? " (hostile)" : "");
+		fillText += "\n\n";
 		// Newly instantiated ships will properly display their description, but any ships loaded from
 		// a savegame can only show a base model found in the store (i.e. the game loses track of
-		// variant-specific descriptions). To fix this requires altering how ships are loaded.
+		// variant-specific descriptions). To fix this requires altering how ships are loaded/saved.
 		fillText += "\t" + (!selectedShip->Description().empty() ? selectedShip->Description()
 				: GameData::Ships().Get(selectedShip->ModelName())->Description());
 	}
@@ -715,8 +701,8 @@ void MapDetailPanel::DrawOrbits()
 	}
 	
 	// Draw the name of the selected planet or ship in the orbits scene label.
-	const string &name = selectedShip ? selectedShip->Name()
-			: (selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name());
+	const string &name = font.TruncateMiddle(selectedShip ? selectedShip->Name()
+			: (selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name()), 150);
 	int width = font.Width(name);
 	width = (width / 2) + 75;
 	Point namePos(Screen::Right() - width - 5., Screen::Top() + 293.);
@@ -756,15 +742,14 @@ void MapDetailPanel::DrawOrbits()
 		
 		// Draw the ship's shields and hull as rings, as the targets interface does in-flight.
 		const bool isEnemy = selectedShip->GetGovernment()->Reputation() < 0.;
-		RingShader::Draw(shipPos, .5 * HEIGHT, 1.25, selectedShip->Shields(), *overlayColors[isEnemy], 0.);
-		RingShader::Draw(shipPos, .5 * HEIGHT - 2., 1.25, selectedShip->Hull(), *overlayColors[2 + isEnemy], 20.);
+		RingShader::Draw(shipPos, .5 * HEIGHT + 3., 1.5, selectedShip->Shields(), *overlayColors[isEnemy], 0.);
+		RingShader::Draw(shipPos, .5 * HEIGHT, 1.5, selectedShip->Hull(), *overlayColors[2 + isEnemy], 20.);
 	}
 }
 
 
-// Draw ships in the selected system as pointers, if the player has or
-// knows of at least one ship in this system.
-// TODO: Hook to the Engine instance to also draw non-special NPCs.
+// Draw ships in the selected system as pointers, if the player owns or
+// is escorting at least one ship in this system.
 void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 {
 	if(shipSystems.empty())
@@ -797,15 +782,15 @@ void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 			alpha = 115. / (pos - center).Length();
 			pos = alpha * (pos - center) + center;
 		}
-		// Allow clicking this ship to know its name:
+		// Allow clicking this ship to display information about it:
 		drawnShips[ship] = pos;
 		
-		// Use the ship's radar colors, after darkening and saturating.
-		// Ships beyond the display radius are more translucent and less saturated.
+		// Use the ship's radar colors, after darkening and saturating. Ships
+		// beyond the display radius are more translucent and less saturated.
 		const float *rgb = Radar::GetColor(Engine::RadarType(*ship, step)).Get();
 		const Color color(max(0., rgb[0] * 1.2 - .2) * alpha, max(0., rgb[1] * 1.2 - .2) * alpha,
 				max(0., rgb[2] * 1.2 - .2) * alpha, alpha);
-		const Color back(0., .85);
+		static const Color back(0., .85);
 		// The pointer offset is half its height to center the body of the pointer
 		// with the body of the ship. Outline each pointer with black for visibility.
 		double edge = ship.get() == player.Flagship() ? 4. : 2.;
@@ -815,47 +800,6 @@ void MapDetailPanel::DrawShips(const Point &center, const double &scale)
 		if(selectedShip && ship.get() == selectedShip)
 			RingShader::Draw(pos, size, size - 1., color);
 	}
-}
-
-
-
-// Find player ships and ships with personality escort. For systems with these
-// ships, also find any other NPCs. Used to help color systems based on known ship locations.
-// TODO: Hook to the Engine instance to find non-special NPCs in these known systems.
-map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShipsDrawList()
-{
-	map<const System *, vector<shared_ptr<const Ship>>> knownShipSystems;
-	for(const shared_ptr<const Ship> &ship : player.Ships())
-		if(ship->GetSystem() && !ship->IsParked())
-			knownShipSystems[ship->GetSystem()].emplace_back(ship);
-	for(const Mission &mission : player.Missions())
-		for(const NPC &npc : mission.NPCs())
-			for(const shared_ptr<const Ship> &ship : npc.Ships())
-				if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
-					knownShipSystems[ship->GetSystem()].emplace_back(ship);
-	
-	// Add non-escort NPCs that are in "known" systems to the ship vectors.
-	for(const Mission &mission : player.Missions())
-		for(const NPC &npc : mission.NPCs())
-			for(const shared_ptr<const Ship> &ship : npc.Ships())
-				if(ship->GetSystem() && !ship->IsDestroyed() && ship->Cloaking() < 1.
-						&& !ship->GetPersonality().IsEscort())
-				{
-					auto it = knownShipSystems.find(ship->GetSystem());
-					if(it != knownShipSystems.end())
-						it->second.emplace_back(ship);
-				}
-	
-	// Also add persons that are also in known systems.
-	for(const auto &pit : GameData::Persons())
-		if(!pit.second.IsDestroyed() && pit.second.GetShip()->GetSystem())
-		{
-			auto it = knownShipSystems.find(pit.second.GetShip()->GetSystem());
-			if(it != knownShipSystems.end())
-				it->second.emplace_back(pit.second.GetShip());
-		}
-	
-	return knownShipSystems;
 }
 
 
