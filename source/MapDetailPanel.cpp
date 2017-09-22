@@ -23,6 +23,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "MapOutfitterPanel.h"
 #include "MapShipyardPanel.h"
 #include "pi.h"
+#include "Person.h"
 #include "Planet.h"
 #include "PlayerInfo.h"
 #include "PointerShader.h"
@@ -811,7 +812,7 @@ map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShi
 				if(ship->GetSystem() && !ship->IsDestroyed() && ship->GetPersonality().IsEscort())
 					knownShipSystems[ship->GetSystem()].emplace_back(ship);
 	
-	// Add non-escort NPCs that are in "known" systems to the drawlist vectors.
+	// Add non-escort NPCs that are in "known" systems to the ship vectors.
 	for(const Mission &mission : player.Missions())
 		for(const NPC &npc : mission.NPCs())
 			for(const shared_ptr<const Ship> &ship : npc.Ships())
@@ -822,6 +823,15 @@ map<const System *, vector<shared_ptr<const Ship>>> MapDetailPanel::GetSystemShi
 					if(it != knownShipSystems.end())
 						it->second.emplace_back(ship);
 				}
+	
+	// Also add persons that are also in known systems.
+	for(const auto &pit : GameData::Persons())
+		if(!pit.second.IsDestroyed() && pit.second.GetShip()->GetSystem())
+		{
+			auto it = knownShipSystems.find(pit.second.GetShip()->GetSystem());
+			if(it != knownShipSystems.end())
+				it->second.emplace_back(pit.second.GetShip());
+		}
 	
 	return knownShipSystems;
 }
