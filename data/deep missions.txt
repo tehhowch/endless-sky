@@ -250,13 +250,8 @@ mission "Deep: Kraz Convoy"
 		"deep convoy" ++
 		payment 1260000
 		conversation
-			branch paris
-				has "Deep: Mystery Cubes 0: offered"
 			`When you return to <planet> with the freighters, you are greeted by a Deep Security officer who hands you <payment> and thanks you for accepting the job on such a short notice. "We'll make sure to contact you in the future should we need your help."`
 				decline
-			
-			label paris
-			`When you return to <planet> with the freighters, you are greeted by the same Deep Security officer that offered you the job. He hands you <payment>. "Thank you for accepting this job on such a short notice, Captain. I should introduce myself. I am Lieutenant Paris, and I will make sure to contact you in the future should the Deep require your help."`
 
 
 
@@ -289,15 +284,7 @@ mission "Deep: Mystery Cubes 0"
 				random < 90
 	on offer
 		conversation
-			branch paris
-				has "Deep: Kraz Convoy: done"
 			`A Deep Security officer calls your name and approaches you as you enter the spaceport's central market. "Greetings, Captain <last>, I'm Lieutenant Paris. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
-				goto choice
-			
-			label paris
-			`A Deep Security officer calls your name as you enter the spaceport's central market. As he approaches, you notice that it is Lieutenant Paris, the same officer who asked you to escort a convoy to Kraz. "Greetings, Captain <last>. I hope that you have been well since we last met. Would you be interested in conducting some more work for the Deep? We are currently in need of a few extra ships to assist in an ongoing situation."`
-			
-			label choice
 			choice
 				`	"I'd love to help. What is the situation?"`
 					goto situation
@@ -513,7 +500,6 @@ mission "Deep: Mystery Cubes 3"
 
 
 
-# Could add `deadline 1` to DMC3 to test if player defended Maelstrom successfully or not (e.g. in one day).
 mission "Deep: Mystery Cubes 4"
 	landing
 	name `Rendezvous on <planet>`
@@ -825,7 +811,7 @@ mission "Deep: Singularity 0"
 				`	"Alright. We discovered an artificial singularity on Midgard."`
 			
 			label singularity
-			branch helped # For if the player helped the Deep before finishing Deep Archaeology; essentially makes this mission a blend between dialog from 0 (didn't help before) and 1
+			branch helped
 				has "Deep: Mystery Cubes 4: done"
 			`	The woman's mouth turns into a sly smile as she leans back in her chair. "Thank you for the information. That is all that we will need you for. You will be escorted back outside momentarily. Enjoy the rest of your day, Captain."`
 				goto next
@@ -1270,7 +1256,7 @@ mission "Deep: Remnant Technology"
 		set "Deep: Remnant Research: done"
 	
 	on fail
-		set "Deep: Remnant Research: done" # Allows the player to decline/abort this and any mission beyond this point and still get a chance to unlock the Bactrian, but not doing the other half of the Deep: Remnant chain could ruin future situations for the player.
+		set "Deep: Remnant Research: done"
 
 
 
@@ -1383,7 +1369,7 @@ mission "Deep: Remnant: Inhibitor Cannon"
 	to offer
 		has "Deep: Remnant: Generators: done"
 	on offer
-		payment 383500
+		payment 276500
 		conversation
 			`Again, the Remnant technology is removed from your ship and transported to the research lab. You wander into the waiting area, and are paid you <payment>. After several hours, the scientists come to you with their initial findings.`
 			`	"This Millennium Cell is little more than a radiothermal generator. Not exactly the best kind of generator if you're looking for lots of power - our fusion reactors are far better at that - but for a radiothermal generator, it produces remarkably little heat. We'll have to take it apart to find out how they are manipulating the decay heat so effectively, but preparing for that will take some time."`
