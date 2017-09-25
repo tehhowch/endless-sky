@@ -23,6 +23,7 @@ mission "Deep: Syndicate Convoy"
 	stopover Hephaestus
 	deadline
 	to offer
+		"combat rating" > 50
 		"mystery cube" >= 10
 		not "Deep: Mystery Cubes 4: done"
 		or
@@ -105,6 +106,7 @@ mission "Deep: Tarazed Convoy"
 	stopover Tarazed
 	deadline
 	to offer
+		"combat rating" > 50
 		"mystery cube" >= 10
 		not "Deep: Mystery Cubes 4: done"
 		or
@@ -189,6 +191,7 @@ mission "Deep: Kraz Convoy"
 	stopover Kraz
 	deadline
 	to offer
+		"combat rating" > 80
 		"mystery cube" >= 10
 		not "Deep: Mystery Cubes 4: done"
 		or
@@ -272,6 +275,7 @@ mission "Deep: Mystery Cubes 0"
 	stopover "Arabia"
 	cargo "mystery cubes" 1
 	to offer
+		"combat rating" > 100
 		or
 			and
 				"deep convoy" == 1
@@ -349,6 +353,8 @@ mission "Deep: Mystery Cubes 0"
 			label next
 			`	"Not at the moment, Captain, but I'll contact you should anything else arise."`
 
+event "deep: warlord detected"
+
 
 
 mission "Deep: Mystery Cubes 1"
@@ -375,10 +381,9 @@ mission "Deep: Mystery Cubes 2"
 		has "Deep: Mystery Cubes 1: done"
 	on offer
 		conversation
-			`The Republic still use the facility on Earth's moon as a minor Navy shipyard, even in its old age. Many of the landing pads are currently filled by Navy capital ships or Deep Security ships. This must be the main base of operations at the moment for tracking Beelzebub.`
-			`	Upon landing, you are escorted by pair of men in Navy uniforms past the tourist areas and into the back of the facility to an elevator. One of your escorts uses a keycard to open the elevator, ushering you in. The elevator opens up many floors below the spaceport, to an area of the facility that looks far newer than that on the surface.`
+			`	Upon landing, you are escorted by pair of men in Navy uniforms past the tourist areas of the moon facility and into the back to an elevator. One of your escorts uses a keycard to open the elevator, ushering you in. The elevator opens up many floors below the spaceport, to an area of the facility that looks far newer than that on the surface.`
 			`	You are kept in what looks like a waiting room along with five others. After a bit of talking, you find out that these are the other merchant captains who helped place the cubes across different regions of known space.`
-			`	An hour of waiting passes, and Lieutenant Paris walks into the room followed by a Navy admiral. "I hope you are all enjoying your stay," the admiral remarks. "We've checked each of your records, and it would appear that you are all clear of any crimes that would connect you to public enemy number one, 'Beelzebub.' How, then, is it that most of the cubes you placed were mysteriously disabled shortly after pirates entered the systems?"`
+			`	An hour of waiting passes, and Lieutenant Paris walks into the room followed by a Navy admiral. "I hope you are all enjoying your stay," the admiral remarks. "Now. How is it that most of the cubes you placed were mysteriously disabled shortly after pirates entered the systems?"`
 			`	The admiral looks to each of the captains in the room, seemingly waiting for a response.`
 			choice
 				`	(Say nothing.)`
@@ -389,26 +394,25 @@ mission "Deep: Mystery Cubes 2"
 			label next
 			`	He continues, "Allow me to explain the situation. Roughly two weeks after the last of your 'deliveries' were activated, the sensors identified Beelzebub's ship in the northern reaches of the Dirt Belt. We dispatched half of the nearest Navy garrison to apprehend the vessel, only to arrive and find a convoy of Star Barges instead."`
 			`	"Worse, while our ships were in pursuit of the decoys, a pirate fleet managed to assault their home base and captured a handful of docked Cruisers. And, amidst the chaos, most of the cubes you placed in the Dirt Belt and Core were disabled!"`
-			`	Before the admiral can work himself up further, Paris intercedes with the rest of the story. "The cubes that Deep Security had you position on multiple worlds were surveillance devices - sensor cubes, as we call them - designed to track Beelzebub's ship and notify us when the ship was located. It can be presumed that Beelzebub now has access to these cubes and has undoubtedly converted them to work in their favor. It may take us weeks to retrieve them, but at the moment it can be assumed that Beelzebub knows where we will be."`
+			`	Before the admiral can work himself up further, Paris intercedes with the rest of the story. "The cubes that Deep Security had you position on multiple worlds were surveillance devices - sensor cubes, as we call them - designed to track Beelzebub's ship and notify us when the ship was located. It can be presumed that Beelzebub now has access to these cubes and has undoubtedly converted them to work in his favor. It may take us weeks to retrieve them, but at the moment it can be assumed that Beelzebub knows where we will be."`
 			choice
 				`	"Why are you involving us in this?"`
 				`	"Are we part of a plan to take Beelzebub down?"`
 			
-			`	"Beelzebub is perhaps the most wanted warlord by the Republic since the 28th century. With both Navy and Deep technology now in the hands of this criminal, every available ship will be required to take him down. The primary purpose for bringing you all here was to determine if any of you were connected to Beelzebub, possibly leading to him being able to locate the cubes, but seeing as how you are all in the clear we are now hoping that you would be willing to assist us in trapping Beelzebub. The six of your fleets combined would certainly make up for anything that the Navy has lost in the attack."`
+			`	"Beelzebub is perhaps the most wanted warlord by the Republic since the 28th century. With both Navy and Deep technology now in the hands of this criminal, every available ship will be required to take him down. Given this, we are now hoping that you would be willing to assist us in trapping Beelzebub. The six of your fleets combined would certainly make up for anything that the Navy has lost in the attack."`
 			`	"How much will we be paid?" one of the other merchant captains asks. "At minimum, one million credits," the admiral replies. The captain who asked instantly agrees to help, as do two others.`
 			choice
 				`	"I'll help as well."`
 					goto accept
 				`	"Sorry, but I am not interested in helping."`
 			
-			`	Only one other merchant captains declines, and you both are escorted out of the room, into the waiting elevator. The trip back to the surface is silent, and your escort dismisses you both with a simple 'Goodbye.'`
+			`	Only one other merchant captains declines, and you both are escorted out of the room, into the waiting elevator. The trip back to the surface is silent, and your escort dismisses you both with a simple "Goodbye."`
 				decline
 			
 			label accept
 			`	In the end, only one of the merchant captains declines. She is escorted out of the room, and the admiral explains each merchant captain's new role.`
-			`	"We assume that Beelzebub knows where we will be, but we know where he is as well - the stolen Cruisers and the pirate fleet that attacked our base moved toward the Core. Given the severity of the crime that Beelzebub has just committed, he will undoubtedly attempt to get as far away from the law as possible. That leaves us only two possible destinations: Buccaneer Bay, or the anarchist colonies of the Far North. Our best guess is that the colonies are the more appealing option for a warlord.`
-			`	The admiral goes on to explain how multiple blockades will be set up across the galaxy in an attempt to either capture Beelzebub or box him in. At the same time, any spare Navy and Deep Security fleets will be scanning the galaxy from the Dirt Belt toward the Paradise Worlds and the Core in an attempt to flush the warlord out of hiding and into the blockades.`
-			`	"Captain <last>, you will be stationed on <destination> with Lieutenant Paris and a small Navy fleet. Please gather your things and travel there immediately."`
+			`	"We assume that Beelzebub knows where we will be, but we know where he is as well - the stolen Cruisers and the pirate fleet that attacked our base moved toward the Core. Given the severity of the crime that Beelzebub has just committed, he will undoubtedly attempt to get as far away from the law as possible. That leaves us only two possible destinations: Buccaneer Bay, or the anarchist colonies of the Far North. Our best guess is that the colonies are the more appealing option for a warlord."`
+			`	"We'll be setting up multiple blockades around the galaxy in hopes of boxing Beelzebub in as we sweep the galaxy. Captain <last>, you will be stationed on <destination> with Lieutenant Paris and a small Navy fleet. Please gather your things and travel there immediately."`
 				accept
 	
 	npc accompany save
@@ -419,9 +423,6 @@ mission "Deep: Mystery Cubes 2"
 			variant
 				"Mule"
 				"Raven" 2
-	npc accompany save
-		personality heroic opportunistic escort
-		government Republic
 		fleet
 			names "republic capital"
 			variant
@@ -446,7 +447,7 @@ mission "Deep: Mystery Cubes 3: Escorts"
 			variant
 				"Mule"
 				"Raven" 2
-				"Dagger"	
+				"Dagger"
 	npc
 		personality heroic opportunistic escort vindictive
 		government Republic
@@ -545,10 +546,6 @@ mission "Deep: Mystery Cubes 4"
 				"Cruiser"
 				"Combat Drone" 4
 				"Frigate"
-	npc
-		personality staying heroic opportunistic vindictive
-		government Republic
-		system destination
 		fleet
 			names deep
 			fighters "deep fighter"
@@ -1254,7 +1251,6 @@ mission "Deep: Remnant Technology"
 	
 	on decline
 		set "Deep: Remnant Research: done"
-	
 	on fail
 		set "Deep: Remnant Research: done"
 
@@ -1315,7 +1311,6 @@ mission "Deep: Remnant: Engines"
 	
 	on decline
 		set "Deep: Remnant Research: done"
-	
 	on fail
 		set "Deep: Remnant Research: done"
 	
@@ -1349,7 +1344,6 @@ mission "Deep: Remnant: Generators"
 	
 	on decline
 		set "Deep: Remnant Research: done"
-	
 	on fail
 		set "Deep: Remnant Research: done"
 	
@@ -1382,7 +1376,6 @@ mission "Deep: Remnant: Inhibitor Cannon"
 	
 	on decline
 		set "Deep: Remnant Research: done"
-	
 	on fail
 		set "Deep: Remnant Research: done"
 	
@@ -1425,7 +1418,6 @@ mission "Deep: Remnant Surveillance"
 	
 	on decline
 		set "Deep: Remnant Research: done"
-	
 	on fail
 		set "Deep: Remnant Research: done"
 	
