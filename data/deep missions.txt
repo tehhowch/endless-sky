@@ -1264,7 +1264,7 @@ mission "Deep: Remnant Technology"
 		has "event: deep: scan log research"
 	on offer
 		payment 250000
-		dialog `You recieve a message from Ivan after you land. "Thanks for all your help recently. We brought our findings to the Deep government and they gave us more funding! We've transfered 250,000 credits to your account and made sure you were listed as a primary contributor on all the reports of these immense discoveries. Please meet us on <destination> if you wish to assist us further. Your help would be appreciated, but we will make progress even if you're a bit busy at the moment."`
+		dialog `You recieve a message from Ivan after you land. "Thanks for all your help recently. We brought our findings to the Deep government and they gave us more funding! We've transfered <payment> to your account and made sure you were listed as a primary contributor on all the reports of these immense discoveries. Please meet us on <destination> if you wish to assist us further. Your help would be appreciated, but we will make progress even if you're a bit busy at the moment."`
 	
 	on decline
 		set "Deep: Remnant Research: done"
@@ -1337,7 +1337,6 @@ mission "Deep: Remnant: Engines"
 		dialog `You have landed on <planet>, but you do not have both a Forge-Class Thruster and Forge-Class Steering. Return to <planet> once you have obtained both engines.`
 		
 	on complete
-		payment 417000
 		outfit "Forge-Class Thruster" -1
 		outfit "Forge-Class Steering" -1
 
@@ -1351,8 +1350,9 @@ mission "Deep: Remnant: Generators"
 	to offer
 		has "Deep: Remnant: Engines: done"
 	on offer
+		payment 417000
 		conversation
-			`An unloading crew is able to quickly remove the engines from your ship and transport them to Ivan's research lab, thanks to the close proximity to the spaceport. You are escorted into a lobby where one of the administrative staff pays you 417,000 credits in exchange for the engines. He asks you to wait, indicating that Ivan or one of the other scientists should be out to meet you shortly. After about three hours of waiting, Ivan enters the room.`
+			`An unloading crew is able to quickly remove the engines from your ship and transport them to Ivan's research lab, thanks to the close proximity to the spaceport. You are escorted into a lobby where one of the administrative staff pays you <payment> in exchange for the engines. He asks you to wait, indicating that Ivan or one of the other scientists should be out to meet you shortly. After about three hours of waiting, Ivan enters the room.`
 			`	"These engines, they are fantastic! The scans made them seem similar to human ion engines, but surprisingly they can outperform even atomic engines! The thrust-to-mass ratio is great, and they have somehow avoided the immense heat generation that our engines emit. They do have some downsides, but it's still amazing that such an isolated group of humans could make technological leaps beyond even what the Deep has accomplished."`
 			`	"We've decided that the next Remnant technology we'd like to examine is their power generation. Could you bring us one of their Millenium Cells?"`
 			choice
@@ -1371,7 +1371,6 @@ mission "Deep: Remnant: Generators"
 		dialog `You have landed on <planet>, but you do not have a Millennium Cell. Return to <planet> once you have obtained the generator.`
 	
 	on complete
-		payment 383500
 		outfit "Millennium Cell" -1
 
 
@@ -1384,8 +1383,9 @@ mission "Deep: Remnant: Inhibitor Cannon"
 	to offer
 		has "Deep: Remnant: Generators: done"
 	on offer
+		payment 383500
 		conversation
-			`Again, the Remnant technology is removed from your ship and transported to the research lab. You wander into the waiting area, and are paid you 383,500 credits. After several hours, the scientists come to you with their initial findings.`
+			`Again, the Remnant technology is removed from your ship and transported to the research lab. You wander into the waiting area, and are paid you <payment>. After several hours, the scientists come to you with their initial findings.`
 			`	"This Millennium Cell is little more than a radiothermal generator. Not exactly the best kind of generator if you're looking for lots of power - our fusion reactors are far better at that - but for a radiothermal generator, it produces remarkably little heat. We'll have to take it apart to find out how they are manipulating the decay heat so effectively, but preparing for that will take some time."`
 			`	"I suppose by now you've seen the Remnant ships in combat more than a few times. The oufit scans showed one of their primary weapons is a modified particle cannon, but we'd need to see the actual weapon in order to understand how the modification works. Would you retrieve an Inihibitor Cannon for us?"`
 			choice
@@ -1404,7 +1404,6 @@ mission "Deep: Remnant: Inhibitor Cannon"
 		dialog `You have landed on <planet>, but you do not have an Inhibitor Cannon. Return to <planet> once you have the weapon.`
 	
 	on complete
-		payment 235500
 		outfit "Inhibitor Cannon" -1
 
 
@@ -1420,15 +1419,16 @@ mission "Deep: Remnant Surveillance"
 	to offer
 		has "Deep: Remnant: Inhibitor Cannon: done"
 	on offer
+		payment 235500
 		conversation
 			`Instead of sending the Inhibitor Cannon to Ivan's lab, it is transfered to a Deep Security ship which immediately departs. When you meet Ivan at his lab, he explains that the Deep was especially interested in the Remnant technology after reading his previous reports, and that his team would need to study it in a "more secure location."`
 			branch friendly
 				"reputation: Remnant" >= 1
-			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>. You've done a lot for humanity in these past few weeks. It may take us months to fully understand the technology you have brought us, but rest assured that that once we do understand it, the galaxy will be a better place. I'll see you later, Captain. Stay safe."`
+			`	Ivan hands you <payment>. "Thank you for all the help, Captain <last>. You've done a lot for humanity in these past few weeks. It may take us months to fully understand the technology you have brought us, but rest assured that that once we do understand it, the galaxy will be a better place. I'll see you later, Captain. Stay safe."`
 				decline
 				
 			label friendly
-			`	Ivan hands you 235,500 credits. "Thank you for all the help, Captain <last>, but I have one last thing to ask." Ivan reaches into his pocket and retrieves six objects that you recognize as sensor cubes. "Would you bring two of these to each of the Remnant worlds? We've been learning a great deal from the study of the Remnant outfits, but aside from your scanning logs we have very little information on the Remnant ships. If you were to place these near their spaceports, they would be able to scan any nearby ships, which would be most helpful."`
+			`	Ivan hands you <payment>. "Thank you for all the help, Captain <last>, but I have one last thing to ask." Ivan reaches into his pocket and retrieves six objects that you recognize as sensor cubes. "Would you bring two of these to each of the Remnant worlds? We've been learning a great deal from the study of the Remnant outfits, but aside from your scanning logs we have very little information on the Remnant ships. If you were to place these near their spaceports, they would be able to scan any nearby ships, which would be most helpful."`
 			choice
 				`	"You can count on me, Ivan."`
 				`	"Sorry, but this doesn't seem like the right thing to do. You'll need to find someone else to do this for you."`
@@ -1471,6 +1471,7 @@ mission "Deep: Scientist Rescue Timer"
 		fail
 
 event "deep: scientist rescue timer"
+
 
 
 mission "Deep: Scientist Rescue 0"
@@ -1523,9 +1524,6 @@ mission "Deep: Scientist Rescue 0"
 	
 	to complete
 		has "found star queen"
-	
-	on complete
-		payment 100000
 
 
 
@@ -1597,6 +1595,7 @@ mission "Deep: Scientist Rescue 1"
 	to offer
 		has "Deep: Scientist Rescue 0: done"
 	on offer
+		payment 100000
 		conversation
 			`You return to Valhalla and find Lieutenant Paris with a large group of men and women in Deep Security uniforms. As you approach them, the Lieutenant stops speaking to the group after noticing you. "Captain <last>! Have you located the Star Queen?"`
 			choice
@@ -1612,7 +1611,7 @@ mission "Deep: Scientist Rescue 1"
 			
 			label next
 			`	After hearing this news, many of the faces in the group turn grim as they realize that they will need to fight to retrieve the Star Queen. The Lieutenant ponders upon this information for a moment, then turns back to the group. "Guards, ready your ships!" The group responds with a collective "Sir, yes sir!" before running off to their ships.`
-			`	Before leaving for his own ship, Paris walks up to you and hands you 100,000 credits.`
+			`	Before leaving for his own ship, Paris walks up to you and hands you <payment>.`
 			`	"That you for locating the Star Queen. Now, Captain <last>, would you be willing to help us? If the Star Queen is as heavily defended as you say it is then we are going to need every ship we can get."`
 			choice
 				`	"I'd be glad to."`
@@ -1741,8 +1740,10 @@ mission "Deep: Scientist Rescue 2"
 	on offer
 		conversation
 			`The remaining fleet quickly enters the atmosphere of Haven and begins scanning the surface. After roughly an hour of flying, you receive a transmission that the Star Queen has been found, along with its coordinates.`
-			`	You watch from afar as the Mule lands outside a hangar in some sort of pirate facility. The Mule immediately unloads what looks to be at least four dozen armed soldiers who quickly surround and breach the hangar. After ten minutes, the hangar doors slide open to reveal the Star Queen, still intact. You hear chatter over the radio saying that most of the crew and scientists are still inside.`
-			`	"Good job, everyone," you hear Lieutenant Paris say over the comms. "Now we just need to make it back to <destination> in one piece." Just as he says that, a bright light pierces the sky, obliterating the Mule while its shields are down. Soldiers begin scrambling into the Star Queen, which quickly takes off into space along with the rest of the fleet. You turn your repulsor engines to full and begin flying up into space behind them.`
+			`	You watch from afar as the Mule lands outside a hangar in some sort of pirate facility. The Mule immediately unloads what looks to be at least four dozen armed soldiers who quickly surround and breach the hangar. "Lieutenant, they have alien technology in here," one of the soldiers says over the radio. "Some of it is from the Hai, but some of it I've never seen before."`
+			`	"Planet explosives on any alien technology you find. We don't have the capabilities to take it all back with us. It's better off destroyed."`
+			`	After fifteen minutes, the hangar doors slide open to reveal the Star Queen, still intact. You hear chatter over the radio saying that most of the crew and scientists are still inside.`
+			`	"Good job, everyone," you hear Lieutenant Paris say over the comms. "Now we just need to make it back to <destination> in one piece." Just as he says that, a bright light pierces the sky, obliterating the Mule while its shields are down. Soldiers begin scrambling into the Star Queen, which quickly takes off into space along with the rest of the fleet. You turn your repulsor engines to full and begin flying up into space behind them as multiple explosions come from the facility behind you.`
 				launch
 	
 	on enter
@@ -1756,9 +1757,6 @@ mission "Deep: Scientist Rescue 2"
 	
 	on visit
 		dialog `You have landed on Valhalla, but you left the <npc> behind! Wait for it to enter the system before landing.`
-	
-	on complete
-		payment 100000
 
 
 
@@ -1792,7 +1790,10 @@ mission "Deep: Scientist Rescue 2: Pirate Bactrian"
 		government Pirate
 		personality staying nemesis waiting
 		ship "Bactrian (Cosmic Devil)" "Cosmic Devil"
-		dialog `The Bactrian "<npc>" has been destroyed. Now the pirates here will have a harder time attacking the Republic.`
+		dialog 
+			`After the Bactrian explodes, you recieve a transmission from an unknown source. It suddenly opens on its own and a clearly manipulated deep voice begins speaking to you.`
+			`"Well done, Captain. Well done. You've destroyed my Bactrian. Or should I say one of my Bactrians. And one of my facilities as well. You will pay for this, Captain. One day."`
+			`The transmission cuts out, leaving you in silence.`
 
 
 
@@ -1824,10 +1825,10 @@ mission "Deep: Scientist Rescue 3A"
 		not "Deep: Scientist Rescue: Pirate Bactrian: done"
 		not "Deep: Scientist Rescue 3B: offered"
 	on offer
+		payment 100000
 		conversation
-			`As you land near the Star Queen, you can see the passengers of the ship being escorted off of it. A medical team is examining each passenger while a Deep Security officer asks questions and jots down the responses. Sadly, you also notice a number of body bags next to the ship, likely from scientists or crew that were found dead on the ship.`
-			`	Lieutenant Paris is waiting for you outside of your ship, and hands you another 100,000 credits when you walk up to him.`
-			`	"Thanks for all the help, Captain <last>. We couldn't have done it without you."`
+			`As you land near the Star Queen, you can see the passengers of the ship being escorted off of it. Maria and Hannah come running off the ship in tears over to Garrison, who must have arrived as soon as he heard the news. A medical team is examining each passenger while a Deep Security officer asks questions and jots down the responses. Sadly, you also notice a number of body bags next to the ship, likely from scientists or crew that were found dead on the ship.`
+			`	Lieutenant Paris is waiting for you outside of your ship, and hands you another <payment> when you walk up to him. "Thanks for all the help, Captain <last>. We couldn't have done it without you."`
 			`	Paris looks back to the Star Queen, and you can overhear one of the Deep Security officers listing off names. "Sarah Reevs, Nicole Faye, Issac Joules, Laura Paris..." the list goes on for slightly over a dozen total names. "The surviving crew tells us that only a few were killed initially, either during boarding or by being thrown out the airlock on the way to Haven. Most of the others were either killed or dragged off after they had reached their destination at a facility of some sort, its purpose unidentifiable to the crew."`
 			`	When you look back to Lieuntenant Paris, you notice that he is holding back tears. Laura Paris was one of the scientists who died...`
 			`	He talks to you in a rather strained voice. "I want you to return to Arneb and take out every single one of those pirates that are left. Especially the Bactrian. We try to keep Bactrians out of unworthy hands, so whenever a pirate gets ahold of one we make sure we destroy it immediately. Seeing as how we're going to be busy here for a while, you need to be the one who destroys it."`
@@ -1872,10 +1873,10 @@ mission "Deep: Scientist Rescue 3B"
 		not "Deep: Scientist Rescue 3A: offered"
 	on offer
 		set "license: City-Ship"
+		payment 100000
 		conversation
-			`As you land near the Star Queen, you can see the passengers of the ship being escorted off of it. A medical team is examining each passenger while a Deep Security officer asks questions and jots down the responses. Sadly, you also notice a number of body bags next to the ship, likely from scientists or crew that were found dead on the ship.`
-			`	Lieutenant Paris is waiting for you outside of your ship, and hands you another 100,000 credits when you walk up to him.`
-			`	"Thanks for all the help, Captain <last>. We couldn't have done it without you."`
+			`As you land near the Star Queen, you can see the passengers of the ship being escorted off of it. Maria and Hannah come running off the ship in tears over to Garrison, who must have arrived as soon as he heard the news. A medical team is examining each passenger while a Deep Security officer asks questions and jots down the responses. Sadly, you also notice a number of body bags next to the ship, likely from scientists or crew that were found dead on the ship.`
+			`	Lieutenant Paris is waiting for you outside of your ship, and hands you another <payment> when you walk up to him. "Thanks for all the help, Captain <last>. We couldn't have done it without you."`
 			`	Paris looks back to the Star Queen, and you can overhear one of the Deep Security officers listing off names. "Sarah Reevs, Nicole Faye, Issac Joules, Laura Paris..." the list goes on for slightly over a dozen total names. "The surviving crew tells us that only a few were killed initially, either during boarding or by being thrown out the airlock on the way to Haven. Most of the others were either killed or dragged off after they had reached their destination at a facility of some sort, its purpose unidentifiable to the crew."`
 			`	When you look back to Lieuntenant Paris, you notice that he is holding back tears. Laura Paris was one of the scientists who died...`
 			`	He turns to you and hands you a license, then says in a rather strained voice. "Thank you. I've said it before, but there's really no way I can thank you enough."`
