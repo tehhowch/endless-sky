@@ -335,11 +335,11 @@ event "wolf pack gacrux start"
 	system Gacrux
 		remove fleet "Large Republic"
 		remove fleet "Navy Surveillance"
-		"set period" fleet "Small Republic" 8000
+		set fleet "Small Republic" 8000
 
 event "wolf pack gacrux end"
 	system Gacrux
-		"set period" fleet "Small Republic" 2000
+		set fleet "Small Republic" 2000
 		add fleet "Large Republic" 3000
 		add fleet "Navy Surveillance" 1600
 
@@ -403,11 +403,11 @@ event "wolf pack mizar start"
 	system Mizar
 		remove fleet "Large Republic"
 		remove fleet "Navy Surveillance"
-		"set period" fleet "Small Republic" 5000
+		set fleet "Small Republic" 5000
 
 event "wolf pack mizar end"
 	system Mizar
-		"set period" fleet "Small Republic" 1000
+		set fleet "Small Republic" 1000
 		add fleet "Large Republic" 1400
 		add fleet "Navy Surveillance" 2000
 
