@@ -8,11 +8,6 @@
 # WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
-#	To Do:
-#		Write Deep: Singularity
-#		Add logs where necessary
-#		Play test
-
 mission "Deep: Syndicate Convoy"
 	minor
 	name `Pickup from Hephaestus`
@@ -390,9 +385,9 @@ mission "Deep: Mystery Cubes 2"
 					goto next
 				`	"Maybe they know how to detect the cubes."`
 			
-			`	"If that is possible then a group of no-good anarchists have figured out how to detect something that even the Navy can not." The admiral turns to Paris, who nods as if to back up the his claims that the Navy is unable to detect the mysterious cubes.`
+			`	The admiral looks at you. "Doubtful." Paris nods, as if to back up this claim.`
 			label next
-			`	He continues, "Allow me to explain the situation. Roughly two weeks after the last of your 'deliveries' were activated, the sensors identified Beelzebub's ship in the northern reaches of the Dirt Belt. We dispatched half of the nearest Navy garrison to apprehend the vessel, only to arrive and find a convoy of Star Barges instead."`
+			`	He clears his throat and continues, "Allow me to explain the situation. Roughly two weeks after the last of your 'deliveries' were activated, the sensors identified Beelzebub's ship in the northern reaches of the Dirt Belt. We dispatched half of the nearest Navy garrison to apprehend the vessel, only to arrive and find a convoy of Star Barges instead."`
 			`	"Worse, while our ships were in pursuit of the decoys, a pirate fleet managed to assault their home base and captured a handful of docked Cruisers. And, amidst the chaos, most of the cubes you placed in the Dirt Belt and Core were disabled!"`
 			`	Before the admiral can work himself up further, Paris intercedes with the rest of the story. "The cubes that Deep Security had you position on multiple worlds were surveillance devices - sensor cubes, as we call them - designed to track Beelzebub's ship and notify us when the ship was located. It can be presumed that Beelzebub now has access to these cubes and has undoubtedly converted them to work in his favor. It may take us weeks to retrieve them, but at the moment it can be assumed that Beelzebub knows where we will be."`
 			choice
@@ -720,7 +715,7 @@ mission "Deep: TMBR 2"
 
 
 
-mission "Deep: Singularity 0"
+mission "Deep: Singularity 0A"
 	landing
 	source
 		attributes deep
@@ -736,8 +731,6 @@ mission "Deep: Singularity 0"
 				`	(Close the hatch and flee)`
 					goto flee
 			
-			### Quickly written draft dialog past this point. Will rewrite some of it.
-			
 			`	"Because we want to know what you were doing with Albert Foster."`
 			choice
 				`	(Follow their orders.)`
@@ -749,7 +742,7 @@ mission "Deep: Singularity 0"
 				goto questioning
 			
 			label flee
-			`	You try and close the hatch but suddenly begin cunvolsing and drop to the floor. Before you black out, you spot one of the officers holding a stun gun.`
+			`	You attempt to close the hatch, but suddenly begin cunvolsing and drop to the floor. Before you black out, you spot one of the officers holding a stun gun.`
 			``
 			`	You wake up sitting in a chair in a dimly lit room. Across the table in front of you is another chair, but it is empty.`
 			
@@ -760,13 +753,13 @@ mission "Deep: Singularity 0"
 				`	"Don't worry, it was just fine."`
 				`	"It wasn't the warmest welcome I've ever recieved."`
 			
-			`	The woman chuckles slightly. "No need to be sarcastic with me. Enough small talk. You know why you're here."`
+			`	The woman chuckles slightly. "No need to be sarcastic with me. Now, you know why you're here."`
 			choice
-				`	"I didn't commit any crimes, so you have no right to detain me."`
 				`	"I do?"`
 					goto clueless
+				`	"I didn't commit any crimes, so you have no right to detain me."`
 			
-			`	"Indeed no crimes were committed, but we still have the right to detain you for the purpose of keeping the Deep safe. Cause us no trouble during this little meeting and answer my question and you will be on your way in a few minutes time."`
+			`	"Indeed no crimes were committed wduring your work for Albert Foster, but we still have the right to detain you for the purpose of keeping the Deep safe. Cause us no trouble during this little meeting and answer my question and you will be on your way in a few minutes time."`
 				goto foster
 			
 			label clueless
@@ -785,7 +778,7 @@ mission "Deep: Singularity 0"
 				`	"Because he isn't allowed in the Deep."`
 					goto allowed
 			
-			`	"I already told you that you didn't commit a crime. The reason is that Foster has caused the Deep plenty of trouble in the past, so we don't perticularly enjoy his presence. Now, did Albert make any discoveries due to your assistance?""`
+			`	"I already told you that you didn't commit a crime. The reason is that Foster has caused the Deep plenty of trouble in the past, so we don't perticularly enjoy his presence. Now, did Albert make any discoveries due to your assistance?"`
 				goto choice
 			
 			label allowed
@@ -816,7 +809,7 @@ mission "Deep: Singularity 0"
 			label helped
 			apply
 				set "deep: helped before archaeology"
-			`	The woman's mouth turns into a sly smile as she leans back in her chair. "Thank you for the information, Captain. Before I let you go, I'd like to thank you for the work you've done for the Deep. I was interested to hear that the same Captain who helped us trap Beelzebub also helped Albert Foster. Don't worry, we all make stupid mistakes. We'll scratch this one off your record."`
+			`	The woman's mouth turns into a sly smile as she leans back in her chair. "Thank you for the information, Captain. Before I let you go, I'd like to thank you for the work you've done for the Deep. I was interested to hear that the same Captain who helped us... almost trap Beelzebub also helped Albert Foster. Don't worry, we all make stupid mistakes. We'll scratch this one off your record."`
 			`	"You clearly mean no harm to the Deep, so I'll give you the privilege of asking me any question you might have after this encounter."`
 			choice
 				`	"When was the Deep really settled?"`
@@ -838,7 +831,7 @@ mission "Deep: Singularity 0"
 					goto none
 				
 			`	"Those gravitational mapping devices can be so finicky sometimes. I'm sure it was nothing."`
-				goto none
+				goto done
 			
 			label singularity?
 			`	"Those gravitational mapping devices can be so finicky sometimes. I'm sure it was nothing."`
@@ -854,47 +847,105 @@ mission "Deep: Singularity 0"
 					goto none
 				
 			`	"That's a question for the people who were originally brought here." The woman flashes another sly smile.`
+			
+			label done
+			`	"That will be enough questions for now. You will be escorted back outside momentarily. Enjoy the rest of your day, Captain."`
+				goto next
 				
 			label none
 			`	"If that is all then this meeting is over. You will be escorted back outside momentarily. Enjoy the rest of your day, Captain."`
 			
 			label next
-			`	The woman gets up and exits the room. The same two men that brought you here step into the room and ask that you follow them. They lead you outside of the building and lock the door behind you as leave the building and step out into the spaceport.`
+			`	The woman gets up from her chair and stops in the doorway. She turns her head slightly and says in a low voice, "I'll be watching," then leaves. Moments later, the same two men that brought you here step into the room and ask that you follow them. They lead you outside of the building and lock the door behind you as leave the building and step out into the spaceport.`
 				decline
-			
-	on decline
-		event "deep: singularity delay" 29
 
 
 
-# Assuming the player had not already helped the Deep at the time of being offered Deep: Singularity 0, then Deep: Singularity 1 will be offered after the player has helped enough. The player is told that the Deep will forget about the Albert Foster incident and is allowed to ask the questions that they may have missed in Singularity 0.
-mission "Deep: Singularity 1"
-	minor
-	name `Mysteryious Message`
+mission "Deep: Singularity 0B"
+	landing
+	name `Mysterious Message`
 	description `Travel to <destination>.`
 	source
 		government Republic "Free Worlds" Syndicate Neutral
-	destination Midgard
+	destination
+		attributes deep
+		attributes urban
 	to offer
 		has "Deep: Mystery Cubes 4: done"
-		has "Deep: Singularity 0: offered"
+		has "Deep: Singularity 0A: offered"
 		not "deep: helped before archaeology"
-		or
-			"deep convoy" == 3
-			has "Deep: TMBR 2: done"
-			has "Deep: Remnant Research: done"
 	on offer
 		dialog `Upon landing, you recieve an encrypted message from an unknown sender. "Hello, Captain <last>. Your recent assistance of the Deep is much appreaciated. I'd like to speak with you on <destination> if you are interested." The message is not signed.`
 	
 	on complete
 		conversation
-			``
+			`You are escorted by two <planet> spaceport security guards to a Corvette occupying a landing pad close to the spaceport's Deep Security complex. Standing below the Corvette is the tall dark woman who questioned you on your work for Albert Foster.`
+			`	"Good evening, Captain," she looks up to the overcast sky for a moment, "or whatever time of day it might be right now. I've been informed that you prooved yourself as a great asset to the Navy and Deep Security in tracking down and... almost trapping Beelzebub. Please, come inside my ship for a moment." `
+			choice
+				`	(Follow her.)`
+					goto questions
+				`	"Why?"`
+			
+			`	"You can leave if you wish to, but I'd only be keeping you for a moment."`
+			choice
+				`	(Enter her ship.)`
+				`	(Leave.)`
+					decline
+			
+			label questions
+			`	The woman closes the hatch to the ship, leaving you in the light of dim flourecent bulbs. This must be an old ship to still be using flourescent bulbs instead of the LED lights that most ships use for their interiors.`
+			`	"I bring you onto my ship so that we may have some privacy. You clearly mean no harm to the Deep. For starters, I'm sure you'll be happy to hear that we've scratch your incident involving Albert Foster from your record. Additionally, I'll give you the privilege of asking me any question you might have relating to our last encounter."`
+			choice
+				`	"When was the Deep really settled?"`
+				`	"Is there really an artificial singularity on Midgard?"`
+					label singularity?
+				`	"I don't have any questions."`
+					goto none
+				
+			`	"The exact date has been lost to time, but folklore states that the first humans arrived here in the mid-1300s before the time of the Black Death plague on ancient Earth."`
+			choice
+				`	"Were the original humans of the Deep really brought here by aliens?"`
+				`	"I don't have any more questions."`
+					goto none
+				
+			`	"That's a question for the people who were originally brought here." The woman flashes a sly smile.`
+			choice
+				`	"Is there really an artificial singularity on Midgard?"`
+				`	"I don't have any more questions."`
+					goto none
+				
+			`	"Those gravitational mapping devices can be so finicky sometimes. I'm sure it was nothing."`
+				goto done
+			
+			label singularity?
+			`	"Those gravitational mapping devices can be so finicky sometimes. I'm sure it was nothing."`
+			choice
+				`	"When was the Deep really settled?"`
+				`	"I don't have any questions."`
+					goto none
+				
+			`	"The exact date has been lost to time, but folklore states that the first humans arrived here in the mid-1300s before the time of the Black Death plague on ancient Earth."`
+			choice
+				`	"Were the original humans of the Deep really brought here by aliens?"`
+				`	"I don't have any more questions."`
+					goto none
+				
+			`	"That's a question for the people who were originally brought here." The woman flashes a sly smile.`
+			
+			label done
+			`	"That will be enough questions for now."`
+				goto next
+				
+			label none
+			`	"If that is all then this meeting is over."`
+			
+			label next
+			`	The woman opens the hatch to the ship, allowing the outside light to mix with the flourescent lighting. "We might meet again in the future. Stay on your best behaviour and our next meeting will be on good terms. Goodbye, Captain."`
 
 
-event "deep: singularity delay"
 
-# I'm lost as to what I should do for this mission. Whatever the case is, I want no combat to win (i.e. npc kill), and for the player to meet with some of the scientists from Deep: TMBR, as well as Lt. Paris.
-mission "Deep: Singularity 2"
+
+mission "Deep: Singularity 1"
 	minor
 	name ``
 	description ``
@@ -904,14 +955,10 @@ mission "Deep: Singularity 2"
 	to offer
 		random < 40
 		has "event: deep: singularity delay"
+		not "Deep: Singularity 0B: active"
 		or
-			has "Deep: Singularity 1: offered"
-			and
-				has "deep: helped before archaeology"
-				or
-					"deep convoy" == 3
-					has "Deep: TMBR 2: done"
-					has "Deep: Remnant Research: done"
+			has "Deep: Singularity 0B: offered"
+			has "deep: helped before archaeology"
 	on offer
 		conversation
 			``
