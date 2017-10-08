@@ -27,8 +27,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 using namespace std;
 
 namespace {
-	static const string &WORMHOLE = "wormhole";
-	static const string &PLANET = "planet";
+	const string WORMHOLE = "wormhole";
+	const string PLANET = "planet";
 }
 
 
@@ -177,6 +177,16 @@ void Planet::Load(const DataNode &node, const Set<Sale<Ship>> &ships, const Set<
 		}
 		else
 			child.PrintTrace("Skipping unrecognized attribute:");
+	}
+	
+	static const vector<string> AUTO_ATTRIBUTES = {"spaceport", "shipyard", "outfitter"};
+	bool autoValues[3] = {!spaceport.empty(), !shipSales.empty(), !outfitSales.empty()};
+	for(unsigned i = 0; i < AUTO_ATTRIBUTES.size(); ++i)
+	{
+		if(autoValues[i])
+			attributes.insert(AUTO_ATTRIBUTES[i]);
+		else
+			attributes.erase(AUTO_ATTRIBUTES[i]);
 	}
 }
 
@@ -483,7 +493,7 @@ string Planet::DemandTribute(PlayerInfo &player) const
 	{
 		isDefending = true;
 		GameData::GetPolitics().Offend(defenseFleet->GetGovernment(), ShipEvent::PROVOKE);
-		GameData::GetPolitics().Offend(GetGovernment(), ShipEvent::PROVOKE);
+		GameData::GetPolitics().Offend(GetGovernment(), ShipEvent::ATROCITY);
 		return "Our defense fleet will make short work of you.";
 	}
 	

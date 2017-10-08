@@ -153,7 +153,7 @@ mission "Wanderers: Translation Machine"
 		log `Was able to communicate with the birdlike "Wanderers" with the help of a Hai ambassador. It turns out that they have been under attack by the Unfettered Hai for some time, and have learned the Hai language by taking captives.`
 		log "Factions" "Wanderers" `The Wanderers are a bird-like species who inhabit a small region of space adjacent to the Hai. They have been under attack by the "Unfettered" Hai for some time. The Wanderers claim to be peaceful, and most of their ships are not designed for military use.`
 		conversation
-			`Once again, the Wanderers allow you to land, but with a large flock of of their light warships surrounding you to herd you into a particular landing zone. A small delegation of Wanderers meets you and Sayari, whom they greet hesitantly in the Hai language. She responds, and a heated exchange follows. You do not understand any of what they are saying.`
+			`Once again, the Wanderers allow you to land, but with a large flock of their light warships surrounding you to herd you into a particular landing zone. A small delegation of Wanderers meets you and Sayari, whom they greet hesitantly in the Hai language. She responds, and a heated exchange follows. You do not understand any of what they are saying.`
 			choice
 				`	(Ask her what they are talking about.)`
 				`	(Wait for a break in the conversation.)`
@@ -434,9 +434,8 @@ event "Sich'ka'ara empty"
 
 event "Sich'ka'ara restored"
 	system "Sich'ka'ara"
-		fleet "Wanderer Freight" 600
-		fleet "Wanderer Drones" 3000
-		fleet "Wanderer Defense" 2000
+		add fleet "Wanderer Freight" 600
+		add fleet "Wanderer Defense" 2000
 
 
 
@@ -573,19 +572,14 @@ event "wanderer / unfettered peace"
 		"attitude toward"
 			"Wanderer" 0
 	system "Ehma Ti"
-		fleet "Small Unfettered" 500
-		fleet "Large Unfettered" 500
-		fleet "Unfettered Tribute" 1000
+		remove fleet "Unfettered Raid"
+		add fleet "Unfettered Tribute" 1000
 	system "Chy'chra"
-		fleet "Wanderer Freight" 1500
-		fleet "Wanderer Drones" 1000
-		fleet "Wanderer Defense" 300
-		fleet "Unfettered Tribute" 2000
+		remove fleet "Unfettered Raid"
+		add fleet "Unfettered Tribute" 2000
 	system "Prakacha'a"
-		fleet "Wanderer Freight" 400
-		fleet "Wanderer Drones" 400
-		fleet "Wanderer Defense" 400
-		fleet "Unfettered Tribute" 2000
+		remove fleet "Unfettered Raid"
+		add fleet "Unfettered Tribute" 2000
 
 
 
@@ -682,6 +676,8 @@ mission "Wanderers: Jump Drive Source"
 	
 	to complete
 		has "Unfettered: Jump Drive Source: offered"
+	on visit
+		dialog `You have not yet tried to sell the Unfettered Hai a Jump Drive. Return here after doing so.`
 	on complete
 		conversation
 			`You report to Iktat Rek. "Most [intriguing, disturbing]," he says. "If what you say of these Alpha humans is [correct, unbiased], they are a dangerous foe. And in exchange for so many jump drives, no doubt the Unfettered have [supplied, furnished] them with many weapons." He pauses to think for a minute, then says, "You must track them. There is a Wanderer [device, technology] that can help you. But I must ask our [elders, government] for permission before giving you access to it. I will meet you back in the spaceport soon."`
@@ -1782,12 +1778,7 @@ mission "Wanderers Hai Assistance Fleet"
 		government "Hai"
 		personality heroic staying uninterested frugal
 		system "Wah Ki"
-		fleet "Large Hai"
-		fleet "Large Hai"
-		fleet "Large Hai"
-		fleet "Large Hai"
-		fleet "Large Hai"
-		fleet "Large Hai"
+		fleet "Large Hai" 6
 
 
 
@@ -1913,8 +1904,7 @@ mission "Wanderers Evacuation 1"
 	npc
 		government "Hai (Unfettered)"
 		personality heroic staying
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
+		fleet "Large Unfettered" 2
 	on visit
 		dialog
 			`You have reached <planet>, but the Wanderer transports have not all arrived yet. You should take off and wait for them to catch up with you.`
@@ -1945,9 +1935,7 @@ mission "Wanderers Evacuation 1B"
 		government "Hai (Unfettered)"
 		personality heroic staying
 		system "Sich'ka'ara"
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
+		fleet "Large Unfettered" 3
 
 
 
@@ -1983,10 +1971,7 @@ mission "Wanderers Evacuation 1C"
 		government "Hai (Unfettered)"
 		personality heroic staying
 		system "Sich'ka'ara"
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
-		fleet "Large Unfettered"
+		fleet "Large Unfettered" 4
 
 
 
@@ -2060,10 +2045,9 @@ mission "Wanderers Defend Sich'ka'ara"
 
 event "battle for sich'ka'ara ends"
 	system "Sich'ka'ara"
-		fleet "Wanderer Freight" 900
-		fleet "Wanderer Defense" 400
-		fleet "Wanderer Flycatchers" 300
-		fleet "Large Unfettered" 400
+		add fleet "Wanderer Freight" 900
+		add fleet "Wanderer Defense" 400
+		add fleet "Large Unfettered" 400
 	system "Chirr'ay'akai"
 		government "Hai (Unfettered)"
 		fleet "Wanderer Defense" 800
@@ -2347,11 +2331,10 @@ event "battle for ap'arak"
 
 event "battle for ap'arak ends"
 	system "Ap'arak"
-		fleet "Wanderer Freight" 2000
-		fleet "Wanderer Drones" 4000
-		fleet "Wanderer Defense" 600
-		fleet "Wanderer Flycatchers" 400
-		fleet "Large Unfettered" 700
+		add fleet "Wanderer Freight" 2000
+		add fleet "Wanderer Drones" 4000
+		add fleet "Wanderer Defense" 600
+		add fleet "Large Unfettered" 700
 
 mission "Wanderers Ap'arak 2"
 	landing

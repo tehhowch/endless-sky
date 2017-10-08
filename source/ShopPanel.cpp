@@ -134,14 +134,14 @@ void ShopPanel::DrawSidebar()
 		Screen::Top() + SIDE_WIDTH / 2 - sideScroll + 40 - 93);
 	
 	int shipsHere = 0;
-	for(shared_ptr<Ship> ship : player.Ships())
+	for(const shared_ptr<Ship> &ship : player.Ships())
 		shipsHere += !(ship->GetSystem() != player.GetSystem() || ship->IsDisabled());
 	if(shipsHere < 4)
 		point.X() += .5 * ICON_TILE * (4 - shipsHere);
 	
 	static const Color selected(.8, 1.);
 	static const Color unselected(.4, 1.);
-	for(shared_ptr<Ship> ship : player.Ships())
+	for(const shared_ptr<Ship> &ship : player.Ships())
 	{
 		// Skip any ships that are "absent" for whatever reason.
 		if(ship->GetSystem() != player.GetSystem() || ship->IsDisabled())
@@ -414,7 +414,7 @@ void ShopPanel::DrawShip(const Ship &ship, const Point &center, bool isSelected)
 
 
 
-void ShopPanel::FailSell() const
+void ShopPanel::FailSell(bool toCargo) const
 {
 }
 
@@ -437,6 +437,7 @@ void ShopPanel::DrawKey()
 bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 {
 	scrollDetailsIntoView = false;
+	bool toCargo = selectedOutfit && (key == 'r' || key == 'u');
 	if((key == 'l' || key == 'd' || key == SDLK_ESCAPE
 			|| (key == 'w' && (mod & (KMOD_CTRL | KMOD_GUI)))) && FlightCheck())
 	{
@@ -453,15 +454,15 @@ bool ShopPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 			player.UpdateCargoCapacities();
 		}
 	}
-	else if(key == 's')
+	else if(key == 's' || toCargo)
 	{
-		if(!CanSell())
-			FailSell();
+		if(!CanSell(toCargo))
+			FailSell(toCargo);
 		else
 		{
 			int modifier = CanSellMultiple() ? Modifier() : 1;
-			for(int i = 0; i < modifier && CanSell(); ++i)
-				Sell();
+			for(int i = 0; i < modifier && CanSell(toCargo); ++i)
+				Sell(toCargo);
 			player.UpdateCargoCapacities();
 		}
 	}
@@ -811,7 +812,7 @@ void ShopPanel::SideSelect(int count)
 				it = player.Ships().end();
 			--it;
 			
-			if((*it)->GetSystem() == player.GetSystem())
+			if((*it)->GetSystem() == player.GetSystem() && !(*it)->IsDisabled())
 				++count;
 		}
 	}
@@ -823,7 +824,7 @@ void ShopPanel::SideSelect(int count)
 			if(it == player.Ships().end())
 				it = player.Ships().begin();
 			
-			if((*it)->GetSystem() == player.GetSystem())
+			if((*it)->GetSystem() == player.GetSystem() && !(*it)->IsDisabled())
 				--count;
 		}
 	}
@@ -840,10 +841,10 @@ void ShopPanel::SideSelect(Ship *ship)
 	if(shift)
 	{
 		bool on = false;
-		for(shared_ptr<Ship> other : player.Ships())
+		for(const shared_ptr<Ship> &other : player.Ships())
 		{
 			// Skip any ships that are "absent" for whatever reason.
-			if(other->GetSystem() != player.GetSystem())
+			if(other->GetSystem() != player.GetSystem() || other->IsDisabled())
 				continue;
 			
 			if(other.get() == ship || other.get() == playerShip)
