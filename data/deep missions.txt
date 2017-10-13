@@ -2020,10 +2020,11 @@ mission "Deep: Scientist Rescue 1"
 	
 	on visit
 		dialog `You have landed on Haven, but you left the <npc> behind! Wait for the <npc> to enter the system before landing.`
-	
 	on accept
 		event "battle in arneb"
-	
+	on fail
+		event "battle in arneb end"
+
 event "battle in arneb"
 	system Arneb
 		remove fleet "Large Northern Pirates"
@@ -2173,6 +2174,8 @@ mission "Deep: Scientist Rescue 2"
 	
 	on visit
 		dialog `You have landed on Valhalla, but you left the <npc> behind! Wait for it to enter the system before landing.`
+	on fail
+		event "battle in arneb end"
 
 
 
@@ -2262,8 +2265,12 @@ mission "Deep: Scientist Rescue 3A"
 			`	"Thank you, <first>." Lieutenant Paris starts walking over to the Star Queen, leaving you alone next to your ship.`
 				accept
 	
+	on decline
+		event "battle in arneb end"
 	on visit
 		dialog "You landed on Valhalla, but you didn't kill the Bactrian! Return to Arneb and make sure that the Bactrian is destroyed and forever out of pirate hands."
+	on fail
+		event "battle in arneb end"
 	to complete
 		has "Deep: Scientist Rescue 2: Pirate Bactrian: done"
 	on complete
