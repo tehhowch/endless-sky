@@ -70,6 +70,20 @@ DistanceMap::DistanceMap(const Ship &ship, const System *destination)
 
 
 
+// Calculate the path for the given ship to travel between two system. The
+// ship will use a jump drive or hyperdrive depending on what it has. The
+// pathfinding will stop once a path to the destination is found.
+DistanceMap::DistanceMap(const Ship &ship, const System *source, const System *destination)
+	: source(source)
+{
+	if(!source || !destination)
+		return;
+	
+	Init(destination, &ship);
+}
+
+
+
 // Find out if the given system is reachable.
 bool DistanceMap::HasRoute(const System *system) const
 {
