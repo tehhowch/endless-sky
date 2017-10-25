@@ -33,6 +33,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <SDL2/SDL.h>
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <set>
@@ -145,16 +146,16 @@ namespace {
 		{
 			// If no direct jump route, or the target system has no
 			// fuel, perform a more elaborate refueling check.
-			vector<const System *> destinations;
-			destinations.push_back(to);
-			if(ship.GetGovernment()->IsPlayer() && player.HasTravelPlan())
-				for(const System *system : player.TravelPlan())
-					if(system != destinations.back())
-						destinations.push_back(system);
+			vector<const System *> destinations = {to};
+			if(ship.IsYours() && player.HasTravelPlan())
+				reverse_copy(player.TravelPlan().begin(), player.TravelPlan().end(), destinations.end());
 			
 			double requiredFuel = 0.;
 			for(const System *destination : destinations)
 			{
+				if(from == destination)
+					continue;
+				
 				const DistanceMap route(ship, from, destination);
 				
 				// Refuel if the ship cannot route further.
