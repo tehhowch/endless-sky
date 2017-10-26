@@ -148,7 +148,7 @@ namespace {
 			// fuel, perform a more elaborate refueling check.
 			vector<const System *> destinations = {to};
 			if(ship.IsYours() && player.HasTravelPlan())
-				reverse_copy(player.TravelPlan().begin(), player.TravelPlan().end(), destinations.end());
+				reverse_copy(player.TravelPlan().begin(), player.TravelPlan().end(), back_inserter(destinations));
 			
 			double requiredFuel = 0.;
 			for(const System *destination : destinations)
