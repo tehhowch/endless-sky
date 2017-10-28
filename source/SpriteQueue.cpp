@@ -29,6 +29,13 @@ namespace {
 		size_t len = path.length();
 		return (len > 7 && path[len - 7] == '@' && path[len - 6] == '2' && path[len - 5] == 'x');
 	}
+	// Check if the given image is a member of a destruction sprites set.
+	bool IsDestruction(const string &path)
+	{
+		
+		size_t len = path.length();
+		return ()
+	}
 }
 
 
@@ -67,8 +74,9 @@ void SpriteQueue::Add(const string &name, const string &path)
 			return;
 		
 		bool is2x = Is2x(path);
+		bool isDestruction = IsDestruction(path);
 		int &frame = (is2x ? count2x[name] : count[name]);
-		toRead.emplace(sprite, name, path, frame++, is2x);
+		toRead.emplace(sprite, name, path, frame++, is2x, isDestruction);
 		++added;
 	}
 	readCondition.notify_one();
@@ -210,7 +218,7 @@ double SpriteQueue::DoLoad(unique_lock<mutex> &lock) const
 
 
 
-SpriteQueue::Item::Item(Sprite *sprite, const string &name, const string &path, int frame, bool is2x)
-	: sprite(sprite), name(name), path(path), image(nullptr), mask(nullptr), frame(frame), is2x(is2x)
+SpriteQueue::Item::Item(Sprite *sprite, const string &name, const string &path, int frame, bool is2x, bool isDestruction)
+	: sprite(sprite), name(name), path(path), image(nullptr), mask(nullptr), frame(frame), is2x(is2x), isDestruction(isDestruction)
 {
 }

@@ -62,6 +62,20 @@ const Sprite *Body::GetSprite() const
 
 
 
+bool Body::HasDestructionSprites() const
+{
+	return !destructionSprites.empty();
+}
+
+
+
+const map<const Sprite *, int> &Body::GetDestructionSprites() const
+{
+	return destructionSprites;
+}
+
+
+
 // Get the width of this object, in world coordinates (i.e. taking zoom into account).
 double Body::Width() const
 {
@@ -190,7 +204,7 @@ const Government *Body::GetGovernment() const
 
 
 // Load the sprite specification, including all animation attributes.
-void Body::LoadSprite(const DataNode &node)
+void Body::LoadSprite(const DataNode &node, bool isDestruction)
 {
 	if(node.Size() < 2)
 		return;
@@ -225,6 +239,15 @@ void Body::LoadSprite(const DataNode &node)
 		else
 			child.PrintTrace("Skipping unrecognized attribute:");
 	}
+}
+
+
+
+void Body::LoadDestructionSprites(const DataNode &node)
+{
+	if(node.Size() < 2)
+		return;
+	
 }
 
 

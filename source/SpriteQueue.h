@@ -54,7 +54,7 @@ private:
 private:
 	class Item {
 	public:
-		Item(Sprite *sprite, const std::string &name, const std::string &path, int frame, bool is2x);
+		Item(Sprite *sprite, const std::string &name, const std::string &path, int frame, bool is2x, bool isDestruction);
 		
 		Sprite *sprite;
 		std::string name;
@@ -63,6 +63,7 @@ private:
 		Mask *mask;
 		int frame;
 		bool is2x;
+		bool isDestruction;
 	};
 	
 	

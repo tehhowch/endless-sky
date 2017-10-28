@@ -13,11 +13,12 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #ifndef BODY_H_
 #define BODY_H_
 
-#include <cstdint>
-#include <string>
-
 #include "Angle.h"
 #include "Point.h"
+
+#include <cstdint>
+#include <map>
+#include <string>
 
 class DataNode;
 class DataWriter;
@@ -51,6 +52,10 @@ public:
 	bool HasSprite() const;
 	// Access the underlying Sprite object.
 	const Sprite *GetSprite() const;
+	// Check if this Body has special sprites for when it is destroyed.
+	bool HasDestructionSprites() const;
+	// Get the available sprites for the destroyed object.
+	const std::map<const Sprite *, int> &GetDestructionSprites() const;
 	// Get the dimensions of the sprite.
 	double Width() const;
 	double Height() const;
@@ -80,6 +85,7 @@ public:
 	
 	// Sprite serialization.
 	void LoadSprite(const DataNode &node);
+	void LoadDestructionSprites(const DataNode &node);
 	void SaveSprite(DataWriter &out) const;
 	// Set the sprite.
 	void SetSprite(const Sprite *sprite);
@@ -139,6 +145,10 @@ private:
 	mutable int currentStep = -1;
 	mutable Frame frame;
 	mutable int activeIndex = 0;
+	
+	// Destruction Sprite parameters. The int parameter controls the angle
+	// of departure from the body's center.
+	std::map<const Sprite *, int> destructionSprites;
 };
 
 
