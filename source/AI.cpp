@@ -33,7 +33,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <SDL2/SDL.h>
 
-#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <set>
@@ -148,7 +147,7 @@ namespace {
 			// fuel, perform a more elaborate refueling check.
 			vector<const System *> destinations = {to};
 			if(ship.IsYours() && player.HasTravelPlan())
-				reverse_copy(player.TravelPlan().begin(), player.TravelPlan().end(), back_inserter(destinations));
+				destinations.insert(destinations.end(), player.TravelPlan().rbegin(), player.TravelPlan().rend());
 			
 			double requiredFuel = 0.;
 			for(const System *destination : destinations)
