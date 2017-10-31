@@ -130,9 +130,10 @@ namespace {
 		return false;
 	}
 	// Wrapper for ship - target system uses.
-	bool ShouldRefuel(const Ship &ship, const System *to)
+	bool ShouldRefuel(const Ship &ship, const System *to, const PlayerInfo &player)
 	{
-		if(!to || ship.Fuel() == 1. || !ship.GetSystem()->HasFuelFor(ship))
+		const System *from = ship.GetSystem();
+		if(!from || !to || ship.Fuel() == 1. || !from->HasFuelFor(ship))
 			return false;
 		double fuelCapacity = ship.Attributes().Get("fuel capacity");
 		if(!fuelCapacity)
@@ -144,8 +145,36 @@ namespace {
 		{
 			// If no direct jump route, or the target system has no
 			// fuel, perform a more elaborate refueling check.
-			const DistanceMap distance(ship, to);
-			return ShouldRefuel(ship, distance);
+			vector<const System *> destinations = {to};
+			if(ship.IsYours() && player.HasTravelPlan())
+				destinations.insert(destinations.end(), player.TravelPlan().rbegin(), player.TravelPlan().rend());
+			
+			double requiredFuel = 0.;
+			for(const System *destination : destinations)
+			{
+				if(from == destination)
+					continue;
+				
+				const DistanceMap route(ship, from, destination);
+				
+				// Refuel if the ship cannot route further.
+				if(!route.HasRoute(destination))
+					return true;
+				
+				const System *fuelSystem = route.Route(from);
+				while(fuelSystem && !fuelSystem->HasFuelFor(ship))
+					fuelSystem = route.Route(fuelSystem);
+				
+				// Refuel if the ship cannot reach the next system with fuel.
+				if(fuelSystem)
+					return ship.Fuel() * fuelCapacity < requiredFuel + route.RequiredFuel(from, fuelSystem);
+				
+				requiredFuel += route.RequiredFuel(from, destination);
+				from = destination;
+			}
+			
+			// Refuel if there is no other system with fuel.
+			return true;
 		}
 	}
 	
@@ -759,7 +788,7 @@ void AI::Step(const PlayerInfo &player)
 			if(personality.IsStaying() || !it->Attributes().Get("fuel capacity"))
 				MoveIndependent(*it, command);
 			else
-				MoveEscort(*it, command);
+				MoveEscort(*it, command, player);
 		}
 		// From here down, we're only dealing with ships that have a "parent"
 		// which is in the same system as them.
@@ -770,7 +799,7 @@ void AI::Step(const PlayerInfo &player)
 			if(target || !parent->IsTargetable())
 				MoveIndependent(*it, command);
 			else
-				MoveEscort(*it, command);
+				MoveEscort(*it, command, player);
 		}
 		else if(parent->IsDisabled())
 		{
@@ -786,16 +815,16 @@ void AI::Step(const PlayerInfo &player)
 		// This is a friendly escort. If the parent is getting ready to
 		// jump, always follow.
 		else if(parent->Commands().Has(Command::JUMP) && it->JumpsRemaining())
-			MoveEscort(*it, command);
+			MoveEscort(*it, command, player);
 		// Timid ships always stay near their parent.
 		else if(personality.IsTimid() && parent->Position().Distance(it->Position()) > 500.)
-			MoveEscort(*it, command);
+			MoveEscort(*it, command, player);
 		// Otherwise, attack targets depending on how heroic you are.
 		else if(target && (targetDistance < 2000. || personality.IsHeroic()))
 			MoveIndependent(*it, command);
 		// This ship does not feel like fighting.
 		else
-			MoveEscort(*it, command);
+			MoveEscort(*it, command, player);
 		
 		// Your own ships cloak on your command; all others do it when the
 		// AI considers it appropriate.
@@ -1315,7 +1344,7 @@ void AI::MoveIndependent(Ship &ship, Command &command) const
 
 
 
-void AI::MoveEscort(Ship &ship, Command &command) const
+void AI::MoveEscort(Ship &ship, Command &command, const PlayerInfo &player) const
 {
 	const Ship &parent = *ship.GetParent();
 	bool hasFuelCapacity = ship.Attributes().Get("fuel capacity") && ship.JumpFuel();
@@ -1388,7 +1417,7 @@ void AI::MoveEscort(Ship &ship, Command &command) const
 		if(!dest)
 			// This ship has no route to the parent's destination system, so protect it until it jumps away.
 			KeepStation(ship, command, parent);
-		else if(ShouldRefuel(ship, dest))
+		else if(ShouldRefuel(ship, dest, player))
 			Refuel(ship, command);
 		else if(!ship.JumpsRemaining())
 			MoveTo(ship, command, Point(), Point(), 40., 0.1);
