@@ -60,6 +60,9 @@ public:
 	
 	// Get the list of minable asteroids.
 	const std::list<std::shared_ptr<Minable>> &Minables() const;
+	// Get the asteroid cross-section (asteroids area per unit area per second)
+	// Ranges from 0 to ~6.5e-3 (Kornephoros).
+	double CrossSection() const;
 	
 	
 private:
@@ -81,6 +84,9 @@ private:
 private:
 	std::vector<Asteroid> asteroids;
 	std::list<std::shared_ptr<Minable>> minables;
+	
+	// The total area swept by the asteroids in the field each timestep.
+	double crossSection = 0.;
 	
 	CollisionSet asteroidCollisions;
 	CollisionSet minableCollisions;

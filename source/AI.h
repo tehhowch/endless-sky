@@ -22,7 +22,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <memory>
 
 class Angle;
-class AsteroidField;
 class Body;
 class Flotsam;
 class Government;

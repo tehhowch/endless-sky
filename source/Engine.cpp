@@ -57,6 +57,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <algorithm>
 #include <cmath>
 #include <string>
+#include <iostream>
 
 using namespace std;
 
@@ -1094,6 +1095,7 @@ void Engine::EnterSystem()
 		else
 			asteroids.Add(a.Name(), a.Count(), a.Energy());
 	}
+	cerr << "Asteroid cross-section: " << asteroids.CrossSection() << endl;
 	
 	// Place five seconds worth of fleets. Check for undefined fleets by not
 	// trying to create anything with no government set.

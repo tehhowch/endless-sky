@@ -30,6 +30,7 @@ namespace {
 	const double WRAP = 4096.;
 	const int CELL_SIZE = 256;
 	const int CELL_COUNT = WRAP / CELL_SIZE;
+	const double INV_WRAP_AREA = 1 / (WRAP * WRAP);
 }
 
 
@@ -47,6 +48,7 @@ void AsteroidField::Clear()
 {
 	asteroids.clear();
 	minables.clear();
+	crossSection = 0.;
 }
 
 
@@ -56,7 +58,11 @@ void AsteroidField::Add(const string &name, int count, double energy)
 {
 	const Sprite *sprite = SpriteSet::Get("asteroid/" + name + "/spin");
 	for(int i = 0; i < count; ++i)
+	{
 		asteroids.emplace_back(sprite, energy);
+		// Increment the field's swept area.
+		crossSection += asteroids.back().Velocity().Length() * 2 * asteroids.back().Radius();
+	}
 }
 
 
@@ -72,6 +78,8 @@ void AsteroidField::Add(const Minable *minable, int count, double energy, double
 	{
 		minables.emplace_back(new Minable(*minable));
 		minables.back()->Place(energy, beltRadius);
+		// Increment the field's swept area: S.A. = v * 2 * r
+		crossSection += minables.back()->Velocity().Length() * 2 * minables.back()->Radius();
 	}
 }
 
@@ -168,6 +176,16 @@ Body *AsteroidField::Collide(const Projectile &projectile, double *closestHit)
 const list<shared_ptr<Minable>> &AsteroidField::Minables() const
 {
 	return minables;
+}
+
+
+
+// Normalize the swept area (v_asteroid * d_asteroid) by the tiled area.
+// This represents a probability of an asteroid (or minable) intersecting
+// with a differential pathlength.
+double AsteroidField::CrossSection() const
+{
+	return crossSection * INV_WRAP_AREA;
 }
 
 
