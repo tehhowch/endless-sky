@@ -68,8 +68,8 @@ void ShipInfoDisplay::DrawAttributes(const Point &topLeft) const
 	Point point = Draw(topLeft, attributeLabels, attributeValues);
 	
 	// Get standard colors to draw with.
-	Color labelColor = *GameData::Colors().Get("medium");
-	Color valueColor = *GameData::Colors().Get("bright");
+	const Color &labelColor = *GameData::Colors().Get("medium");
+	const Color &valueColor = *GameData::Colors().Get("bright");
 	
 	Table table;
 	table.AddColumn(10, Table::LEFT);
@@ -105,7 +105,7 @@ void ShipInfoDisplay::DrawSale(const Point &topLeft) const
 {
 	Draw(topLeft, saleLabels, saleValues);
 	
-	Color color = *GameData::Colors().Get("medium");
+	const Color &color = *GameData::Colors().Get("medium");
 	FillShader::Fill(topLeft + Point(.5 * WIDTH, saleHeight + 8.), Point(WIDTH - 20., 1.), color);
 }
 
@@ -263,6 +263,8 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const Depreciation &dep
 	energyTable.push_back(Format::Number(
 		60. * (attributes.Get("energy generation")
 			+ attributes.Get("solar collection")
+			+ (.1 * ship.IdleHeat() * attributes.Get("heat dissipation")) / emptyMass
+				* attributes.Get("passive heat conversion")
 			- attributes.Get("energy consumption")
 			- attributes.Get("cooling energy"))));
 	double efficiency = ship.CoolingEfficiency();

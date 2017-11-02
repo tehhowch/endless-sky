@@ -644,6 +644,7 @@ void Ship::Place(Point position, Point velocity, Angle angle)
 		zoom = 1.;
 	// Make sure various special status values are reset.
 	heat = IdleHeat();
+	previousHeat = heat;
 	ionization = 0.;
 	disruption = 0.;
 	slowness = 0.;
@@ -830,10 +831,20 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 	// with no batteries but a good generator can still move.
 	energy = min(energy, attributes.Get("energy capacity"));
 	
-	heat -= .001 * heat * attributes.Get("heat dissipation");
-	if(heat > Mass() * 100.)
+	// Generators that convert differential heat into energy use the heat
+	// output by the ship's actions (movement, firing, repairing, taking
+	// damage). If no actions were performed, no energy is generated.
+	double newHeat = heat - previousHeat;
+	previousHeat = heat;
+	// Generators which passively convert waste heat into energy use the
+	// heat dissipated naturally. Hotter ships generate more energy.
+	double dissipatedHeat = .001 * heat * attributes.Get("heat dissipation");
+	
+	heat -= dissipatedHeat;
+	double mass = Mass();
+	if(heat > mass * 100.)
 		isOverheated = true;
-	else if(heat < Mass() * 90.)
+	else if(heat < mass * 90.)
 		isOverheated = false;
 	
 	double maxShields = attributes.Get("shields");
@@ -865,6 +876,11 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 		fuel += currentSystem->SolarWind() * .03 * scale * (sqrt(attributes.Get("ramscoop")) + .05 * scale);
 		
 		energy += currentSystem->SolarPower() * scale * attributes.Get("solar collection");
+		
+		// Collect energy from heat-to-energy generators.
+		if(newHeat > 0.)
+			energy += newHeat * attributes.Get("differential heat conversion");
+		energy += 100. * dissipatedHeat / mass * attributes.Get("passive heat conversion");
 		
 		double coolingEfficiency = CoolingEfficiency();
 		energy += attributes.Get("energy generation") - attributes.Get("energy consumption");
@@ -1189,7 +1205,6 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 	
 	// This ship is not landing or entering hyperspace. So, move it. If it is
 	// disabled, all it can do is slow down to a stop.
-	double mass = Mass();
 	if(isDisabled)
 		velocity *= 1. - attributes.Get("drag") / mass;
 	else if(!pilotError)
