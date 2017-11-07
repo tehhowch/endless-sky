@@ -159,12 +159,6 @@ mission "Liberate Kornephoros"
 
 
 
-event "prepare for battle of Kornephoros"
-	system "Kornephoros"
-		fleet "Small Free Worlds" 10000
-
-
-
 mission "FW Prisoner Parole"
 	name "Prisoner Parole"
 	description "Escort a fleet of transports carrying prisoners of war to <planet>. The temporary ceasefire will end on <date>."
@@ -1493,12 +1487,6 @@ mission "FW Pirates 4"
 	
 	on accept
 		event "battle for Thule"
-
-
-
-event "battle for Thule"
-	system Men
-		fleet "Small Southern Pirates" 10000
 
 
 

@@ -90,16 +90,6 @@ mission "FW Reconciliation 1"
 
 
 
-event "fw empty gienah"
-	system Gienah
-		fleet "Small Core Pirates" 5000
-
-event "fw restore gienah"
-	system Gienah
-		fleet "Small Core Pirates" 500
-		fleet "Large Core Pirates" 800
-		fleet "Large Syndicate" 5000
-
 mission "FW Reconciliation 1B"
 	name "Travel to <planet>"
 	description "Bring Ijs, Sawyer, and Katya to <system>. Destroy any Syndicate ships that are watching you, then land on <planet>. Make sure Raven's ship arrives there as well. You may need to bribe Syndicate worlds to let you refuel."

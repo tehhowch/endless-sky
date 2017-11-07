@@ -312,17 +312,19 @@ mission "FW Southern Battle 1B"
 event "battle for Rastaban"
 	"reputation: Republic" = -1000
 	system Rastaban
-		fleet "Small Free Worlds" 10000
+		remove fleet "Small Southern Merchants"
+		remove fleet "Large Southern Merchants"
+		remove fleet "Small Republic"
+		remove fleet "Large Republic"
+		add fleet "Small Free Worlds" 10000
 	system Lesath
-		fleet "Small Southern Merchants" 800
-		fleet "Large Southern Merchants" 1600
-		fleet "Small Free Worlds" 800
-		fleet "Large Free Worlds" 1100
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
 	system Sargas
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2500
-		fleet "Small Free Worlds" 1000
-		fleet "Large Free Worlds" 1500
+		remove fleet "Small Southern Pirates"
+		remove fleet "Large Southern Pirates"
+		remove fleet "Navy Surveillance"
 
 mission "FW Southern Battle 2"
 	name "Attack Rastaban"
@@ -1691,11 +1693,6 @@ mission "FW Albatross 2B"
 
 
 
-event "battle for zeta aquilae"
-	"reputation: Republic" = -1000
-	system "Zeta Aquilae"
-		fleet "Small Southern Merchants" 5000
-
 mission "FW Rand 1"
 	landing
 	name "Occupy Zeta Aquilae"
@@ -1827,45 +1824,35 @@ mission "FW Rand 1B"
 
 event "battle of alioth"
 	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 8000
-		fleet "Small Republic" 1000
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
 	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Republic" 1000
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
+	system Holeb
+		remove fleet "Large Republic"
+		remove fleet "Navy Surveillance"
 	system Alioth
-		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
-		fleet "Small Southern Pirates" 1200
-		fleet "Large Southern Pirates" 2400
-		fleet "Small Republic" 3000
-			
+		remove fleet "Small Free Worlds"
+		remove fleet "Large Free Worlds"
+		remove fleet "Large Republic"
+		add fleet "Small Southern Pirates" 1200
+		add fleet "Large Southern Pirates" 2400
+		add fleet "Small Republic" 7500
+
 event "end battle of alioth"
 	system Rutilicus
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 8000
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 2000
-		fleet "Navy Surveillance" 1600
+		add fleet "Large Republic" 2000
+		add fleet "Navy Surveillance" 1600
 	system Cebalrai
-		fleet "Small Southern Merchants" 600
-		fleet "Large Southern Merchants" 2000
-		fleet "Small Southern Pirates" 4000
-		fleet "Small Republic" 1000
-		fleet "Large Republic" 2000
-		fleet "Navy Surveillance" 1600
+		add fleet "Large Republic" 2000
+		add fleet "Navy Surveillance" 1600
+	system Holeb
+		add fleet "Large Republic" 3000
+		add fleet "Navy Surveillance" 1600
 	system Alioth
-		fleet "Small Southern Merchants" 400
-		fleet "Large Northern Merchants" 600
-		fleet "Small Southern Pirates" 1200
-		fleet "Large Southern Pirates" 2400
-		fleet "Small Republic" 3000
-		fleet "Large Republic" 4000
-		fleet "Navy Surveillance" 1600
+		add fleet "Large Republic" 4000
+		add fleet "Navy Surveillance" 1600
 
 
 

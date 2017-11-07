@@ -1225,9 +1225,8 @@ mission "Rim Archaeology 5B"
 
 event "rim archaeology results"
 	planet Zug
-		attributes rim farming factory tourism
-		description `Zug is a pleasant world of rolling hills, fertile fields, and a few small oceans. Hundreds of millions of people live here, with more immigrants arriving every day, almost faster than the construction industry can keep up with them. In addition to the larger cities, many people live in smaller farming villages, making this one of the few worlds in the region that is truly self-sufficient both in industry and in agriculture.`
-		description `	The largest industry on Zug is Southbound Shipyards. However, in the wake of some extraordinary archaeological discoveries of a lost civilization, Zug has suddenly also become a popular destination for tourists.`
+		add attributes tourism
+		add description `	In the wake of some extraordinary archaeological discoveries of a lost civilization, Zug has suddenly also become a popular destination for tourists.`
 
 
 
