@@ -71,6 +71,7 @@ int main(int argc, char *argv[])
 	string testToRunName = "";
 	bool printFleets = false;
 	bool printSystems = false;
+	bool printAllContent = false;
 	
 	for(const char *const *it = argv + 1; *it; ++it)
 	{
@@ -97,6 +98,8 @@ int main(int argc, char *argv[])
 			printFleets = true;
 		else if(arg == "-y" || arg == "--systems" || arg == "--systems=true")
 			printSystems = true;
+		else if(arg == "-a" || arg == "--all-content")
+			printAllContent = true;
 	}
 	
 	try {
@@ -128,6 +131,11 @@ int main(int argc, char *argv[])
 		else if(printSystems)
 		{
 			GameData::PrintSystemTable();
+			return 0;
+		}
+		else if(printAllContent)
+		{
+			GameData::PrintAllContentPluginList();
 			return 0;
 		}
 		
@@ -359,6 +367,7 @@ void PrintHelp()
 	cerr << "    -f, --fleets: print list of fleets from the game, before loading a save." << endl;
 	cerr << "    --player-fleets: print list of fleets from the default saved game." << endl;
 	cerr << "    -y, --systems (=false): print table of system contents. Default is after loading a save, use '--systems=false' to print the table before loading the player's save." << endl;
+	cerr << "    -a, --all-content: print list of ships and outfits for use with the all-content plugin." << endl;
 	cerr << endl;
 	cerr << "Report bugs to: <https://github.com/endless-sky/endless-sky/issues>" << endl;
 	cerr << "Home page: <https://endless-sky.github.io>" << endl;

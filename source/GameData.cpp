@@ -1380,3 +1380,38 @@ void GameData::PrintSystemTable()
 		cout << it.second.PrintContents() << "\n";
 	cout.flush();
 }
+
+
+
+void GameData::PrintAllContentPluginList()
+{
+	vector<string> shipList;
+	vector<string> outfitList;
+	for(const auto &it : ships)
+		if(it.second.ModelName() == it.first && !it.second.Attributes().Category().empty())
+			shipList.emplace_back(it.first);
+	sort(shipList.begin(), shipList.end());
+	
+	for(const auto &it : outfits)
+		if(!it.second.Category().empty())
+			outfitList.emplace_back(it.first);
+	sort(outfitList.begin(), outfitList.end());
+	
+	DataWriter out(Files::Config() + "allcontent.txt");
+	out.Write("shipyard", "All Ships");
+	out.BeginChild();
+	{
+		for(const string &str : shipList)
+			out.Write(str);
+	}
+	out.EndChild();
+	out.Write();
+	out.Write("outfitter", "All Outfits");
+	out.BeginChild();
+	{
+		for(const string &str : outfitList)
+			out.Write(str);
+	}
+	out.EndChild();
+	cerr << "All-content list printed." << endl;
+}
