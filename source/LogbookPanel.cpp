@@ -64,17 +64,17 @@ void LogbookPanel::Draw()
 	DrawBackdrop();
 	
 	// Draw the panel. The sidebar should be slightly darker than the rest.
-	Color sideColor(.09, 1.);
+	const Color &sideColor = *GameData::Colors().Get("logbook sidebar");
 	FillShader::Fill(
 		Point(Screen::Left() + .5 * SIDEBAR_WIDTH, 0.),
 		Point(SIDEBAR_WIDTH, Screen::Height()),
 		sideColor);
-	Color backColor(.125, 1.);
+	const Color &backColor = *GameData::Colors().Get("logbook background");
 	FillShader::Fill(
 		Point(Screen::Left() + SIDEBAR_WIDTH + .5 * TEXT_WIDTH, 0.),
 		Point(TEXT_WIDTH, Screen::Height()),
 		backColor);
-	Color lineColor(.2, 1.);
+	const Color &lineColor = *GameData::Colors().Get("logbook line");
 	FillShader::Fill(
 		Point(Screen::Left() + SIDEBAR_WIDTH - .5, 0.),
 		Point(1., Screen::Height()),
@@ -94,9 +94,9 @@ void LogbookPanel::Draw()
 	
 	// Colors to be used for drawing the log.
 	const Font &font = FontSet::Get(14);
-	Color dim = *GameData::Colors().Get("dim");
-	Color medium = *GameData::Colors().Get("medium");
-	Color bright = *GameData::Colors().Get("bright");
+	const Color &dim = *GameData::Colors().Get("dim");
+	const Color &medium = *GameData::Colors().Get("medium");
+	const Color &bright = *GameData::Colors().Get("bright");
 	
 	// Draw the sidebar.
 	// The currently selected sidebar item should be highlighted. This is how
@@ -118,10 +118,9 @@ void LogbookPanel::Draw()
 	}
 	
 	// Parameters for drawing the main text:
-	WrappedText wrap;
+	WrappedText wrap(font);
 	wrap.SetAlignment(WrappedText::JUSTIFIED);
 	wrap.SetWrapWidth(TEXT_WIDTH - 2. * PAD);
-	wrap.SetFont(font);
 	
 	// Draw the main text.
 	pos = Screen::TopLeft() + Point(SIDEBAR_WIDTH + PAD, PAD + .5 * (LINE_HEIGHT - font.Height()) - scroll);
@@ -183,7 +182,7 @@ bool LogbookPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		{
 			++i;
 			if(i >= contents.size())
-				return true;
+				i = 0;
 		}
 		else if(i)
 		{
@@ -199,6 +198,8 @@ bool LogbookPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 					++i;
 			}
 		}
+		else
+			i = contents.size() - 1;
 		if(contents[i] != selectedName)
 		{
 			selectedDate = dates[i];

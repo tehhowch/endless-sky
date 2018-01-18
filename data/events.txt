@@ -305,10 +305,6 @@ event "initial deployment 1"
 		add fleet "Navy Surveillance" 2000
 	planet "New Austria"
 		add description `The Navy has recently requisitioned one of the abandoned mining towns and begun refurbishing it for a secure military base, with the mining tunnels used as deep underground bunkers.`
-	shipyard "Syndicate Basics"
-		"Barb"
-	outfitter "Syndicate Basics"
-		"X1050 Ion Engines"
 
 event "initial deployment 2"
 	date 14 8 3014
@@ -917,6 +913,7 @@ event "start of hostilities"
 	government "Free Worlds"
 		"attitude toward"
 			"Republic" -.2
+	"reputation: Republic" <?= -10
 
 
 
@@ -1202,7 +1199,7 @@ event "fw safe passage starts"
 
 
 event "fw safe passage ends"
-	"reputation: Republic" = -1000
+	"reputation: Republic" <?= -1000
 
 
 
@@ -1960,7 +1957,7 @@ event "fw syndicate welcoming"
 
 
 event "at war with the pug"
-	"reputation: Pug" = -1000
+	"reputation: Pug" <?= -1000
 	government Pug
 		"attitude toward"
 			"Free Worlds" -.01

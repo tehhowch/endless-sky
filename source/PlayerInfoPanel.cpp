@@ -208,6 +208,52 @@ bool PlayerInfoPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &comman
 				Scroll(-player.Ships().size());
 			}
 		}
+		// Holding both Ctrl & Shift keys and using the arrows moves the
+		// selected ship group up or down one row.
+		else if(!allSelected.empty() && (mod & KMOD_CTRL) && (mod & KMOD_SHIFT))
+		{
+			// Move based on the position of the first selected ship. An upward
+			// movement is a shift of one, while a downward move shifts 1 and
+			// then 1 for each ship in the contiguous selection.
+			size_t toIndex = *allSelected.begin();
+			if(key == SDLK_UP && toIndex > 0)
+				--toIndex;
+			else if(key == SDLK_DOWN)
+			{
+				int next = ++toIndex;
+				for(set<int>::const_iterator sel = allSelected.begin(); ++sel != allSelected.end(); )
+				{
+					if(*sel != next)
+						break;
+					
+					++toIndex;
+					++next;
+				}
+			}
+			
+			// Clamp the destination index to the end of the ships list.
+			size_t moved = allSelected.size();
+			toIndex = min(player.Ships().size() - moved, static_cast<size_t>(toIndex));
+			selectedIndex = player.ReorderShips(allSelected, toIndex);
+			// If the move accessed invalid indices, no moves are done
+			// but the selectedIndex is set to -1.
+			if(selectedIndex < 0)
+				selectedIndex = *allSelected.begin();
+			else
+			{
+				// Update the selected indices so they still refer
+				// to the block of ships that just got moved.
+				int lastIndex = selectedIndex + moved;
+				allSelected.clear();
+				for(int i = selectedIndex; i < lastIndex; ++i)
+					allSelected.insert(i);
+			}
+			// Update the scroll if necessary to keep the selected ship on screen.
+			int scrollDirection = ((selectedIndex >= scroll + LINES_PER_PAGE) - (selectedIndex < scroll));
+			if(selectedIndex >= 0 && Scroll((LINES_PER_PAGE - 2) * scrollDirection))
+				hoverIndex = -1;
+			return true;
+		}
 		else
 		{
 			// Move the selection up or down one space.
@@ -435,8 +481,9 @@ void PlayerInfoPanel::DrawPlayer(const Rectangle &bounds)
 	table.Draw(Format::Number(player.Accounts().NetWorth()) + " credits", bright);
 	
 	// Determine the player's combat rating.
-	static const vector<string> &RATINGS = GameData::CombatRatings();
-	if(!RATINGS.empty())
+	int combatLevel = log(max(1, player.GetCondition("combat rating")));
+	const string &combatRating = GameData::Rating("combat", combatLevel);
+	if(!combatRating.empty())
 	{
 		table.DrawGap(10);
 		table.DrawUnderline(dim);
@@ -444,11 +491,35 @@ void PlayerInfoPanel::DrawPlayer(const Rectangle &bounds)
 		table.Advance();
 		table.DrawGap(5);
 		
-		int ratingLevel = min<int>(RATINGS.size() - 1, log(max(1, player.GetCondition("combat rating"))));
-		table.Draw(RATINGS[ratingLevel], dim);
-		table.Draw("(" + to_string(ratingLevel) + ")", dim);
+		table.Draw(combatRating, dim);
+		table.Draw("(" + to_string(combatLevel) + ")", dim);
 	}
 	
+	// Display the factors affecting piracy targeting the player.
+	pair<double, double> factors = player.RaidFleetFactors();
+	double attractionLevel = max(0., log2(max(factors.first, 0.)));
+	double deterrenceLevel = max(0., log2(max(factors.second, 0.)));
+	const string &attractionRating = GameData::Rating("cargo attractiveness", attractionLevel);
+	const string &deterrenceRating = GameData::Rating("armament deterrence", deterrenceLevel);
+	if(!attractionRating.empty() && !deterrenceRating.empty())
+	{
+		double attraction = max(0., min(1., .005 * (factors.first - factors.second - 2.)));
+		double prob = 1. - pow(1. - attraction, 10.);
+		
+		table.DrawGap(10);
+		table.DrawUnderline(dim);
+		table.Draw("piracy threat:", bright);
+		table.Draw(Format::Number(lround(100 * prob)) + "%", dim);
+		table.DrawGap(5);
+		
+		// Format the attraction and deterrence levels with tens places, so it
+		// is clear which is higher even if they round to the same level.
+		table.Draw("cargo: " + attractionRating, dim);
+		table.Draw("(+" + Format::Decimal(attractionLevel, 1) + ")", dim);
+		table.DrawGap(5);
+		table.Draw("fleet: " + deterrenceRating, dim);
+		table.Draw("(-" + Format::Decimal(deterrenceLevel, 1) + ")", dim);
+	}
 	// Other special information:
 	auto salary = Match(player, "salary: ", "");
 	sort(salary.begin(), salary.end());

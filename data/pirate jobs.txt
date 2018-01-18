@@ -91,6 +91,8 @@ mission "Cargo Smuggling [3]"
 		payment 6000 200
 		dialog "You find the contact at the edge of the spaceport. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
 
+
+
 mission "Drug Running [0]"
 	name "Drug run to <planet>"
 	job
@@ -175,6 +177,8 @@ mission "Drug Running [3]"
 		payment 9000 250
 		dialog "You find the contact at the edge of the spaceport. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
 
+
+
 mission "Bulk Cargo Smuggling [0]"
 	name "Bulk smuggling to <planet>"
 	job
@@ -237,6 +241,8 @@ mission "Bulk Cargo Smuggling [2]"
 	on complete
 		payment 15000 200
 		dialog "You find the contact at the edge of the spaceport. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
+
+
 
 mission "Bulk Drug Running [0]"
 	name "Bulk drug run to <planet>"
@@ -301,6 +307,8 @@ mission "Bulk Drug Running [2]"
 		payment 20000 250
 		dialog "You find the contact at the edge of the spaceport. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
 
+
+
 mission "Stealth Cargo Smuggling (North) [0]"
 	name "Highly illegal cargo to <planet>"
 	job
@@ -321,26 +329,26 @@ mission "Stealth Cargo Smuggling (North) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system destination
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
+		government Republic
 		personality heroic staying
-		government Republic
+		system destination
 		fleet
 			names "republic small"
 			variant
@@ -369,43 +377,44 @@ mission "Stealth Cargo Smuggling (North) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
+		government Republic
 		personality heroic waiting
-		government Republic
+		system
+			distance 3 5
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 4
-		personality heroic waiting 
 		government Republic
-		fleet
-			names "republic small"
-			variant
-				"Gunboat"
-	npc
-		distance 3
 		personality heroic waiting
-		government Republic
+		system
+			distance 2 4
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
+		government Republic
+		personality heroic waiting
+		system
+			distance 3
+		fleet
+			names "republic small"
+			variant
+				"Gunboat"
+	npc
+		government Republic
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Republic
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Republic
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "republic small"
 			variant
@@ -439,26 +448,26 @@ mission "Stealth Cargo Smuggling (Core) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system destination
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
+		government Syndicate
 		personality heroic staying
-		government Syndicate
+		system destination
 		fleet
 			names "syndicate small"
 			variant
@@ -487,51 +496,52 @@ mission "Stealth Cargo Smuggling (Core) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
+		government Syndicate
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Syndicate
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
+		government Syndicate
 		personality heroic staying
-		government Syndicate
+		system destination
 		fleet
 			names "syndicate small"
 			variant
@@ -560,26 +570,26 @@ mission "Stealth Cargo Smuggling (South) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system destination
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
+		government Militia
 		personality heroic staying
-		government Militia
+		system destination
 		fleet
 			names "militia"
 			variant
@@ -608,51 +618,52 @@ mission "Stealth Cargo Smuggling (South) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
+		government Militia
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Militia
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Militia
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
+		government Militia
 		personality heroic staying
-		government Militia
+		system destination
 		fleet
 			names "militia"
 			variant
@@ -660,6 +671,8 @@ mission "Stealth Cargo Smuggling (South) [1]"
 	on complete
 		payment 75000 300
 		dialog "You find the contact outside of the main city. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
+
+
 
 mission "Stealth Drug Running (North) [0]"
 	name "Highly illegal drugs to <planet>"
@@ -681,26 +694,26 @@ mission "Stealth Drug Running (North) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system destination
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
+		government Republic
 		personality heroic staying
-		government Republic
+		system destination
 		fleet
 			names "republic small"
 			variant
@@ -729,51 +742,52 @@ mission "Stealth Drug Running (North) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 4
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 3
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
+		government Republic
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Republic
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Republic
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
+		government Republic
 		personality heroic staying
-		government Republic
+		system destination
 		fleet "Navy Surveillance"
 	on complete
 		payment 100000 375
@@ -799,26 +813,26 @@ mission "Stealth Drug Running (Core) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system destination
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
+		government Syndicate
 		personality heroic staying
-		government Syndicate
+		system destination
 		fleet
 			names "syndicate small"
 			variant
@@ -847,51 +861,52 @@ mission "Stealth Drug Running (Core) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
+		government Syndicate
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Syndicate
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
+		government Syndicate
 		personality heroic staying
-		government Syndicate
+		system destination
 		fleet
 			names "syndicate small"
 			variant
@@ -920,26 +935,26 @@ mission "Stealth Drug Running (South) [0]"
 		distance 3 12
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 3
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system destination
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
+		government Militia
 		personality heroic staying
-		government Militia
+		system destination
 		fleet
 			names "militia"
 			variant
@@ -968,51 +983,52 @@ mission "Stealth Drug Running (South) [1]"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		distance 5
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
+		government Militia
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Militia
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Militia
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
+		government Militia
 		personality heroic staying
-		government Militia
+		system destination
 		fleet
 			names "militia"
 			variant
@@ -1020,6 +1036,8 @@ mission "Stealth Drug Running (South) [1]"
 	on complete
 		payment 100000 375
 		dialog "You find the contact outside of the main city. Your cargo of <commodity> is removed from your ship and you collect your payment of <payment>."
+
+
 
 mission "Wanted Passenger [0]"
 	name "Wanted individual to <planet>"
@@ -1109,6 +1127,8 @@ mission "Wanted Passengers [3]"
 		payment 20000 300
 		dialog "Your <passengers> insist that you land on the edge of the spaceport to avoid being seen. After you land, they pay you <payment> before quickly grabbing their things and leaving your ship."
 
+
+
 mission "Highly Wanted Passenger (North)"
 	name "Galactic criminal to <planet>"
 	job
@@ -1130,58 +1150,59 @@ mission "Highly Wanted Passenger (North)"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 5
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 4
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		distance 3
-		personality heroic waiting
 		government Republic
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
+		government Republic
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Republic
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Republic
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "republic small"
 			variant
 				"Gunboat"
 	npc
-		system destination
+		government Republic
 		personality heroic staying
-		government Republic
+		system destination
 		fleet "Navy Surveillance"
 	on complete
 		payment 200000 1000
@@ -1208,58 +1229,59 @@ mission "Highly Wanted Passenger (Core)"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 5
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
+		government Syndicate
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Syndicate
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Syndicate
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "syndicate small"
 			variant
 				"Quicksilver (Scanner)"
 	npc
-		system destination
+		government Syndicate
 		personality heroic staying
-		government Syndicate
+		system destination
 		fleet
 			names "syndicate small"
 			variant
@@ -1289,58 +1311,59 @@ mission "Highly Wanted Passenger (South)"
 		distance 4 14
 		government "Republic" "Free Worlds" "Syndicate" "Neutral" "Pirate"
 	npc
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 5
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3 5
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 4
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 2 4
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		distance 3
-		personality heroic waiting
 		government Militia
+		personality heroic waiting
+		system
+			distance 3
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
+		government Militia
+		personality heroic waiting
 		system destination
-		distance 1
-		personality heroic waiting
-		government Militia
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
-		distance 1
-		personality heroic waiting
 		government Militia
+		personality heroic waiting entering
+		system destination
 		fleet
 			names "militia"
 			variant
 				"Bastion (Scanner)"
 	npc
-		system destination
+		government Militia
 		personality heroic staying
-		government Militia
+		system destination
 		fleet
 			names "militia"
 			variant
@@ -1348,6 +1371,8 @@ mission "Highly Wanted Passenger (South)"
 	on complete
 		payment 200000 1000
 		dialog "You land outside of the main city to avoid any chances of your passenger being seen. They grab their things and make their way off of your ship after paying you <payment>."
+
+
 
 mission "Slave Transport [0]"
 	name "Transfer slaves to <planet>"
@@ -1412,6 +1437,8 @@ mission "Slave Transport [2]"
 		payment 75000 400
 		dialog "After landing on <planet>, the pirates move the <bunks> slaves from your ship and pay you <payment>."
 
+
+
 mission "Bulk Slave Transport [0]"
 	name "Transfer slaves to <planet>"
 	job
@@ -1454,6 +1481,8 @@ mission "Bulk Slave Transport [1]"
 		payment 100000 400
 		dialog "After landing on <planet>, the pirates move the <bunks> slaves from your ship and pay you <payment>."
 
+
+
 mission "Mercenary Job (Medium, North, Dangerous Origin)"
 	name "Protection to <planet>"
 	job
@@ -1472,15 +1501,15 @@ mission "Mercenary Job (Medium, North, Dangerous Origin)"
 		attributes "north pirate"
 		distance 3 4
 	npc
-		personality waiting
 		government Republic
+		personality waiting
 		fleet "Small Republic"
 	npc
-		system destination
-		distance 1
-		personality waiting
 		government Republic
+		personality waiting entering
+		system destination
 		fleet "Small Republic"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1510,7 +1539,7 @@ mission "Escort Illegal Cargo (Large, North, Dangerous Path)"
 	name "Protect cargo to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 30
@@ -1524,10 +1553,11 @@ mission "Escort Illegal Cargo (Large, North, Dangerous Path)"
 		government "Pirate"
 		attributes "north pirate"
 	npc
-		system destination
-		personality staying
 		government Republic
+		personality staying
+		system destination
 		fleet "Large Republic"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1557,7 +1587,7 @@ mission "Escort Stolen Vessel (Extra Large, North, Dangerous Path)"
 	name "Protect ship to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 15
@@ -1571,15 +1601,12 @@ mission "Escort Stolen Vessel (Extra Large, North, Dangerous Path)"
 		attributes "north pirate"
 		distance 3 6
 	npc
-		system destination
-		personality staying
 		government Republic
+		personality staying
+		system destination
 		fleet "Small Republic"
-	npc
-		system destination
-		personality staying
-		government Republic
 		fleet "Large Republic"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1621,15 +1648,15 @@ mission "Mercenary Job (Medium, Core, Dangerous Origin)"
 		attributes "core pirate"
 		distance 3 4
 	npc
-		personality waiting
 		government Syndicate
+		personality waiting
 		fleet "Small Syndicate"
 	npc
-		system destination
-		distance 1
-		personality waiting
 		government Syndicate
+		personality waiting entering
+		system destination
 		fleet "Small Syndicate"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1653,7 +1680,7 @@ mission "Escort Illegal Cargo (Large, Core, Dangerous Path)"
 	name "Protect cargo to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 30
@@ -1667,10 +1694,11 @@ mission "Escort Illegal Cargo (Large, Core, Dangerous Path)"
 		government "Pirate"
 		attributes "core pirate"
 	npc
-		system destination
-		personality staying
 		government Syndicate
+		personality staying
+		system destination
 		fleet "Large Syndicate"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1696,7 +1724,7 @@ mission "Escort Stolen Vessel (Extra Large, Core, Dangerous Path)"
 	name "Protect ship to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 15
@@ -1710,15 +1738,12 @@ mission "Escort Stolen Vessel (Extra Large, Core, Dangerous Path)"
 		attributes "core pirate"
 		distance 3 6
 	npc
-		system destination
-		personality staying
 		government Syndicate
+		personality staying
+		system destination
 		fleet "Small Syndicate"
-	npc
-		system destination
-		personality staying
-		government Syndicate
 		fleet "Large Syndicate"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1766,15 +1791,15 @@ mission "Mercenary Job (Medium, South, Dangerous Origin)"
 		attributes "south pirate"
 		distance 3 4
 	npc
-		personality waiting
 		government Militia
+		personality waiting
 		fleet "Small Militia"
 	npc
-		system destination
-		distance 1
-		personality waiting
 		government Militia
+		personality waiting entering
+		system destination
 		fleet "Small Militia"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1798,7 +1823,7 @@ mission "Escort Illegal Cargo (Large, South, Dangerous Path)"
 	name "Protect cargo to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their illegal cargo safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 30
@@ -1812,10 +1837,11 @@ mission "Escort Illegal Cargo (Large, South, Dangerous Path)"
 		government "Pirate"
 		attributes "south pirate"
 	npc
-		system destination
-		personality staying
 		government Militia
+		personality staying
+		system destination
 		fleet "Large Militia"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1843,7 +1869,7 @@ mission "Escort Stolen Vessel (Extra Large, South, Dangerous Path)"
 	name "Protect ship to <planet>"
 	job
 	repeat
-	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law enforced space to reach <destination> by <date>."
+	description "The captain of the <npc> will pay you <payment> to escort them and their stolen vessel safely through law-enforced space to reach <destination> by <date>."
 	deadline 12
 	to offer
 		random < 15
@@ -1857,15 +1883,12 @@ mission "Escort Stolen Vessel (Extra Large, South, Dangerous Path)"
 		attributes "south pirate"
 		distance 3 6
 	npc
-		system destination
-		personality staying
 		government Militia
+		personality staying
+		system destination
 		fleet "Small Militia"
-	npc
-		system destination
-		personality staying
-		government Militia
 		fleet "Large Militia"
+	
 	npc accompany save
 		government Pirate
 		personality escort
@@ -1895,6 +1918,8 @@ mission "Escort Stolen Vessel (Extra Large, South, Dangerous Path)"
 	on visit
 		dialog "You have reached <planet>, but you left the <npc> behind! Better depart and wait for them to arrive in this star system."
 
+
+
 mission "Eliminating Law Enforcement (North, Small)"
 	name "Navy near <system>"
 	repeat
@@ -1907,12 +1932,11 @@ mission "Eliminating Law Enforcement (North, Small)"
 		government "Pirate"
 		attributes "north pirate"
 	npc kill
-		personality heroic staying target
 		government "Republic"
+		personality heroic staying target
 		system
 			distance 1 3
-		fleet "Small Republic"
-		fleet "Small Republic"
+		fleet "Small Republic" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 250000
@@ -1930,13 +1954,12 @@ mission "Eliminating Law Enforcement (North, Large)"
 		government "Pirate"
 		attributes "north pirate"
 	npc kill
-		personality heroic staying target
 		government "Republic"
+		personality heroic staying target
 		system
 			distance 1 3
 		fleet "Large Republic"
-		fleet "Small Republic"
-		fleet "Small Republic"
+		fleet "Small Republic" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 400000
@@ -1954,12 +1977,11 @@ mission "Eliminating Law Enforcement (Core, Small)"
 		government "Pirate"
 		attributes "core pirate"
 	npc kill
-		personality heroic staying target
 		government "Syndicate"
+		personality heroic staying target
 		system
 			distance 1 3
-		fleet "Small Syndicate"
-		fleet "Small Syndicate"
+		fleet "Small Syndicate" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 250000
@@ -1977,13 +1999,12 @@ mission "Eliminating Law Enforcement (Core, Large)"
 		government "Pirate"
 		attributes "core pirate"
 	npc kill
-		personality heroic staying target
 		government "Syndicate"
+		personality heroic staying target
 		system
 			distance 1 3
 		fleet "Large Syndicate"
-		fleet "Small Syndicate"
-		fleet "Small Syndicate"
+		fleet "Small Syndicate" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 400000
@@ -2001,12 +2022,11 @@ mission "Eliminating Law Enforcement (South, Small)"
 		government "Pirate"
 		attributes "south pirate"
 	npc kill
-		personality heroic staying target
 		government "Militia"
+		personality heroic staying target
 		system
 			distance 1 3
-		fleet "Small Militia"
-		fleet "Small Militia"
+		fleet "Small Militia" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 250000
@@ -2024,17 +2044,18 @@ mission "Eliminating Law Enforcement (South, Large)"
 		government "Pirate"
 		attributes "south pirate"
 	npc kill
-		personality heroic staying target
 		government "Militia"
+		personality heroic staying target
 		system
 			distance 1 3
 		fleet "Large Militia"
-		fleet "Small Militia"
-		fleet "Small Militia"
+		fleet "Small Militia" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 400000
 		dialog "The pirates of <planet> gratefully pay you <payment> for eliminating the militia fleet."
+
+
 
 mission "Eliminating Competition (North, Small)"
 	name "Competition near <system>"
@@ -2048,14 +2069,11 @@ mission "Eliminating Competition (North, Small)"
 		government "Pirate"
 		attributes "north pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 2
-		fleet "Small Northern Pirates"
-		fleet "Small Northern Pirates"
-		fleet "Small Northern Pirates"
-		fleet "Small Northern Pirates"
+		fleet "Small Northern Pirates" 4
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 500000
@@ -2073,14 +2091,12 @@ mission "Eliminating Competition (North, Large)"
 		government "Pirate"
 		attributes "north pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 3
-		fleet "Large Northern Pirates"
-		fleet "Large Northern Pirates"
-		fleet "Small Northern Pirates"
-		fleet "Small Northern Pirates"
+		fleet "Large Northern Pirates" 2
+		fleet "Small Northern Pirates" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 750000
@@ -2098,14 +2114,11 @@ mission "Eliminating Competition (Core, Small)"
 		government "Pirate"
 		attributes "core pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 2
-		fleet "Small Core Pirates"
-		fleet "Small Core Pirates"
-		fleet "Small Core Pirates"
-		fleet "Small Core Pirates"
+		fleet "Small Core Pirates" 4
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 500000
@@ -2123,14 +2136,12 @@ mission "Eliminating Competition (Core, Large)"
 		government "Pirate"
 		attributes "core pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 3
-		fleet "Large Core Pirates"
-		fleet "Large Core Pirates"
-		fleet "Small Core Pirates"
-		fleet "Small Core Pirates"
+		fleet "Large Core Pirates" 2
+		fleet "Small Core Pirates" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 750000
@@ -2148,14 +2159,11 @@ mission "Eliminating Competition (South, Small)"
 		government "Pirate"
 		attributes "south pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 2
-		fleet "Small Southern Pirates"
-		fleet "Small Southern Pirates"
-		fleet "Small Southern Pirates"
-		fleet "Small Southern Pirates"
+		fleet "Small Southern Pirates" 4
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 500000
@@ -2173,18 +2181,18 @@ mission "Eliminating Competition (South, Large)"
 		government "Pirate"
 		attributes "south pirate"
 	npc kill
-		personality heroic staying target
-		government Bounty
+		government Pirate
+		personality heroic staying target marked
 		system
 			distance 1 3
-		fleet "Large Southern Pirates"
-		fleet "Large Southern Pirates"
-		fleet "Small Southern Pirates"
-		fleet "Small Southern Pirates"
+		fleet "Large Southern Pirates" 2
+		fleet "Small Southern Pirates" 2
 		dialog "The fleet has been eliminated. You can claim the bounty payment by returning to <destination>."
 	on complete
 		payment 750000
 		dialog "The pirates of <planet> gratefully pay you <payment> for eliminating the rival gang."
+
+
 
 mission "Raid on Merchants (North)"
 	name "Merchants near <system>"
@@ -2199,16 +2207,16 @@ mission "Raid on Merchants (North)"
 		government "Pirate"
 		attributes "north pirate"
 	npc
-		personality plunders escort
 		government "Pirate"
+		personality plunders harvests escort
 		fleet "Small Northern Pirates"
+	
 	npc kill
-		personality heroic staying target
 		government "Merchant"
+		personality heroic staying target
 		system
 			distance 1 3
-		fleet "Small Northern Merchants"
-		fleet "Small Northern Merchants"
+		fleet "Small Northern Merchants" 2
 		fleet "Large Northern Merchants"
 		dialog "The merchants have been eliminated. Return to <destination> for your cut of the loot."
 	on complete
@@ -2228,16 +2236,16 @@ mission "Raid on Merchants (Core)"
 		government "Pirate"
 		attributes "core pirate"
 	npc
-		personality plunders escort
 		government "Pirate"
+		personality plunders harvests escort
 		fleet "Small Core Pirates"
+	
 	npc kill
 		personality heroic staying target
 		government "Merchant"
 		system
 			distance 1 3
-		fleet "Small Core Merchants"
-		fleet "Small Core Merchants"
+		fleet "Small Core Merchants" 2
 		fleet "Large Core Merchants"
 		dialog "The merchants have been eliminated. Return to <destination> for your cut of the loot."
 	on complete
@@ -2257,128 +2265,213 @@ mission "Raid on Merchants (South)"
 		government "Pirate"
 		attributes "south pirate"
 	npc
-		personality plunders escort
 		government "Pirate"
+		personality plunders harvests escort
 		fleet "Small Southern Pirates"
 	npc kill
 		personality heroic staying target
 		government "Merchant"
 		system
 			distance 1 3
-		fleet "Small Southern Merchants"
-		fleet "Small Southern Merchants"
+		fleet "Small Southern Merchants" 2
 		fleet "Large Southern Merchants"
 		dialog "The merchants have been eliminated. Return to <destination> for your cut of the loot."
 	on complete
 		payment 150000
 		dialog "After counting up the loot from the destroyed merchant fleet, you are given your cut. <payment>"
 
+
+
 mission "Northern Pirate Defense"
 	name "Defend <planet>"
 	repeat
 	minor
-	description "Local Navy forces are attacking the <destination>! Defeat them to defend anarchy!"
+	description "Local Navy forces are attacking <destination>! Defeat them to defend anarchy!"
 	to offer
-		random < 20
+		random < 15
 		"reputation: Pirate" >= 0
 	source
 		government "Pirate"
 		attributes "north pirate"
 	npc evade
-		personality heroic staying waiting
 		government "Republic"
-		fleet "Large Republic"
-		fleet "Large Republic"
-		dialog "The Navy fleets have been eliminated. Return to <destination>."
+		personality heroic staying waiting
+		fleet "Large Republic" 2
+		dialog `The Navy fleets have been defeated. Return to <destination>.`
 	npc
-		personality plunders staying
 		government "Pirate"
+		personality plunders staying
 		fleet "Large Northern Pirates"
 		fleet "Small Northern Pirates"
 	on offer
-		conversation
-			`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the militia! We need every combat-worthy ship to join in the defenses!" This could also be an easy way to get yourself killed, and you can't even guarentee that you will be paid for your work.`
-			choice
-				"	(Stay here until the fight is over.)"
-					decline
-				"	(Join the defense fleet.)"
-			"Local pirate forces are preparing to repel the militia attack. You join them, and take off together..."
-				launch
+		conversation "northern pirate defense"
 	on complete
 		payment 200000
-		dialog "Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the Navy."
+		dialog `Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the Navy.`
+
+mission "Northern Pirate Defense [Unpaid]"
+	name "Defend <planet>"
+	repeat
+	minor
+	description "Local Navy forces are attacking <destination>! Defeat them to defend anarchy!"
+	to offer
+		random < 5
+		"reputation: Pirate" >= 0
+	source
+		government "Pirate"
+		attributes "north pirate"
+	npc evade
+		government "Republic"
+		personality heroic staying waiting
+		fleet "Large Republic"
+		fleet "Small Republic"
+		dialog `The Navy fleets have been defeated. Return to <destination>.`
+	npc
+		government "Pirate"
+		personality plunders staying
+		fleet "Large Northern Pirates"
+		fleet "Small Northern Pirates"
+	on offer
+		conversation "northern pirate defense"
+	on complete
+		dialog `Many locals of <planet> thank you for helping to drive off the Navy.`
+
+conversation "northern pirate defense"
+	`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the Navy! We need every combat-worthy ship to join the defenses!" This could be an easy way to get yourself killed, and you can't even guarantee that you will be paid for your work.`
+	choice
+		`	(Stay here until the fight is over.)`
+			decline
+		`	(Join the defense fleet.)`
+	`	Local pirate forces are preparing to repel the Navy attack. You join them, and take off together...`
+		launch
+
 
 mission "Core Pirate Defense"
 	name "Defend <planet>"
 	repeat
 	minor
-	description "Local Syndicate forces are attacking the <destination>! Defeat them to defend anarchy!"
+	description "Local Syndicate forces are attacking <destination>! Defeat them to defend anarchy!"
 	to offer
-		random < 20
+		random < 15
 		"reputation: Pirate" >= 0
 	source
 		government "Pirate"
 		attributes "core pirate"
 	npc evade
-		personality heroic staying waiting
 		government "Syndicate"
+		personality heroic staying waiting
 		fleet "Small Syndicate"
-		fleet "Large Syndicate"
-		fleet "Large Syndicate"
-		dialog "The Syndicate fleets have been eliminated. Return to <destination>."
+		fleet "Large Syndicate" 2
+		dialog `The Syndicate fleets have been defeated. Return to <destination>.`
 	npc
-		personality plunders staying
 		government "Pirate"
-		fleet "Small Core Pirates"
-		fleet "Small Core Pirates"
+		personality plunders staying
+		fleet "Small Core Pirates" 2
 	on offer
-		conversation
-			`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the Syndicate! We need every combat-worthy ship to join in the defenses!" This could also be an easy way to get yourself killed, and you can't even guarentee that you will be paid for your work.`
-			choice
-				"	(Stay here until the fight is over.)"
-					decline
-				"	(Join the defense fleet.)"
-			"Local pirate forces are preparing to repel the Syndicate attack. You join them, and take off together..."
-				launch
+		conversation "core pirate defense"
 	on complete
 		payment 200000
-		dialog "Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the Navy."
+		dialog `Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the Syndicate.`
+
+mission "Core Pirate Defense [Unpaid]"
+	name "Defend <planet>"
+	repeat
+	minor
+	description "Local Syndicate forces are attacking <destination>! Defeat them to defend anarchy!"
+	to offer
+		random < 5
+		"reputation: Pirate" >= 0
+	source
+		government "Pirate"
+		attributes "core pirate"
+	npc evade
+		government "Syndicate"
+		personality heroic staying waiting
+		fleet "Small Syndicate" 2
+		fleet "Large Syndicate"
+		dialog `The Syndicate fleets have been defeated. Return to <destination>.`
+	npc
+		government "Pirate"
+		personality plunders staying
+		fleet "Small Core Pirates" 2
+	on offer
+		conversation "core pirate defense"
+	on complete
+		dialog `Many locals of <planet> thank you for helping to drive off the Syndicate.`
+
+conversation "core pirate defense"
+	`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the Syndicate! We need every combat-worthy ship to join the defenses!" This could be an easy way to get yourself killed, and you can't even guarantee that you will be paid for your work.`
+	choice
+		`	(Stay here until the fight is over.)`
+			decline
+		`	(Join the defense fleet.)`
+	`	Local pirate forces are preparing to repel the Syndicate attack. You join them, and take off together...`
+		launch
+
 
 mission "Southern Pirate Defense"
 	name "Defend <planet>"
 	repeat
 	minor
-	description "Local militia forces are attacking the <destination>! Defeat them to defend anarchy!"
+	description "Local militia forces are attacking <destination>! Defeat them to defend anarchy!"
 	to offer
-		random < 20
+		random < 15
 		"reputation: Pirate" >= 0
 	source
 		government "Pirate"
 		attributes "south pirate"
 	npc evade
-		personality heroic staying waiting
 		government "Militia"
+		personality heroic staying waiting
 		fleet "Small Militia"
-		fleet "Large Militia"
-		fleet "Large Militia"
-		dialog "The militia fleets have been eliminated. Return to <destination>."
+		fleet "Large Militia" 2
+		dialog `The militia fleets have been defeated. Return to <destination>.`
 	npc
-		personality plunders staying
 		government "Pirate"
-		fleet "Small Southern Pirates"
-		fleet "Small Southern Pirates"
+		personality plunders staying
+		fleet "Small Southern Pirates" 2
 	on offer
-		conversation
-			`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the militia! We need every combat-worthy ship to join in the defenses!" This could also be an easy way to get yourself killed, and you can't even guarentee that you will be paid for your work.`
-			choice
-				"	(Stay here until the fight is over.)"
-					decline
-				"	(Join the defense fleet.)"
-			"Local pirate forces are preparing to repel the militia attack. You join them, and take off together..."
-				launch
+		conversation "southern pirate defense"
 	on complete
 		payment 200000
-		dialog "Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the Navy."
+		dialog `Many locals of <planet> thank you and collectively pay you <payment> for helping to drive off the militia forces.`
+
+mission "Southern Pirate Defense [Unpaid]"
+	name "Defend <planet>"
+	repeat
+	minor
+	description "Local militia forces are attacking <destination>! Defeat them to defend anarchy!"
+	to offer
+		random < 5
+		"reputation: Pirate" >= 0
+	source
+		government "Pirate"
+		attributes "south pirate"
+	npc evade
+		government "Militia"
+		personality heroic staying waiting
+		fleet "Small Militia" 2
+		fleet "Large Militia"
+		dialog `The militia fleets have been defeated. Return to <destination>.`
+	npc
+		government "Pirate"
+		personality plunders staying
+		fleet "Small Southern Pirates" 2
+	on offer
+		conversation "southern pirate defense"
+	on complete
+		dialog `Many locals of <planet> thank you for helping to drive off the militia forces.`
+
+conversation "southern pirate defense"
+	`Suddenly you hear raised voices and shouting outside: "We are under attack! <planet> is under attack by the militia! We need every combat-worthy ship to join the defenses!" This could be an easy way to get yourself killed, and you can't even guarantee that you will be paid for your work.`
+	choice
+		`	(Stay here until the fight is over.)`
+			decline
+		`	(Join the defense fleet.)`
+	`	Local pirate forces are preparing to repel the militia attack. You join them, and take off together...`
+		launch
+
+
 
 outfit "Secret Cargo"
 	category "Special"
@@ -2399,8 +2492,8 @@ mission "Cargo Theft (North)"
 		government Pirate
 		attributes "north pirate"
 	npc
-		personality staying heroic target
 		government "Merchant"
+		personality staying heroic target
 		system
 			distance 2 3
 		fleet
@@ -2433,8 +2526,8 @@ mission "Cargo Theft (Core)"
 		government Pirate
 		attributes "core pirate"
 	npc
-		personality staying heroic target
 		government "Merchant"
+		personality staying heroic target
 		system
 			distance 2 3
 		fleet
@@ -2467,8 +2560,8 @@ mission "Cargo Theft (South)"
 		government Pirate
 		attributes "south pirate"
 	npc
-		personality staying heroic target
 		government "Merchant"
+		personality staying heroic target
 		system
 			distance 2 3
 		fleet
@@ -2489,7 +2582,9 @@ mission "Cargo Theft (South)"
 		payment 1500000
 		dialog "The pirates of <planet> take the secret cargo from your cargo hold and pay you <payment>."
 
-#must destroy hunters and land to fail
+
+
+# Must destroy hunters and land to fail
 mission "Hunted by State [0]"
 	invisible
 	landing
@@ -2498,7 +2593,8 @@ mission "Hunted by State [0]"
 	source
 		government "Republic" "Syndicate" "Free Worlds" "Neutral" "Pirate"
 	to offer
-		random > 90
+		random < 10
+		"combat rating" > 150
 		or
 			not "chosen sides"
 			has "main plot completed"
@@ -2509,11 +2605,11 @@ mission "Hunted by State [0]"
 	to complete
 		never
 	npc save
-		fleet "Bounty Hunters"
-		personality heroic nemesis plunders
 		government "Bounty Hunter"
+		personality heroic nemesis plunders
 		system
 			distance 5 5
+		fleet "Bounty Hunters"
 
 mission "Hunted by State [1]"
 	invisible
@@ -2524,6 +2620,7 @@ mission "Hunted by State [1]"
 		government "Republic" "Syndicate" "Free Worlds" "Neutral" "Pirate"
 	to offer
 		random > 95
+		"combat rating" > 1100
 		or
 			not "chosen sides"
 			has "main plot completed"
@@ -2534,8 +2631,8 @@ mission "Hunted by State [1]"
 	to complete
 		never
 	npc save
-		fleet "Hired Guns"
-		personality heroic nemesis plunders
 		government "Bounty Hunter"
+		personality heroic nemesis plunders
 		system
 			distance 5 5
+		fleet "Hired Guns"

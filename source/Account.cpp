@@ -55,10 +55,7 @@ void Account::Load(const DataNode &node)
 		else if(child.Token(0) == "score" && child.Size() >= 2)
 			creditScore = child.Value(1);
 		else if(child.Token(0) == "mortgage")
-		{
-			mortgages.push_back(Mortgage(0, 0, 0));
-			mortgages.back().Load(child);
-		}
+			mortgages.emplace_back(child);
 		else if(child.Token(0) == "history")
 			for(const DataNode &grand : child)
 				history.push_back(grand.Value(0));
@@ -307,6 +304,19 @@ int64_t Account::NetWorth() const
 int Account::CreditScore() const
 {
 	return creditScore;
+}
+
+
+
+// Get the total amount owed for "Mortgage", "Fine", or both.
+int64_t Account::TotalDebt(const string &type) const
+{
+	int64_t total = 0;
+	for(const Mortgage &mortgage : mortgages)
+		if(type.empty() || mortgage.Type() == type)
+			total += mortgage.Principal();
+	
+	return total;
 }
 
 

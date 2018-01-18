@@ -30,6 +30,8 @@ void Weapon::LoadWeapon(const DataNode &node)
 {
 	isWeapon = true;
 	bool isClustered = false;
+	calculatedDamage = false;
+	doesDamage = false;
 	
 	for(const DataNode &child : node)
 	{
@@ -42,6 +44,8 @@ void Weapon::LoadWeapon(const DataNode &node)
 			isSafe = true;
 		else if(key == "phasing")
 			isPhasing = true;
+		else if(key == "no damage scaling")
+			isDamageScaled = false;
 		else if(child.Size() < 2)
 			child.PrintTrace("Skipping weapon attribute with no value specified:");
 		else if(key == "sprite")
@@ -140,6 +144,8 @@ void Weapon::LoadWeapon(const DataNode &node)
 				damage[SHIELD_DAMAGE] = value;
 			else if(key == "hull damage")
 				damage[HULL_DAMAGE] = value;
+			else if(key == "fuel damage")
+				damage[FUEL_DAMAGE] = value;
 			else if(key == "heat damage")
 				damage[HEAT_DAMAGE] = value;
 			else if(key == "ion damage")
@@ -299,11 +305,16 @@ void Weapon::SetTurretTurn(double rate)
 
 double Weapon::TotalDamage(int index) const
 {
-	if(!calculatedDamage[index])
+	if(!calculatedDamage)
 	{
-		calculatedDamage[index] = true;
-		for(const auto &it : submunitions)
-			damage[index] += it.first->TotalDamage(index) * it.second;
+		for(int i = 0; i < DAMAGE_TYPES; ++i)
+		{
+			for(const auto &it : submunitions)
+				damage[i] += it.first->TotalDamage(i) * it.second;
+			doesDamage |= (damage[i] > 0.);
+		}
+		
+		calculatedDamage = true;
 	}
 	return damage[index];
 }
