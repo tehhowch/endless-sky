@@ -19,6 +19,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Format.h"
 #include "GameData.h"
 #include "Government.h"
+#include "Information.h"
 #include "MapOutfitterPanel.h"
 #include "MapShipyardPanel.h"
 #include "pi.h"
@@ -70,6 +71,8 @@ namespace {
 		// Return the angle, plus the length as a tie-breaker.
 		return make_pair(angle, length);
 	}
+	
+	const int TEXT_MARGIN = 10;
 }
 
 
@@ -77,6 +80,7 @@ namespace {
 MapDetailPanel::MapDetailPanel(PlayerInfo &player, const System *system)
 	: MapPanel(player, system ? MapPanel::SHOW_REPUTATION : player.MapColoring(), system)
 {
+	mapDetail = GameData::Interfaces().Get("map detail panel");
 }
 
 
@@ -86,6 +90,7 @@ MapDetailPanel::MapDetailPanel(const MapPanel &panel)
 {
 	// Use whatever map coloring is specified in the PlayerInfo.
 	commodity = player.MapColoring();
+	mapDetail = GameData::Interfaces().Get("map detail panel");
 }
 
 
@@ -102,7 +107,13 @@ void MapDetailPanel::Draw()
 {
 	MapPanel::Draw();
 	
-	DrawInfo();
+	// Begin with a blank information object on every draw step.
+	Information info;
+	// Fill it with information from the player's selection.
+	UpdateInfo(info);
+	// Display the data, and draw some of the desired sprites (e.g. backgrounds).
+	mapDetail->Draw(info, this);
+	DrawInfo(info);
 	DrawOrbits();
 	DrawKey();
 }
@@ -279,29 +290,61 @@ bool MapDetailPanel::Click(int x, int y, int clicks)
 
 
 
+// Update the displayed information based on the player's selection.
+void MapDetailPanel::UpdateInfo(Information &info) const
+{
+	const Font &font = FontSet::Get(14);
+	// Set the name of the selected system, and its government, if known.
+	string systemName;
+	string govName;
+	if(player.KnowsName(selectedSystem))
+	{
+		systemName = selectedSystem->Name();
+		govName = selectedSystem->GetGovernment()->GetName();
+	}
+	else
+	{
+		systemName = "Unexplored System";
+		govName = "Unknown Government";
+	}
+	info.SetString("system name", systemName);
+	// TODO: Draw the system government string as "medium" if the commodity
+	// is SHOW_GOVERNMENT, instead of always "dim".
+	if(commodity == SHOW_GOVERNMENT)
+		info.SetCondition("show government");
+	info.SetString("system government", govName);
+	
+	// Set the name of the selected system or planet for the scene label.
+	// The player cannot select a planet unless they have visited its system,
+	// but a system can be selected even if its name is unknown.
+	const string &selected = selectedPlanet ? selectedPlanet->Name() : systemName;
+	int selectedWidth = mapDetail->HasPoint("selected name") ?
+		mapDetail->GetBox("selected name").Width() - 2 * TEXT_MARGIN : 180;
+	info.SetString("selected name", font.TruncateMiddle(selected, selectedWidth));
+	// For visited planets with descriptions (excluding wormholes), selecting
+	// the planet displays its description.
+	if(selectedPlanet && player.HasVisited(selectedPlanet)
+			&& !selectedPlanet->Description().empty() && !selectedPlanet->IsWormhole())
+	{
+		info.SetCondition("has planet info");
+		info.SetString("fill text", selectedPlanet->Description());
+	}
+}
+
+
+
 // Draw the various information displays: system name & government, planetary
 // details, trade prices, and details about the selected object.
-void MapDetailPanel::DrawInfo()
+void MapDetailPanel::DrawInfo(Information &info)
 {
 	const Color &faint = *GameData::Colors().Get("faint");
 	const Color &dim = *GameData::Colors().Get("dim");
 	const Color &medium = *GameData::Colors().Get("medium");
 	
-	Point uiPoint(Screen::Left() + 100., Screen::Top() + 45.);
-	
-	// System sprite goes from 0 to 90.
-	const Sprite *systemSprite = SpriteSet::Get("ui/map system");
-	SpriteShader::Draw(systemSprite, uiPoint);
-	
 	const Font &font = FontSet::Get(14);
-	string systemName = player.KnowsName(selectedSystem) ?
-		selectedSystem->Name() : "Unexplored System";
-	font.Draw(systemName, uiPoint + Point(-90., -7.), medium);
 	
+	Point uiPoint(Screen::Left() + 100., Screen::Top() + 45.);
 	governmentY = uiPoint.Y() + 10.;
-	string gov = player.HasVisited(selectedSystem) ?
-		selectedSystem->GetGovernment()->GetName() : "Unknown Government";
-	font.Draw(gov, uiPoint + Point(-90., 13.), (commodity == SHOW_GOVERNMENT) ? medium : dim);
 	if(commodity == SHOW_GOVERNMENT)
 		PointerShader::Draw(uiPoint + Point(-90., 20.), Point(1., 0.),
 			10., 10., 0., medium);
@@ -423,21 +466,16 @@ void MapDetailPanel::DrawInfo()
 		uiPoint.Y() += 20.;
 	}
 	
-	if(selectedPlanet && !selectedPlanet->Description().empty()
-			&& player.HasVisited(selectedPlanet) && !selectedPlanet->IsWormhole())
+	const string &fillText = info.GetString("fill text");
+	if(!fillText.empty() && mapDetail->HasPoint("planet description"))
 	{
-		static const int X_OFFSET = 240;
-		static const int WIDTH = 500;
-		const Sprite *panelSprite = SpriteSet::Get("ui/description panel");
-		Point pos(Screen::Right() - X_OFFSET - .5 * panelSprite->Width(),
-			Screen::Top() + .5 * panelSprite->Height());
-		SpriteShader::Draw(panelSprite, pos);
+		const Rectangle &bounds = mapDetail->GetBox("planet description");
 		
 		WrappedText text(font);
 		text.SetAlignment(WrappedText::JUSTIFIED);
-		text.SetWrapWidth(WIDTH - 20);
-		text.Wrap(selectedPlanet->Description());
-		text.Draw(Point(Screen::Right() - X_OFFSET - WIDTH, Screen::Top() + 20), medium);
+		text.SetWrapWidth(bounds.Width() - 2 * TEXT_MARGIN);
+		text.Wrap(fillText);
+		text.Draw(bounds.TopLeft() + Point(TEXT_MARGIN, TEXT_MARGIN), medium);
 	}
 	
 	DrawButtons("is ports");
@@ -448,26 +486,20 @@ void MapDetailPanel::DrawInfo()
 // Draw the planet orbits in the currently selected system, on the current day.
 void MapDetailPanel::DrawOrbits()
 {
-	const Sprite *orbitSprite = SpriteSet::Get("ui/orbits and key");
-	SpriteShader::Draw(orbitSprite, Screen::TopRight() + .5 * Point(-orbitSprite->Width(), orbitSprite->Height()));
-	Point orbitCenter = Screen::TopRight() + Point(-120., 160.);
-	
-	if(!selectedSystem || !player.HasVisited(selectedSystem))
+	if(!selectedSystem || !player.HasVisited(selectedSystem) || !mapDetail->HasPoint("orbit scene"))
 		return;
-	
-	const Font &font = FontSet::Get(14);
 	
 	// Figure out what the largest orbit in this system is.
 	double maxDistance = 0.;
 	for(const StellarObject &object : selectedSystem->Objects())
 		maxDistance = max(maxDistance, object.Position().Length() + object.Radius());
 	
-	// 2400 -> 120.
+	// Scale stellar distances into the available space.
 	double scale = .03;
 	maxDistance *= scale;
-	
-	if(maxDistance > 115.)
-		scale *= 115. / maxDistance;
+	const double ORBIT_RADIUS = mapDetail->GetValue("orbit radius");
+	if(maxDistance > ORBIT_RADIUS)
+		scale *= ORBIT_RADIUS / maxDistance;
 	
 	// Draw the orbits.
 	static const Color habitColor[7] = {
@@ -479,6 +511,7 @@ void MapDetailPanel::DrawOrbits()
 		Color(.2, .2, .2, 1.),
 		Color(1., 1., 1., 1.)
 	};
+	const Point &orbitCenter = mapDetail->GetPoint("orbit scene");
 	for(const StellarObject &object : selectedSystem->Objects())
 	{
 		if(object.Radius() <= 0.)
@@ -496,8 +529,8 @@ void MapDetailPanel::DrawOrbits()
 		
 		double radius = object.Distance() * scale;
 		RingShader::Draw(orbitCenter + parentPos * scale,
-			radius + .7, radius - .7,
-			habitColor[habit]);
+				radius + .7, radius - .7,
+				habitColor[habit]);
 	}
 	
 	// Draw the planets themselves.
@@ -518,16 +551,14 @@ void MapDetailPanel::DrawOrbits()
 	}
 	
 	// Draw the selection ring on top of everything else.
-	for(const StellarObject &object : selectedSystem->Objects())
-		if(selectedPlanet && object.GetPlanet() == selectedPlanet)
-			RingShader::Draw(orbitCenter + object.Position() * scale,
-				object.Radius() * scale + 5., object.Radius() * scale + 4.,
-				habitColor[6]);
-	
-	// Draw the name of the selected planet.
-	const string &name = selectedPlanet ? selectedPlanet->Name() : selectedSystem->Name();
-	Point namePos(Screen::Right() - .5 * font.Width(name) - 100., Screen::Top() + 7.);
-	font.Draw(name, namePos, *GameData::Colors().Get("medium"));
+	if(selectedPlanet)
+		for(const StellarObject &object : selectedSystem->Objects())
+			if(object.GetPlanet() == selectedPlanet)
+			{
+				RingShader::Draw(orbitCenter + object.Position() * scale,
+					object.Radius() * scale + 5., object.Radius() * scale + 4., habitColor[6]);
+				break;
+			}
 }
 
 
@@ -540,9 +571,9 @@ void MapDetailPanel::DrawKey() const
 	const Color &medium = *GameData::Colors().Get("medium");
 	const Font &font = FontSet::Get(14);
 	
-	Point pos = Screen::TopRight() + Point(-110., 310.);
+	Point pos = mapDetail->GetBox("map key").TopLeft();
 	Point headerOff(-5., -.5 * font.Height());
-	Point textOff(10., -.5 * font.Height());
+	Point textOff(TEXT_MARGIN, -.5 * font.Height());
 	
 	static const string HEADER[] = {
 		"Trade prices:",
@@ -566,7 +597,7 @@ void MapDetailPanel::DrawKey() const
 		if(static_cast<unsigned>(commodity) >= commodities.size())
 			return;
 		
-		for(int i = 0; i <= 3; ++i)
+		for(int i = 0; i < 4; ++i)
 		{
 			RingShader::Draw(pos, OUTER, INNER, MapColor(i * (2. / 3.) - 1.));
 			int price = range.low + ((range.high - range.low) * i) / 3;

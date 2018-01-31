@@ -858,6 +858,70 @@ interface "map buttons" bottom right
 
 
 
+# Interface controlling the position of elements on the "M" or "P" map menu.
+interface "map detail panel"
+	# Specify the orbits scene and map legend in reference from the top right corner.
+	anchor top right
+	sprite "ui/orbits and key"
+		align top right
+		from 0 0
+	
+	string "selected name"
+		center -100 15
+		dimensions 200 30
+	
+	point "orbit scene"
+		center -120 160
+	value "orbit radius" 115
+	
+	box "map key"
+		from -110 310 to 0 450
+	box "planet description"
+		from -750 10 to -250 270 top right
+	
+	visible if "has planet info"
+	sprite "ui/description panel"
+		from -810 0 to -240 280
+	visible
+	
+	
+	# Specify the selected system and its planets in reference from the top left corner.
+	anchor top left
+	sprite "ui/map system"
+		from 0 0 top left
+		to 200 90 top left
+	
+	# When the map coloring changes, a position is needed to draw
+	# a pointer that indicates the selected coloring scheme.
+	point "system pointer"
+	point "government pointer"
+	string "system name"
+		from 10 38 to 150 53
+		align left
+		color "medium"
+	active if "show government"
+	string "system government"
+		from 10 58 to 150 73
+		align left
+		color "dim"
+	
+	# Specify the selected system's commodity prices in reference to the bottom left corner.
+	# Commodity names and price are drawn in a table within the box.
+	anchor bottom left
+	sprite "ui/map trade"
+		align bottom left
+		from 0 0
+	box "map trade"
+		from 0 -220 to 160 0 bottom left
+
+# Each planet object is drawn as its own interface
+interface "map planet detail"
+	anchor left
+	sprite "ui/map planet"
+		align left
+		from 0 0
+
+
 interface "info panel"
 	sprite "ui/info panel"
 		center 0 -5

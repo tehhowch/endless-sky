@@ -15,10 +15,12 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "MapPanel.h"
 
+#include "Interface.h"
 #include "Point.h"
 
 #include <map>
 
+class Information;
 class Planet;
 class PlayerInfo;
 
@@ -44,7 +46,8 @@ protected:
 	
 	
 private:
-	void DrawInfo();
+	void UpdateInfo(Information &info) const;
+	void DrawInfo(Information &info);
 	void DrawOrbits();
 	void DrawKey() const;
 	
@@ -58,6 +61,7 @@ private:
 	
 	std::map<const Planet *, int> planetY;
 	std::map<const Planet *, Point> planets;
+	const Interface *mapDetail = nullptr;
 };
 
 
