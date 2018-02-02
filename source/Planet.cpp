@@ -12,6 +12,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Planet.h"
 
+#include "Account.h"
 #include "DataNode.h"
 #include "Format.h"
 #include "GameData.h"
@@ -497,13 +498,43 @@ void Planet::Bribe(bool fullAccess) const
 
 
 
-// Demand tribute, and get the planet's response.
+// If the tribute value is positive, the player must defeat its defenses in
+// order to receive tribute. If negative, the player pays the planet a daily sum.
+// To facilitate missions based on tribute status, a distinction is made between
+// tribute > 0, tribute < 0, and tribute < 0 with no defense fleet.
 string Planet::DemandTribute(PlayerInfo &player) const
 {
-	if(player.GetCondition("tribute: " + name))
-		return "We are already paying you as much as we can afford.";
-	if(!tribute || !defenseFleet || !defenseCount || player.GetCondition("combat rating") < defenseThreshold)
+	if(GameData::GetPolitics().HasDominated(this))
+		return tribute < 0
+				? "We thank you for your continued generosity."
+				: "We are already paying you as much as we can afford.";
+	if(!tribute || !defenseFleet || !defenseCount)
+	{
+		// If a planet has no defense fleet, a negative tribute value implies
+		// a voluntary donation of credits, and has no reputation hit.
+		if(tribute < 0)
+		{
+			// If this planet has a bribe, paying tribute is equivalent (as both allow landing).
+			int64_t toPay = 1000 * static_cast<int64_t>(bribe * sqrt(player.Accounts().NetWorth()));
+			// Discourage repeatedly offering and revoking donations by giving several days worth
+			// as a part of the initial payment.
+			toPay -= 10 * tribute;
+			if(player.Accounts().Credits() > toPay)
+			{
+				player.Accounts().AddCredits(-toPay);
+				player.Conditions()[TributeCondition()] = abs(tribute);
+				GameData::GetPolitics().DominatePlanet(this);
+				return "Your generosity is much appreciated! Your daily payments of "
+						+ Format::Number(abs(tribute)) + " credits will be put to good use.";
+			}
+			return "We're only interested in donations from rich benefactors";
+		}
+		// This planet has no tribute interactions.
 		return "Please don't joke about that sort of thing.";
+	}
+	// This planet has a defined tribute battle, but is the player dangerous enough?
+	else if(player.GetCondition("combat rating") < defenseThreshold)
+		return "You're not worth our time.";
 	
 	// The player is scary enough for this planet to take notice. Check whether
 	// this is the first demand for tribute, or not.
@@ -528,9 +559,24 @@ string Planet::DemandTribute(PlayerInfo &player) const
 	if(!isDefeated)
 		return "We're not ready to surrender yet.";
 	
-	player.Conditions()["tribute: " + name] = tribute;
+	// Always write a positive condition value: the condition name controls
+	// whether it is an asset or liability in the player's accounts.
+	player.Conditions()[TributeCondition()] = abs(tribute);
 	GameData::GetPolitics().DominatePlanet(this);
-	return "We surrender. We will pay you " + Format::Number(tribute) + " credits per day to leave us alone.";
+	string message = "We surrender!\n";
+	if(tribute > 0)
+		message += "We will pay you " + Format::Number(tribute) + " credits per day to leave us alone.";
+	else
+	{
+		// A negative tribute value and defenses means a "hostile takeover"
+		// and the continued monetary support of a puppet government.
+		int64_t toPay = abs(tribute);
+		player.Accounts().AddCredits(-min(toPay, player.Accounts().Credits()));
+		message += "(You have succeeded in deposing the local authorities. ";
+		message += "Maintaining your power over the citizens and government will cost ";
+		message += Format::Number(toPay) + " credits per day.)";
+	}
+	return message;
 }
 
 
@@ -560,4 +606,18 @@ void Planet::ResetDefense() const
 	isDefending = false;
 	defenseDeployed = 0;
 	defenders.clear();
+}
+
+
+
+// Get the condition name that corresponds to this planet's tribute entry, which
+// is dependent on if it has defense fleets and upon the sign of the tribute value.
+string Planet::TributeCondition() const
+{
+	if(tribute < 0 && defenseFleet && defenseCount)
+		return "upkeep: " + name;
+	else if(tribute < 0)
+		return "donation: " + name;
+	else
+		return "tribute: " + name;
 }

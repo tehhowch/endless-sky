@@ -218,10 +218,8 @@ void HailPanel::Draw()
 	draw.Draw();
 	
 	// Draw the current message.
-	WrappedText wrap;
-	wrap.SetAlignment(WrappedText::JUSTIFIED);
+	WrappedText wrap(FontSet::Get(14));
 	wrap.SetWrapWidth(330);
-	wrap.SetFont(FontSet::Get(14));
 	wrap.Wrap(message);
 	wrap.Draw(Point(-50., -50.), *GameData::Colors().Get("medium"));
 }
@@ -239,8 +237,11 @@ bool HailPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		if(GameData::GetPolitics().HasDominated(planet))
 		{
 			GameData::GetPolitics().DominatePlanet(planet, false);
-			player.Conditions().erase("tribute: " + planet->Name());
-			message = "Thank you for granting us our freedom!";
+			if(player.Conditions().count("donation: " + planet->TrueName()))
+				message = "Your generosity will be missed.";
+			else
+				message = "Thank you for granting us our freedom!";
+			player.Conditions().erase(planet->TributeCondition());
 		}
 		else
 			message = planet->DemandTribute(player);

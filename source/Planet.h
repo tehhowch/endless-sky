@@ -15,6 +15,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Sale.h"
 
+#include <cstdint>
 #include <list>
 #include <memory>
 #include <set>
@@ -120,6 +121,7 @@ public:
 	std::string DemandTribute(PlayerInfo &player) const;
 	void DeployDefense(std::list<std::shared_ptr<Ship>> &ships) const;
 	void ResetDefense() const;
+	std::string TributeCondition() const;
 	
 	
 private:
@@ -140,11 +142,13 @@ private:
 	
 	const Government *government = nullptr;
 	double requiredReputation = 0.;
+	// The percentage of net worth required to purchase a landing berth for a day.
 	double bribe = 0.01;
+	// The maximum chance upon landing for illegal items to be discovered.
 	double security = .25;
 	bool inhabited;
 	
-	int tribute = 0;
+	int64_t tribute = 0;
 	const Fleet *defenseFleet = nullptr;
 	int defenseCount = 0;
 	mutable int defenseDeployed = 0;
