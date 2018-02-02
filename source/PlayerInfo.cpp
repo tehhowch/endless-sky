@@ -502,14 +502,17 @@ void PlayerInfo::IncrementDate()
 		if(mission.CheckDeadline(date) && mission.IsVisible())
 			Messages::Add("You failed to meet the deadline for the mission \"" + mission.Name() + "\".");
 	
-	// Check what salaries and tribute the player receives.
-	int total[2] = {0, 0};
-	static const string prefix[2] = {"salary: ", "tribute: "};
-	for(int i = 0; i < 2; ++i)
+	// Check what salaries and tribute the player receives, and any upkeep or donations
+	// they pay.
+	int64_t total[4] = {0, 0, 0, 0};
+	static const string prefix[4] = {"salary: ", "tribute: ", "upkeep: ", "donation: "};
+	for(int i = 0; i < 4; ++i)
 	{
 		auto it = conditions.lower_bound(prefix[i]);
+		// Always treat these as positive values. (A negative value could
+		// be set by the player editing their save, or ConditionSet::Apply()).
 		for( ; it != conditions.end() && !it->first.compare(0, prefix[i].length(), prefix[i]); ++it)
-			total[i] += it->second;
+			total[i] += abs(it->second);
 	}
 	if(total[0] || total[1])
 	{
@@ -523,6 +526,20 @@ void PlayerInfo::IncrementDate()
 		message += ".";
 		Messages::Add(message);
 		accounts.AddCredits(total[0] + total[1]);
+	}
+	if(total[2] || total[3])
+	{
+		string message = "You pay ";
+		if(total[2])
+			message += Format::Number(total[2]) + " credits in upkeep";
+		if(total[2] && total[3])
+			message += " and ";
+		if(total[3])
+			message += Format::Number(total[3]) + " credits in donations";
+		message += ".";
+		Messages::Add(message);
+		int64_t toPay = min(total[2] + total[3], accounts.Credits());
+		accounts.AddCredits(-toPay);
 	}
 	
 	// For accounting, keep track of the player's net worth. This is for
