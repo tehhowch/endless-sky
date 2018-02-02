@@ -103,17 +103,19 @@ void BankPanel::Draw()
 	
 	// Check if salaries need to be drawn.
 	int64_t salaries = player.Salaries();
-	int64_t income[2] = {0, 0};
-	static const string prefix[2] = {"salary: ", "tribute: "};
-	for(int i = 0; i < 2; ++i)
+	int64_t transactions[4] = {0, 0, 0, 0};
+	static const string prefix[4] = {"salary: ", "tribute: ", "upkeep: ", "donation: "};
+	for(int i = 0; i < 4; ++i)
 	{
 		auto it = player.Conditions().lower_bound(prefix[i]);
 		for( ; it != player.Conditions().end() && !it->first.compare(0, prefix[i].length(), prefix[i]); ++it)
-			income[i] += it->second;
+			transactions[i] += abs(it->second);
 	}
 	// Figure out how many rows of the display are for mortgages, and also check
 	// whether multiple mortgages have to be combined into the last row.
-	mortgageRows = MAX_ROWS - (salaries != 0) - (income[0] != 0 || income[1] != 0);
+	mortgageRows = MAX_ROWS - (salaries != 0)
+			- (transactions[0] != 0 || transactions[1] != 0)
+			- (transactions[2] != 0 || transactions[3] != 0);
 	int mortgageCount = player.Accounts().Mortgages().size();
 	mergedMortgages = (mortgageCount > mortgageRows);
 	if(!mergedMortgages)
@@ -184,16 +186,30 @@ void BankPanel::Draw()
 		table.Draw(salaries);
 		table.Advance();
 	}
-	if(income[0] || income[1])
+	if(transactions[0] || transactions[1])
 	{
 		// Your daily income offsets expenses.
-		totalPayment -= income[0] + income[1];
+		totalPayment -= transactions[0] + transactions[1];
 		
-		static const string LABEL[] = {"", "Your Salary Income", "Your Tribute Income", "Your Salary and Tribute Income"};
-		table.Draw(LABEL[(income[0] != 0) + 2 * (income[1] != 0)]);
+		static const string LABEL[] = {"", "Your Salary Income",
+				"Your Tribute Income", "Your Salary and Tribute Income"};
+		table.Draw(LABEL[(transactions[0] != 0) + 2 * (transactions[1] != 0)]);
 		// For crew salaries, only the "payment" field needs to be shown.
 		table.Advance(3);
-		table.Draw(-(income[0] + income[1]));
+		table.Draw(-(transactions[0] + transactions[1]));
+		table.Advance();
+	}
+	if(transactions[2] || transactions[3])
+	{
+		// Paying upkeep for a puppet government, or giving aid to defenseless
+		// planets increases the player's daily expenses.
+		totalPayment += transactions[2] + transactions[3];
+		
+		static const string LABEL[] = {"", "Planetary Upkeep",
+				"Planetary Donations", "Planetary Upkeep and Donation Expenses"};
+		table.Draw(LABEL[(transactions[2] != 0) + 2 * (transactions[3] != 0)]);
+		table.Advance(3);
+		table.Draw(transactions[2] + transactions[3]);
 		table.Advance();
 	}
 	
