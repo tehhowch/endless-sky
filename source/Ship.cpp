@@ -1168,6 +1168,7 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 		if(isUsingJumpDrive && !forget)
 			CreateSparks(visuals, "jump drive", hyperspaceCount * Width() * Height() * .000006);
 		
+		// Transition between the current and destination system after HYPER_C steps.
 		if(hyperspaceCount == HYPER_C)
 		{
 			currentSystem = hyperspaceSystem;
@@ -1203,9 +1204,15 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 					}
 			}
 			
+			// Set the ship's position in the new system.
 			if(isUsingJumpDrive)
 			{
 				position = target + Angle::Random().Unit() * 300. * (Random::Real() + 1.);
+				// Ensure that the entry point is outside the system's entry radius.
+				double toMove = currentSystem->EntryRadius() - position.Length();
+				if(toMove > 0.)
+					position += toMove * position.Unit();
+				
 				return;
 			}
 			
@@ -1219,6 +1226,8 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 			// sudden shift in direction at the end.
 			velocity = velocity.Length() * angle.Unit();
 		}
+		
+		// Ships without jump drives accelerate out of and in to the two systems.
 		if(!isUsingJumpDrive)
 		{
 			velocity += (HYPER_A * direction) * angle.Unit();
@@ -1249,6 +1258,9 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 			}
 		}
 		position += velocity;
+		
+		// Hyperspacing escorts keep relative position with their parent ship.
+		// (Escorts will not jump without their parent also jumping.)
 		if(GetParent() && GetParent()->currentSystem == currentSystem)
 		{
 			hyperspaceOffset = position - GetParent()->position;
