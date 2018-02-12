@@ -176,10 +176,17 @@ void HailPanel::Draw()
 	}
 	else
 	{
-		if(!GameData::GetPolitics().HasDominated(planet))
+		if(GameData::GetPolitics().HasDominated(planet))
+		{
+			if(planet->TributeType() == Tribute::DOMINATE)
+				info.SetCondition("show relinquish");
+			else
+				info.SetCondition("show rescind");
+		}
+		else if(planet->GetTribute() > 0)
 			info.SetCondition("show dominate");
-		else
-			info.SetCondition("show relinquish");
+		else if(planet->GetTribute() < 0 && planet)
+			info.SetCondition("show pledge");
 		if(hasLanguage)
 		{
 			info.SetCondition("can dominate");

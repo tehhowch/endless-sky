@@ -118,10 +118,12 @@ public:
 	void Bribe(bool fullAccess = true) const;
 	
 	// Demand tribute, and get the planet's response.
+	enum Tribute = {NONE, CONTROL, DOMINATE, PLEDGE};
+	Tribute TributeType() const;
+	std::string TributeCondition() const;
 	std::string DemandTribute(PlayerInfo &player) const;
 	void DeployDefense(std::list<std::shared_ptr<Ship>> &ships) const;
 	void ResetDefense() const;
-	std::string TributeCondition() const;
 	
 	
 private:

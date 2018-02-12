@@ -498,6 +498,36 @@ void Planet::Bribe(bool fullAccess) const
 
 
 
+// Get the type of tribute this planet offers. "Control" and "Pledge" involve
+// the player paying money to the planet, while "Dominate" pays the player.
+Tribute Planet::TributeType() const
+{
+	if(tribute == 0)
+		return NONE;
+	else if(tribute > 0)
+		return DOMINATE;
+	else if(defenseFleet && defenseCount)
+		return CONTROL;
+	else
+		return PLEDGE;
+}
+
+
+
+// Get the condition name that corresponds to this planet's tribute entry, which
+// is dependent on if it has defense fleets and upon the sign of the tribute value.
+string Planet::TributeCondition() const
+{
+	if(tribute < 0 && defenseFleet && defenseCount)
+		return "upkeep: " + name;
+	else if(tribute < 0)
+		return "donation: " + name;
+	else
+		return "tribute: " + name;
+}
+
+
+
 // If the tribute value is positive, the player must defeat its defenses in
 // order to receive tribute. If negative, the player pays the planet a daily sum.
 // To facilitate missions based on tribute status, a distinction is made between
@@ -606,18 +636,4 @@ void Planet::ResetDefense() const
 	isDefending = false;
 	defenseDeployed = 0;
 	defenders.clear();
-}
-
-
-
-// Get the condition name that corresponds to this planet's tribute entry, which
-// is dependent on if it has defense fleets and upon the sign of the tribute value.
-string Planet::TributeCondition() const
-{
-	if(tribute < 0 && defenseFleet && defenseCount)
-		return "upkeep: " + name;
-	else if(tribute < 0)
-		return "donation: " + name;
-	else
-		return "tribute: " + name;
 }
