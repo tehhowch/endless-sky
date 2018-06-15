@@ -2443,7 +2443,22 @@ mission "Wanderers Ap'arak 3: Pug"
 		ship "Pug Arfecta" "Hork Ekekek Ptui"
 		ship "Pug Arfecta" "Graak Sput Kchoo"
 	on complete
+		dialog "Shortly after destroying the Pug ships, you received a message from Sobari Tele'ek: "We have received [news, reports] that you are destroying the ships of our Keeper [friends, allies] in the Ap'arak system. This is [unacceptable, intolerable]. From now on, you are no longer [welcome, allowed] in our [territory, space]."
 		"reputation: Wanderer" <?= -1
+
+mission "Wanderers Ap'arak Pug Patrol Increased"
+	invisible
+	landing
+	to offer
+		has "Wanderers Ap'arak 3: Pug: done"
+	npc kill
+		government "Pug"
+		personality staying unconstrained
+		system Ap'arak
+		ship "Pug Arfecta" "Pak Kim Glorf"
+		ship "Pug Arfecta" "Mug Wor Florp"
+		ship "Pug Arfecta" "Prot Moof Marg"
+		ship "Pug Arfecta" "Dor Plat Graw"
 
 mission "Wanderers Ap'arak 3"
 	landing
