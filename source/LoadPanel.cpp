@@ -34,6 +34,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "StarField.h"
 #include "UI.h"
 
+#include "gl_header.h"
+
 #include <algorithm>
 
 using namespace std;
@@ -79,15 +81,16 @@ void LoadPanel::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	GameData::Background().Draw(Point(), Point());
+	const Font &font = FontSet::Get(14);
 	
 	Information info;
 	if(loadedInfo.IsLoaded())
 	{
-		info.SetString("pilot", loadedInfo.Name());
+		info.SetString("pilot", font.TruncateMiddle(loadedInfo.Name(), 165));
 		if(loadedInfo.ShipSprite())
 		{
 			info.SetSprite("ship sprite", loadedInfo.ShipSprite());
-			info.SetString("ship", loadedInfo.ShipName());
+			info.SetString("ship", font.TruncateMiddle(loadedInfo.ShipName(), 165));
 		}
 		if(!loadedInfo.GetSystem().empty())
 			info.SetString("system", loadedInfo.GetSystem());
@@ -111,8 +114,6 @@ void LoadPanel::Draw()
 	GameData::Interfaces().Get("menu background")->Draw(info, this);
 	GameData::Interfaces().Get("load menu")->Draw(info, this);
 	GameData::Interfaces().Get("menu player info")->Draw(info, this);
-	
-	const Font &font = FontSet::Get(14);
 	
 	// The list has space for 14 entries. Alpha should be 100% for Y = -157 to
 	// 103, and fade to 0 at 10 pixels beyond that.
@@ -164,8 +165,8 @@ void LoadPanel::Draw()
 	{
 		Point boxSize(font.Width(hoverText) + 20., 30.);
 		
-		FillShader::Fill(hoverPoint + .5 * boxSize, boxSize, Color(.3, 1.));
-		font.Draw(hoverText, hoverPoint + Point(10., 10.), Color(.5, 0.));
+		FillShader::Fill(hoverPoint + .5 * boxSize, boxSize, *GameData::Colors().Get("tooltip background"));
+		font.Draw(hoverText, hoverPoint + Point(10., 10.), *GameData::Colors().Get("medium"));
 	}
 }
 

@@ -17,29 +17,32 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "AsteroidField.h"
 #include "BatchDrawList.h"
 #include "CollisionSet.h"
+#include "Command.h"
 #include "DrawList.h"
 #include "EscortDisplay.h"
-#include "Flotsam.h"
 #include "Information.h"
-#include "PlanetLabel.h"
 #include "Point.h"
-#include "Projectile.h"
 #include "Radar.h"
 #include "Rectangle.h"
-#include "Ship.h"
-#include "ShipEvent.h"
-#include "Visual.h"
 
 #include <condition_variable>
 #include <list>
 #include <map>
 #include <memory>
 #include <thread>
+#include <utility>
 #include <vector>
 
+class Flotsam;
 class Government;
 class Outfit;
+class PlanetLabel;
 class PlayerInfo;
+class Projectile;
+class Ship;
+class ShipEvent;
+class Sprite;
+class Visual;
 
 
 
@@ -67,7 +70,8 @@ public:
 	void Go();
 	
 	// Get any special events that happened in this step.
-	const std::list<ShipEvent> &Events() const;
+	// MainPanel::Step will clear this list.
+	std::list<ShipEvent> &Events();
 	
 	// Draw a frame.
 	void Draw() const;
@@ -164,7 +168,7 @@ private:
 	// Other information to display.
 	Information info;
 	std::vector<Target> targets;
-	Point targetAngle;
+	Point targetVector;
 	Point targetUnit;
 	int targetSwizzle = -1;
 	EscortDisplay escorts;
@@ -186,7 +190,6 @@ private:
 	int grudgeTime = 0;
 	
 	CollisionSet shipCollisions;
-	CollisionSet cloakedCollisions;
 	
 	int alarmTime = 0;
 	double flash = 0.;

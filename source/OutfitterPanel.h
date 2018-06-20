@@ -18,6 +18,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Sale.h"
 
 #include <map>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -56,6 +57,7 @@ protected:
 	virtual bool CanSell(bool toCargo = false) const override;
 	virtual void Sell(bool toCargo = false) override;
 	virtual void FailSell(bool toCargo = false) const override;
+	virtual bool ShouldHighlight(const Ship *ship) override;
 	virtual void DrawKey() override;
 	virtual void ToggleForSale() override;
 	virtual void ToggleCargo() override;

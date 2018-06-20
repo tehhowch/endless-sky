@@ -118,11 +118,11 @@ void BoardingPanel::Draw()
 	DrawBackdrop();
 	
 	// Draw the list of plunder.
-	Color opaque(.1, 1.);
-	Color back = *GameData::Colors().Get("faint");
-	Color dim = *GameData::Colors().Get("dim");
-	Color medium = *GameData::Colors().Get("medium");
-	Color bright = *GameData::Colors().Get("bright");
+	const Color &opaque = *GameData::Colors().Get("panel background");
+	const Color &back = *GameData::Colors().Get("faint");
+	const Color &dim = *GameData::Colors().Get("dim");
+	const Color &medium = *GameData::Colors().Get("medium");
+	const Color &bright = *GameData::Colors().Get("bright");
 	FillShader::Fill(Point(-155., -60.), Point(360., 250.), opaque);
 	
 	int index = (scroll - 10) / 20;
@@ -179,7 +179,7 @@ void BoardingPanel::Draw()
 			Round(defenseOdds.DefenderPower(crew)));
 	}
 	int vCrew = victim ? victim->Crew() : 0;
-	if(victim && (victim->IsCapturable() || victim->GetGovernment()->IsPlayer()))
+	if(victim && (victim->IsCapturable() || victim->IsYours()))
 	{
 		info.SetString("enemy crew", to_string(vCrew));
 		info.SetString("enemy attack",
@@ -187,7 +187,7 @@ void BoardingPanel::Draw()
 		info.SetString("enemy defense",
 			Round(attackOdds.DefenderPower(vCrew)));
 	}
-	if(victim && victim->IsCapturable() && !victim->GetGovernment()->IsPlayer())
+	if(victim && victim->IsCapturable() && !victim->IsYours())
 	{
 		// If you haven't initiated capture yet, show the self destruct odds in
 		// the attack odds. It's illogical for you to have access to that info,
@@ -377,7 +377,6 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 			{
 				messages.push_back("You have been killed. Your ship is lost.");
 				you->WasCaptured(victim);
-				you->SetIsYours(false);
 				playerDied = true;
 				isCapturing = false;
 			}
@@ -465,9 +464,9 @@ bool BoardingPanel::CanExit() const
 bool BoardingPanel::CanTake() const
 {
 	// If you ship or the other ship has been captured:
-	if(!you->GetGovernment()->IsPlayer())
+	if(!you->IsYours())
 		return false;
-	if(victim->GetGovernment()->IsPlayer())
+	if(victim->IsYours())
 		return false;
 	if(isCapturing || playerDied)
 		return false;
@@ -487,9 +486,9 @@ bool BoardingPanel::CanCapture() const
 		return false;
 	
 	// If your ship or the other ship has been captured:
-	if(!you->GetGovernment()->IsPlayer())
+	if(!you->IsYours())
 		return false;
-	if(victim->GetGovernment()->IsPlayer())
+	if(victim->IsYours())
 		return false;
 	if(!victim->IsCapturable())
 		return false;
@@ -636,5 +635,5 @@ void BoardingPanel::Plunder::UpdateStrings()
 // Commodities come in units of one ton.
 double BoardingPanel::Plunder::UnitMass() const
 {
-	return outfit ? outfit->Get("mass") : 1.;
+	return outfit ? outfit->Mass() : 1.;
 }

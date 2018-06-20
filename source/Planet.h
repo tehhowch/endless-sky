@@ -103,6 +103,7 @@ public:
 	bool IsWormhole() const;
 	const System *WormholeSource(const System *to) const;
 	const System *WormholeDestination(const System *from) const;
+	const std::vector<const System *> &WormholeSystems() const;
 	
 	// Check if the given ship has all the attributes necessary to allow it to
 	// land on this planet.
@@ -141,6 +142,7 @@ private:
 	double requiredReputation = 0.;
 	double bribe = 0.01;
 	double security = .25;
+	bool inhabited;
 	
 	int tribute = 0;
 	const Fleet *defenseFleet = nullptr;

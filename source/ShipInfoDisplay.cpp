@@ -263,7 +263,7 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const Depreciation &dep
 	energyTable.push_back(Format::Number(
 		60. * (attributes.Get("energy generation")
 			+ attributes.Get("solar collection")
-			+ (.1 * ship.IdleHeat() * attributes.Get("heat dissipation")) / emptyMass
+			+ (100 * ship.IdleHeat() * ship.HeatDissipation()) / emptyMass
 				* attributes.Get("passive heat conversion")
 			- attributes.Get("energy consumption")
 			- attributes.Get("cooling energy"))));
@@ -305,7 +305,7 @@ void ShipInfoDisplay::UpdateAttributes(const Ship &ship, const Depreciation &dep
 	attributesHeight += 20;
 	tableLabels.push_back("max:");
 	energyTable.push_back(Format::Number(attributes.Get("energy capacity")));
-	heatTable.push_back(Format::Number(60. * emptyMass * .1 * attributes.Get("heat dissipation")));
+	heatTable.push_back(Format::Number(60. * ship.HeatDissipation() * ship.MaximumHeat()));
 	// Pad by 10 pixels on the top and bottom.
 	attributesHeight += 30;
 }
