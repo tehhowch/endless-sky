@@ -38,7 +38,8 @@ public:
 	
 	// If this hazard is currently posing a threat to in-system ships.
 	bool IsActive() const;
-	void Harm(const Body &body) const; // minable, ship, ???
+	// Attempt to harm the given object. Returns true if it was affected. (could be void?)
+	bool Harm(const Body &body) const; // minable, ship, ???
 
 
 private:
