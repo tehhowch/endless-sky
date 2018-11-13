@@ -36,12 +36,14 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "gl_header.h"
 #include <SDL2/SDL.h>
 
+#include <algorithm>
 #include <cstring>
 #include <iostream>
 #include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <vector>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -51,6 +53,7 @@ using namespace std;
 
 void PrintHelp();
 void PrintVersion();
+void PrintSaves();
 void SetIcon(SDL_Window *window);
 void AdjustViewport(SDL_Window *window);
 int DoError(string message, SDL_Window *window = nullptr, SDL_GLContext context = nullptr);
@@ -90,6 +93,12 @@ int main(int argc, char *argv[])
 			debugMode = true;
 		else if(arg == "-p" || arg == "--parse-save")
 			loadOnly = true;
+		else if(arg == "-l" || arg == "--list-saves")
+		{
+			Files::Init(argv);
+			PrintSaves();
+			return 0;
+		}
 	}
 	PlayerInfo player;
 	
@@ -427,6 +436,30 @@ void PrintVersion()
 	cerr << "This is free software: you are free to change and redistribute it." << endl;
 	cerr << "There is NO WARRANTY, to the extent permitted by law." << endl;
 	cerr << endl;
+}
+
+
+
+void PrintSaves()
+{
+	vector<string> savesList = Files::List(Files::Saves());
+	string saveDirectory = Files::Config() + "saves/";
+	cout << endl;
+	if(savesList.empty())
+		cout << "No saved games detected in " << saveDirectory << endl;
+	else
+	{
+		sort(savesList.begin(), savesList.end(),
+			[](const string &a, const string &b)
+			{
+				return Files::Timestamp(a) < Files::Timestamp(b);
+			});
+		cout << "Found " << savesList.size() << " saves in '" << saveDirectory << "'" << endl;
+		cout << "(most recently used last):" << endl;
+		for(const auto &save : savesList)
+			cout << "    " << Files::Name(save) << endl;
+	}
+	cout << endl;
 }
 
 
