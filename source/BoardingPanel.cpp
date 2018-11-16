@@ -13,7 +13,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "BoardingPanel.h"
 
 #include "CargoHold.h"
-#include "Depreciation.h"
 #include "Dialog.h"
 #include "FillShader.h"
 #include "Font.h"
@@ -52,15 +51,8 @@ namespace {
 		return result;
 	}
 	
-	// Determine the ammo used by the boarding ship.
-	const set<const Outfit *> GetUsedAmmo(const map<const Outfit *, int> &shipOutfits)
-	{
-		auto ammo = set<const Outfit *>();
-		for(const auto &it : shipOutfits)
-			if(it.first->Ammo())
-				ammo.insert(it.first->Ammo());
-		return ammo;
-	}
+	// Ammo used by the boarding ship.
+	auto usedAmmo = set<const Outfit *>();
 }
 
 
@@ -117,6 +109,11 @@ BoardingPanel::BoardingPanel(PlayerInfo &player, const shared_ptr<Ship> &victim)
 	// Some "ships" do not represent something the player could actually pilot.
 	if(!victim->IsCapturable())
 		messages.emplace_back("This is not a ship that you can capture.");
+	
+	// Precompute the ammo that the boarding ship can use.
+	for(const auto &oit : you->Outfits())
+		if(oit.first->Ammo())
+			usedAmmo.insert(oit.first->Ammo());
 	
 	// Sort the plunder by price per ton.
 	sort(plunder.begin(), plunder.end());
@@ -252,7 +249,6 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		int count = plunder[selected].Count();
 		
 		const Outfit *outfit = plunder[selected].GetOutfit();
-		const set<const Outfit *> usedAmmo = GetUsedAmmo(you->Outfits());
 		if(outfit)
 		{
 			// Check if this outfit is ammo for one of your weapons. If so, use
@@ -614,146 +610,4 @@ bool BoardingPanel::CanCapture() const
 bool BoardingPanel::CanAttack() const
 {
 	return isCapturing;
-}
-
-
-
-// Functions for BoardingPanel::Plunder:
-
-// Constructor (commodity cargo).
-BoardingPanel::Plunder::Plunder(const string &commodity, int count, int unitValue)
-	: name(commodity), outfit(nullptr), count(count), unitValue(unitValue)
-{
-	UpdateStrings();
-}
-
-
-
-// Constructor (outfit installed in the victim ship).
-BoardingPanel::Plunder::Plunder(const Outfit *outfit, int count)
-	: name(outfit->Name()), outfit(outfit), count(count), unitValue(outfit->Cost() * Depreciation::Full())
-{
-	UpdateStrings();
-}
-
-
-
-// Sort by value per ton of mass.
-bool BoardingPanel::Plunder::operator<(const Plunder &other) const
-{
-	// This may involve infinite values when the mass is zero, but that's okay.
-	return (unitValue / UnitMass() > other.unitValue / other.UnitMass());
-}
-
-
-
-// Check how many of this item are left un-plundered. Once this is zero,
-// the item can be removed from the list.
-int BoardingPanel::Plunder::Count() const
-{
-	return count;
-}
-
-
-
-// Get the value of each unit of this plunder item.
-int64_t BoardingPanel::Plunder::UnitValue() const
-{
-	return unitValue;
-}
-
-
-
-// Get the name of this item. If it is a commodity, this is its name.
-const string &BoardingPanel::Plunder::Name() const
-{
-	return name;
-}
-
-
-
-// Get the mass, in the format "<count> x <unit mass>". If this is a
-// commodity, no unit mass is given (because it is 1). If the count is
-// 1, only the unit mass is reported.
-const string &BoardingPanel::Plunder::Size() const
-{
-	return size;
-}
-
-
-
-// Get the total value (unit value times count) as a string.
-const string &BoardingPanel::Plunder::Value() const
-{
-	return value;
-}
-
-
-
-// If this is an outfit, get the outfit. Otherwise, this returns null.
-const Outfit *BoardingPanel::Plunder::GetOutfit() const
-{
-	return outfit;
-}
-
-
-
-// Determine if this piece of plunder can be taken by the given ship as-is.
-bool BoardingPanel::Plunder::CanTake(const Ship &ship) const
-{
-	// If there's cargo space for this outfit, you can take it.
-	if(UnitMass() <= ship.Cargo().Free())
-		return true;
-	
-	// Otherwise, check if it is ammo for any of the ship's weapons. If so,
-	// check if you can install it as an outfit.
-	if(outfit && GetUsedAmmo(ship.Outfits()).count(outfit)
-			&& ship.Attributes().CanAdd(*outfit))
-		return true;
-	
-	return false;
-}
-
-
-// Determine if this plunder can be decomposed into other plunder.
-bool BoardingPanel::Plunder::CanSalvage() const
-{
-	// Commodities cannot be salvaged.
-	if(!outfit)
-		return false;
-	
-	return outfit->IsSalvageable();
-}
-
-
-
-// Take some or all of this plunder item.
-void BoardingPanel::Plunder::Take(int count)
-{
-	this->count -= count;
-	UpdateStrings();
-}
-
-
-
-// Update the text to reflect a change in the item count.
-void BoardingPanel::Plunder::UpdateStrings()
-{
-	double mass = UnitMass();
-	if(!outfit)
-		size = to_string(count);
-	else if(count == 1)
-		size = Format::Number(mass);
-	else
-		size = to_string(count) + " x " + Format::Number(mass);
-	
-	value = Format::Credits(unitValue * count);
-}
-
-
-
-// Commodities come in units of one ton.
-double BoardingPanel::Plunder::UnitMass() const
-{
-	return outfit ? outfit->Mass() : 1.;
 }
