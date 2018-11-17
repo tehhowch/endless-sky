@@ -59,8 +59,9 @@ public:
 	const Sprite *Thumbnail() const;
 	// Determine if this outfit can be split into parts.
 	bool IsSalvageable() const;
-	// Get the component parts this outfit decomposes into.
-	const std::vector<Plunder> &Salvage() const;
+	// Get the component parts this outfit decomposes into. Specific ship
+	// attributes may be needed to access certain kinds of parts.
+	const std::map<std::string, std::vector<Plunder>> &Salvage() const;
 	
 	double Get(const char *attribute) const;
 	double Get(const std::string &attribute) const;
@@ -104,7 +105,7 @@ private:
 	std::map<const Effect *, int> afterburnerEffects;
 	const Sprite *flotsamSprite = nullptr;
 	// The outfit "parts" that compose this outfit.
-	std::vector<Plunder> salvage;
+	std::map<std::string, std::vector<Plunder>> salvage;
 };
 
 

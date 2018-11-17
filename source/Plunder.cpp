@@ -127,14 +127,21 @@ bool Plunder::CanTake(const Ship &ship) const
 }
 
 
-// Determine if this plunder can be decomposed into other plunder.
-bool Plunder::CanSalvage() const
+// Determine if this plunder can be decomposed into other plunder by this ship.
+bool Plunder::CanSalvage(const Ship &ship) const
 {
-	// Commodities cannot be salvaged.
-	if(!outfit)
+	// Commodities cannot be further salvaged.
+	if(!outfit || !outfit->IsSalvageable())
 		return false;
 	
-	return outfit->IsSalvageable();
+	// If the associated attribute is empty (unspecified), no special
+	// attributes are required to salvage this outfit. Otherwise, the
+	// boarding ship must have at least one of the specified attributes.
+	for(const auto &groups : outfit->Salvage())
+		if(groups.first.empty() || ship.Attributes().Get(groups.first))
+			return true;
+	
+	return false;
 }
 
 

@@ -93,6 +93,8 @@ void Outfit::Load(const DataNode &node)
 			// and commodities.
 			if(child.HasChildren())
 			{
+				string requiredAttribute = child.Size() >= 2 ? child.Token(1) : "";
+				auto parts = vector<Plunder>();
 				for(const DataNode &grand : child)
 				{
 					int count = grand.Size() >= 3 ? static_cast<int>(grand.Value(2)) : 1;
@@ -104,11 +106,23 @@ void Outfit::Load(const DataNode &node)
 						const string &name = grand.Token(1);
 						// TODO: The commodity list may not yet be loaded, so this may be an unknown / incorrect commodity.
 						if(kind == "commodity")
-							salvage.emplace_back(name, count, -1);
+							parts.emplace_back(name, count, -1);
 						else if(kind == "outfit")
-							salvage.emplace_back(GameData::Outfits().Get(name), count);
+							parts.emplace_back(GameData::Outfits().Get(name), count);
 						else
 							grand.PrintTrace("Skipping invalid \"salvage\" kind:");
+					}
+				}
+				if(!parts.empty())
+				{
+					// Try to add to the map directly first.
+					auto it = salvage.emplace(requiredAttribute, parts);
+					if(!it.second)
+					{
+						// The required attribute already existed. Merge the new salvage
+						// list with the existing one.
+						auto &existing = (*it.first).second;
+						existing.insert(existing.end(), parts.begin(), parts.end());
 					}
 				}
 			}
@@ -205,7 +219,7 @@ bool Outfit::IsSalvageable() const
 
 
 
-const vector<Plunder> &Outfit::Salvage() const
+const map<string, vector<Plunder>> &Outfit::Salvage() const
 {
 	return salvage;
 }

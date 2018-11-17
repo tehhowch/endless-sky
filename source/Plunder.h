@@ -50,8 +50,8 @@ public:
 	const Outfit *GetOutfit() const;
 	// Determine if the ship can take this plunder as-is.
 	bool CanTake(const Ship &ship) const;
-	// Determine if this plunder can be decomposed into other plunder.
-	bool CanSalvage() const;
+	// Determine if this plunder can be decomposed into other plunder by this ship.
+	bool CanSalvage(const Ship &ship) const;
 	// Take some or all of this plunder item.
 	void Take(int count);
 	

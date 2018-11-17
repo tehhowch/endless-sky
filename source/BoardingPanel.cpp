@@ -152,7 +152,7 @@ void BoardingPanel::Draw()
 			FillShader::Fill(Point(-155., y + 10.), Point(360., 20.), back);
 		
 		// Color the item based on whether you have space for it.
-		const Color &color = (item.CanTake(*you) || item.CanSalvage()) ? (isSelected ? bright : medium) : dim;
+		const Color &color = (item.CanTake(*you) || item.CanSalvage(*you)) ? (isSelected ? bright : medium) : dim;
 		Point pos(-320., y + fontOff);
 		font.Draw(item.Name(), pos, color);
 		
@@ -303,15 +303,22 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		const int salvageSkill = player.Conditions()["mechanic"];
 		auto salvaged = vector<Plunder>();
 		const System &system = *you->GetSystem();
-		for(const auto &p : outfit->Salvage())
+		// This outfit may have several options depending on the attributes
+		// of the boarding ship. At least one is valid (else we could not salvage).
+		for(const auto &group : outfit->Salvage())
 		{
-			int count = Random::Int(p.Count() + 1);
-			if(salvageSkill && count < p.Count())
-				++count;
-			if(count && p.GetOutfit())
-				salvaged.emplace_back(p.GetOutfit(), count);
-			else if(count)
-				salvaged.emplace_back(p.Name(), count, system.Trade(p.Name()));
+			const string &attr = group.first;
+			if(attr.empty() || you->Attributes().Get(attr))
+				for(const auto &p : group.second)
+				{
+					int count = Random::Int(p.Count() + 1);
+					if(salvageSkill && count < p.Count())
+						++count;
+					if(count && p.GetOutfit())
+						salvaged.emplace_back(p.GetOutfit(), count);
+					else if(count)
+						salvaged.emplace_back(p.Name(), count, system.Trade(p.Name()));
+				}
 		}
 		
 		// Notify the player of the salvage results.
@@ -589,7 +596,7 @@ bool BoardingPanel::CanSalvage() const
 	if(static_cast<unsigned>(selected) >= plunder.size())
 		return false;
 	
-	return plunder[selected].CanSalvage();
+	return plunder[selected].CanSalvage(*you);
 }
 
 
