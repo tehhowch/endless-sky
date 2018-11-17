@@ -28,6 +28,8 @@ public:
 	
 	// Sort by value per ton of mass.
 	bool operator<(const Plunder &other) const;
+	// Plunder is equal if it refers to the same outfit or the same commodity, regardless of count.
+	bool operator==(const Plunder &other) const;
 	
 	// Check how many of this item are left un-plundered. Once this is zero,
 	// the item can be removed from the list.

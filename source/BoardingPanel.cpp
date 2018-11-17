@@ -301,66 +301,74 @@ bool BoardingPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command)
 		
 		// TODO: implement a better "salvage skill curve" than just +1.
 		const int salvageSkill = player.Conditions()["mechanic"];
-		auto results = vector<Plunder>();
-		const map<const Outfit *, int> salvage = outfit->Salvage();
-		for(const auto &sit : salvage)
+		auto salvaged = vector<Plunder>();
+		const System &system = *you->GetSystem();
+		for(const auto &p : outfit->Salvage())
 		{
-			int count = Random::Int(sit.second + 1);
-			if(salvageSkill && count < sit.second)
+			int count = Random::Int(p.Count() + 1);
+			if(salvageSkill && count < p.Count())
 				++count;
-			if(count)
-				results.emplace_back(sit.first, count);
+			if(count && p.GetOutfit())
+				salvaged.emplace_back(p.GetOutfit(), count);
+			else if(count)
+				salvaged.emplace_back(p.Name(), count, system.Trade(p.Name()));
 		}
 		
 		// Notify the player of the salvage results.
 		string message = "You salvaged 1 " + outfit->Name() + " into";
-		if(results.empty())
+		if(salvaged.empty())
 			message += " nothing of value.";
 		else
 		{
 			message += ":\n";
-			if(results.size() >= 1)
-				sort(results.begin(), results.end(), [](const Plunder &a, const Plunder &b){ return a.Name() < b.Name(); });
-			for(const auto &r : results)
+			if(salvaged.size() >= 2)
+				sort(salvaged.begin(), salvaged.end(), [](const Plunder &a, const Plunder &b){ return a.Name() < b.Name(); });
+			for(const Plunder &p : salvaged)
 			{
-				int quantity = r.Count();
-				message += "\t" + Format::Number(quantity) + " " + (quantity > 1 ?
-						r.GetOutfit()->PluralName() : r.Name()) + "\n";
+				int quantity = p.Count();
+				message += "\t" + Format::Number(quantity) + " " + (quantity > 1 && p.GetOutfit() ?
+						p.GetOutfit()->PluralName() : p.Name()) + "\n";
 			}
 		}
 		GetUI()->Push(new Dialog(message));
+		// If nothing was salvaged, report the keypress event was handled.
+		if(salvaged.empty())
+			return true;
 		
 		// Add the salvaged plunder to the victim's cargo, to preserve it if
 		// the aggressor departs and reboards. Disable transfer limits in case
 		// a plugin defines a salvage operation that results in a larger volume.
+		int size = victim->Cargo().Size();
 		victim->Cargo().SetSize(-1);
-		for(const Plunder &p : results)
-			victim->Cargo().Add(p.GetOutfit(), p.Count());
-		victim->Cargo().SetSize(victim->Attributes().Get("cargo space"));
+		for(const Plunder &p : salvaged)
+		{
+			if(p.GetOutfit())
+				victim->Cargo().Add(p.GetOutfit(), p.Count());
+			else
+				victim->Cargo().Add(p.Name(), p.Count());
+		}
+		victim->Cargo().SetSize(size);
 		
 		// If a salvaged outfit already exists in the ship's available plunder,
 		// add the new count to it.
 		for(Plunder &p : plunder)
 		{
-			if(p.GetOutfit())
-				for(auto sit = results.begin(); sit != results.end();)
+			for(auto sit = salvaged.begin(); sit != salvaged.end(); )
+			{
+				if(p == *sit)
 				{
-					if((*sit).GetOutfit() == p.GetOutfit())
-					{
-						p.Take(-(*sit).Count());
-						results.erase(sit);
-						// There can be only one of a given outfit in the results list.
-						break;
-					}
-					else
-						++sit;
+					p.Take(-(*sit).Count());
+					salvaged.erase(sit);
 				}
-			if(results.empty())
-				break;
+				else
+					++sit;
+			}
+			if(salvaged.empty())
+				return true;
 		}
 		
 		// Combine the plunder lists and sort descending.
-		plunder.insert(plunder.end(), results.begin(), results.end());
+		plunder.insert(plunder.end(), salvaged.begin(), salvaged.end());
 		sort(plunder.begin(), plunder.end());
 	}
 	else if((key == SDLK_UP || key == SDLK_DOWN || key == SDLK_PAGEUP || key == SDLK_PAGEDOWN) && !isCapturing)

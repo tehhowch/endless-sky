@@ -47,6 +47,15 @@ bool Plunder::operator<(const Plunder &other) const
 	return (unitValue / UnitMass() > other.unitValue / other.UnitMass());
 }
 
+// Plunder is equivalent if it is either the same outfit, or a commodity with the same name.
+bool Plunder::operator==(const Plunder &other) const
+{
+	if(outfit)
+		return outfit == other.outfit;
+	
+	return name == other.name;
+}
+
 
 
 // Check how many of this item are left un-plundered. Once this is zero,
