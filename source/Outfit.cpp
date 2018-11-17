@@ -25,6 +25,36 @@ using namespace std;
 
 namespace {
 	const double EPS = 0.0000000001;
+	
+	// Since an outfit definition may be modified by several plugins,
+	// ensure that any outfit defined for a given required attribute
+	// has only a single associated entry for that attribute (rather
+	// than possibly appearing multiple times).
+	void MergeSalvageParts(map<string, vector<Plunder>> &salvageable)
+	{
+		for(auto &group : salvageable)
+			if(group.second.size() > 1)
+			{
+				auto tallied = map<pair<string, const Outfit *>, int>();
+				for(const auto &p : group.second)
+				{
+					auto it = tallied.emplace(make_pair(p.Name(), p.GetOutfit()), p.Count());
+					if(!it.second)
+						(*it.first).second += p.Count();
+				}
+				if(tallied.size() < group.second.size())
+				{
+					group.second.clear();
+					for(const auto &p : tallied)
+					{
+						if(p.first.second)
+							group.second.emplace_back(p.first.second, p.second);
+						else
+							group.second.emplace_back(p.first.first, p.second, -1);
+					}
+				}
+			}
+	}
 }
 
 const vector<string> Outfit::CATEGORIES = {
@@ -163,6 +193,7 @@ void Outfit::Load(const DataNode &node)
 	};
 	convertScan("outfit");
 	convertScan("cargo");
+	MergeSalvageParts(salvage);
 }
 
 
