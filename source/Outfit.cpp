@@ -88,24 +88,28 @@ void Outfit::Load(const DataNode &node)
 		}
 		else if(child.Token(0) == "salvage")
 		{
-			if(child.Size() >= 2)
-			{
-				// Specification is for either a name or a name and a count
-				int count = child.Size() >= 3 ? static_cast<int>(child.Value(2)) : 1;
-				if(count > 0)
-					salvage[GameData::Outfits().Get(child.Token(1))] = count;
-				else
-					child.PrintTrace("Salvage quantity must be positive:");
-			}
-			else if(child.HasChildren())
+			// The associated salvage from this outfit is identified by a number
+			// of `salvage` nodes, each of which is associated with various outfits
+			// and commodities.
+			if(child.HasChildren())
 			{
 				for(const DataNode &grand : child)
 				{
-					int count = grand.Size() >= 2 ? static_cast<int>(grand.Value(1)) : 1;
-					if(count > 0)
-						salvage[GameData::Outfits().Get(grand.Token(0))] = count;
+					int count = grand.Size() >= 3 ? static_cast<int>(grand.Value(2)) : 1;
+					if(count <= 0 || grand.Size() == 1)
+						grand.PrintTrace("Skipping invalid \"salvage\" specification:");
 					else
-						grand.PrintTrace("Salvage quantity must be positive:");
+					{
+						const string &kind = grand.Token(0);
+						const string &name = grand.Token(1);
+						// TODO: The commodity list may not yet be loaded, so this may be an unknown / incorrect commodity.
+						if(kind == "commodity")
+							salvage.emplace_back(name, count, -1);
+						else if(kind == "outfit")
+							salvage.emplace_back(GameData::Outfits().Get(name), count);
+						else
+							grand.PrintTrace("Skipping invalid \"salvage\" kind:");
+					}
 				}
 			}
 			else
@@ -201,7 +205,7 @@ bool Outfit::IsSalvageable() const
 
 
 
-map<const Outfit *, int> Outfit::Salvage() const
+const vector<Plunder> &Outfit::Salvage() const
 {
 	return salvage;
 }

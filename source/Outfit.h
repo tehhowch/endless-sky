@@ -16,6 +16,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Weapon.h"
 
 #include "Dictionary.h"
+#include "Plunder.h"
 
 #include <map>
 #include <string>
@@ -59,7 +60,7 @@ public:
 	// Determine if this outfit can be split into parts.
 	bool IsSalvageable() const;
 	// Get the component parts this outfit decomposes into.
-	std::map<const Outfit *, int> Salvage() const;
+	const std::vector<Plunder> &Salvage() const;
 	
 	double Get(const char *attribute) const;
 	double Get(const std::string &attribute) const;
@@ -103,7 +104,7 @@ private:
 	std::map<const Effect *, int> afterburnerEffects;
 	const Sprite *flotsamSprite = nullptr;
 	// The outfit "parts" that compose this outfit.
-	std::map<const Outfit *, int> salvage;
+	std::vector<Plunder> salvage;
 };
 
 
