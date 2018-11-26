@@ -61,6 +61,10 @@ public:
 	// This command from the AI tells a ship that if possible, it should apply
 	// less than its full thrust in order to come to a complete stop.
 	static const Command STOP;
+	// Strafe commands convert thrust into lateral movement.
+	static const Command STRAFE_LEFT;
+	static const Command STRAFE_RIGHT;
+	
 	
 public:
 	// In the given text, replace any instances of command names (in angle

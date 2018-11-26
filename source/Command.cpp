@@ -67,6 +67,8 @@ const Command Command::HOLD(1uL << 23, "Fleet: Hold position");
 const Command Command::AMMO(1uL << 24, "Fleet: Toggle ammo usage");
 const Command Command::WAIT(1uL << 25, "");
 const Command Command::STOP(1ul << 26, "");
+const Command Command::STRAFE_LEFT(1uL << 27, "Strafe left");
+const Command Command::STRAFE_RIGHT(1ul << 28, "Strafe right");
 
 
 
