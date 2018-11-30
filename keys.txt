@@ -2,6 +2,8 @@
 "Forward thrust" 1073741906
 "Turn left" 1073741904
 "Turn right" 1073741903
+"Strafe left" 122
+"Strafe right" 120
 "Reverse" 1073741905
 "Fire primary weapon" 9
 "Fire secondary weapon" 113

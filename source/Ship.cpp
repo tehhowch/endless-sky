@@ -1375,6 +1375,22 @@ void Ship::Move(vector<Visual> &visuals, list<shared_ptr<Flotsam>> &flotsam)
 				angle += commands.Turn() * TurnRate() * slowMultiplier;
 			}
 		}
+		double strafeCommand = commands.Has(Command::STRAFE_RIGHT) - commands.Has(Command::STRAFE_LEFT);
+		if(strafeCommand)
+		{
+			// Check if we are able to strafe.
+			double cost = attributes.Get("turning energy");
+			if(energy < cost)
+				strafeCommand *= energy / cost;
+			
+			if(strafeCommand)
+			{
+				double scale = fabs(strafeCommand);
+				energy -= scale * cost;
+				heat += scale * attributes.Get("turning heat");
+				acceleration += strafeCommand * TurnRate() / mass * Angle(90.).Rotate(angle.Unit());
+			}
+		}
 		double thrustCommand = commands.Has(Command::FORWARD) - commands.Has(Command::BACK);
 		double thrust = 0.;
 		if(thrustCommand)

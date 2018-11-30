@@ -46,7 +46,8 @@ namespace {
 	const Command &AutopilotCancelKeys()
 	{
 		static const Command keys(Command::LAND | Command::JUMP | Command::BOARD | Command::AFTERBURNER
-			| Command::BACK | Command::FORWARD | Command::LEFT | Command::RIGHT);
+			| Command::BACK | Command::FORWARD | Command::LEFT | Command::RIGHT | Command::STRAFE_LEFT
+			| Command::STRAFE_RIGHT);
 		
 		return keys;
 	}
@@ -3282,6 +3283,10 @@ void AI::MovePlayer(Ship &ship, const PlayerInfo &player)
 	{
 		if(keyHeld.Has(Command::FORWARD))
 			command |= Command::FORWARD;
+		if(keyHeld.Has(Command::STRAFE_LEFT))
+			command |= Command::STRAFE_LEFT;
+		else if(keyHeld.Has(Command::STRAFE_RIGHT))
+			command |= Command::STRAFE_RIGHT;
 		if(keyHeld.Has(Command::RIGHT | Command::LEFT))
 			command.SetTurn(keyHeld.Has(Command::RIGHT) - keyHeld.Has(Command::LEFT));
 		if(keyHeld.Has(Command::BACK))
