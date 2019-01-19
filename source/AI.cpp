@@ -35,6 +35,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <SDL2/SDL.h>
 
+#include <algorithm>
 #include <cmath>
 #include <limits>
 #include <set>
@@ -370,6 +371,8 @@ void AI::UpdateKeys(PlayerInfo &player, Command &clickCommands, bool isActive)
 
 
 
+// Update current records for things that have occurred while the player was
+// in this system, such as provocations, captures, and scans.
 void AI::UpdateEvents(const list<ShipEvent> &events)
 {
 	for(const ShipEvent &event : events)
@@ -390,6 +393,30 @@ void AI::UpdateEvents(const list<ShipEvent> &events)
 			if(event.Type() & ShipEvent::PROVOKE)
 				newActions |= ShipEvent::PROVOKE;
 			event.TargetGovernment()->Offend(newActions, event.Target()->RequiredCrew());
+		}
+		
+		if(event.Target())
+		{
+			// Invalidate any orders that were preconditioned on the previous state of the target ship.
+			auto hasEventTarget = [&event](const pair<const Ship *, Orders> &o)
+			{
+				return o.second.target.lock() == event.Target();
+			};
+			if(event.Type() & ShipEvent::CAPTURE)
+			{
+				// Any orders to attack this newly-captured ship should be removed
+				// if the ordered ship and its target are now not enemies.
+				const Government *newGov = event.Target()->GetGovernment();
+				for(auto it = orders.begin();
+					(it = find_if(it, orders.end(), hasEventTarget)) != orders.end(); )
+				{
+					if((it->second.type & (Orders::FINISH_OFF | Orders::ATTACK))
+							&& !newGov->IsEnemy(it->first->GetGovernment()))
+						it = orders.erase(it);
+					else
+						++it;
+				}
+			}
 		}
 	}
 }
