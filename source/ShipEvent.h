@@ -48,8 +48,8 @@ public:
 		// on your reputation with the given government. This event is generated
 		// when a ship takes damage that switches it to being disabled.
 		DISABLE = (1 << 4),
-		// This ship boarded the given ship. This may either be an attempt to
-		// render assistance, or an attempt to capture the ship.
+		// This ship boarded the given ship. This may be an attempt to
+		// plunder or capture it.
 		BOARD = (1 << 5),
 		// This ship captured the given ship.
 		CAPTURE = (1 << 6),
