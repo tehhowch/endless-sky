@@ -234,10 +234,42 @@ void MissionAction::Load(const DataNode &node, const string &missionName)
 
 
 
-// Note: the Save() function can assume this is an instantiated mission, not
-// a template, so it only has to save a subset of the data.
+// Load the given requirements, under the assumption that the parent mission
+// already verified that having prerequisites for this action is sensible.
+void MissionAction::LoadPrerequisites(const DataNode &node)
+{
+	// Any outfit requirements should be added to the outfit requirements,
+	// and all other nodes should be parsed as testable conditions.
+	for(const DataNode &child : node)
+	{
+		if(child.Token(0) == "require" && child.Size() >= 2)
+		{
+			int count = (child.Size() < 3 ? 1 : static_cast<int>(child.Value(2)));
+			if(count >= 0)
+				requiredOutfits[GameData::Outfits().Get(child.Token(1))] = count;
+			else
+				child.PrintTrace("Skipping invalid \"require\" amount:");
+		}
+		else
+			prerequisites.Load(child);
+	}
+}
+
+
+// Note: the Save() function can assume this is an instantiated mission
+// action, not a template, so it only has to save a subset of the data.
 void MissionAction::Save(DataWriter &out) const
 {
+	if(!prerequisites.IsEmpty())
+	{
+		out.Write("to", trigger);
+		out.BeginChild();
+		{
+			prerequisites.Save(out);
+		}
+		out.EndChild();
+	}
+
 	if(system.empty())
 		out.Write("on", trigger);
 	else
@@ -321,6 +353,10 @@ int MissionAction::Payment() const
 // if it takes away money or outfits that the player does not have.
 bool MissionAction::CanBeDone(const PlayerInfo &player, const shared_ptr<Ship> &boardingShip) const
 {
+	// Any prerequisite conditions must be satisfied.
+	if(!prerequisites.IsEmpty() && !prerequisites.Test(player.Conditions()))
+		return false;
+
 	if(player.Accounts().Credits() < -payment)
 		return false;
 	
@@ -380,6 +416,13 @@ bool MissionAction::CanBeDone(const PlayerInfo &player, const shared_ptr<Ship> &
 	if(!systemFilter.IsEmpty() && !systemFilter.Matches(player.GetSystem()))
 		return false;
 	return true;
+}
+
+
+
+const ConditionSet &MissionAction::Prerequisites() const
+{
+	return prerequisites;
 }
 
 

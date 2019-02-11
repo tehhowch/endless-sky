@@ -102,6 +102,17 @@ void Mission::Load(const DataNode &node)
 		return;
 	}
 	name = node.Token(1);
+
+	static const map<string, Trigger> trigger = {
+		{"complete", COMPLETE},
+		{"offer", OFFER},
+		{"accept", ACCEPT},
+		{"decline", DECLINE},
+		{"fail", FAIL},
+		{"defer", DEFER},
+		{"visit", VISIT},
+		{"stopover", STOPOVER}
+	};
 	
 	for(const DataNode &child : node)
 	{
@@ -181,11 +192,14 @@ void Mission::Load(const DataNode &node)
 			hasFailed = true;
 		else if(child.Token(0) == "to" && child.Size() >= 2)
 		{
-			if(child.Token(1) == "offer")
-				toOffer.Load(child);
-			else if(child.Token(1) == "complete")
-				toComplete.Load(child);
-			else if(child.Token(1) == "fail")
+			const string &action = child.Token(1);
+			if(action == "offer" || action == "complete" || action == "fail")
+			{
+				auto it = trigger.find(action);
+				if(it != trigger.end())
+					actions[it->second].LoadPrerequisites(child);
+			}
+			else if(action == "fail")
 				toFail.Load(child);
 			else
 				child.PrintTrace("Skipping unrecognized attribute:");
@@ -238,16 +252,6 @@ void Mission::Load(const DataNode &node)
 		}
 		else if(child.Token(0) == "on" && child.Size() >= 2)
 		{
-			static const map<string, Trigger> trigger = {
-				{"complete", COMPLETE},
-				{"offer", OFFER},
-				{"accept", ACCEPT},
-				{"decline", DECLINE},
-				{"fail", FAIL},
-				{"defer", DEFER},
-				{"visit", VISIT},
-				{"stopover", STOPOVER}
-			};
 			auto it = trigger.find(child.Token(1));
 			if(it != trigger.end())
 				actions[it->second].Load(child, name);
@@ -314,24 +318,6 @@ void Mission::Save(DataWriter &out, const string &tag) const
 		if(repeat != 1)
 			out.Write("repeat", repeat);
 		
-		if(!toOffer.IsEmpty())
-		{
-			out.Write("to", "offer");
-			out.BeginChild();
-			{
-				toOffer.Save(out);
-			}
-			out.EndChild();
-		}
-		if(!toComplete.IsEmpty())
-		{
-			out.Write("to", "complete");
-			out.BeginChild();
-			{
-				toComplete.Save(out);
-			}
-			out.EndChild();
-		}
 		if(!toFail.IsEmpty())
 		{
 			out.Write("to", "fail");
@@ -553,7 +539,9 @@ bool Mission::HasFullClearance() const
 
 
 
-// Check if it's possible to offer or complete this mission right now.
+// Check if it's possible to offer this mission right now. To be offered,
+// this mission must not be failed, and any actions associated with
+// offering, accepting, or declining must be possible.
 bool Mission::CanOffer(const PlayerInfo &player, const shared_ptr<Ship> &boardingShip) const
 {
 	if(location == BOARDING || location == ASSISTING)
@@ -573,9 +561,6 @@ bool Mission::CanOffer(const PlayerInfo &player, const shared_ptr<Ship> &boardin
 			return false;
 	}
 	
-	if(!toOffer.Test(player.Conditions()))
-		return false;
-	
 	if(!toFail.IsEmpty() && toFail.Test(player.Conditions()))
 		return false;
 	
@@ -586,17 +571,18 @@ bool Mission::CanOffer(const PlayerInfo &player, const shared_ptr<Ship> &boardin
 			return false;
 	}
 	
-	auto it = actions.find(OFFER);
-	if(it != actions.end() && !it->second.CanBeDone(player, boardingShip))
-		return false;
-	
-	it = actions.find(ACCEPT);
-	if(it != actions.end() && !it->second.CanBeDone(player, boardingShip))
-		return false;
-	
-	it = actions.find(DECLINE);
-	if(it != actions.end() && !it->second.CanBeDone(player, boardingShip))
-		return false;
+	for(const Trigger t : {OFFER, ACCEPT, DECLINE})
+	{
+		auto it = actions.find(t);
+		if(it != actions.end() && !it->second.CanBeDone(player, boardingShip));
+			return false;
+	}
+
+	auto it = actions.find(FAIL);
+	if(it != actions.end())
+	{
+		
+	}
 	
 	return true;
 }
@@ -625,9 +611,6 @@ bool Mission::HasSpace(const Ship &ship) const
 bool Mission::CanComplete(const PlayerInfo &player) const
 {
 	if(player.GetPlanet() != destination)
-		return false;
-	
-	if(!toComplete.Test(player.Conditions()))
 		return false;
 	
 	return IsSatisfied(player);
@@ -1053,10 +1036,7 @@ Mission Mission::Instantiate(const PlayerInfo &player, const shared_ptr<Ship> &b
 	if(deadlineBase || deadlineMultiplier)
 		result.deadline = player.GetDate() + deadlineBase + deadlineMultiplier * jumps;
 	
-	// Copy the conditions. The offer conditions must be copied too, because they
-	// may depend on a condition that other mission offers might change.
-	result.toOffer = toOffer;
-	result.toComplete = toComplete;
+	// Copy the conditions.
 	result.toFail = toFail;
 	
 	// Generate the substitutions map.
@@ -1112,7 +1092,8 @@ Mission Mission::Instantiate(const PlayerInfo &player, const shared_ptr<Ship> &b
 		result.npcs.push_back(npc.Instantiate(subs, source, result.destination->GetSystem()));
 	
 	// Instantiate the actions. The "complete" action is always first so that
-	// the "<payment>" substitution can be filled in.
+	// the "<payment>" substitution can be filled in. Associated conditions are
+	// also copied, in case they depend on factors altered by other missions.
 	for(const auto &it : actions)
 		result.actions[it.first] = it.second.Instantiate(subs, source, jumps, payload);
 	for(const auto &it : onEnter)

@@ -45,8 +45,10 @@ public:
 	MissionAction(const DataNode &node, const std::string &missionName);
 	
 	void Load(const DataNode &node, const std::string &missionName);
-	// Note: the Save() function can assume this is an instantiated mission, not
-	// a template, so it only has to save a subset of the data.
+	// Add conditions that must evaluate to true for this action to be performed.
+	void LoadPrerequisites(const DataNode &node);
+	// Note: the Save() function can assume this is an instantiated mission
+	// action, not a template, so it only has to save a subset of the data.
 	void Save(DataWriter &out) const;
 	
 	int Payment() const;
@@ -55,6 +57,9 @@ public:
 	// if it takes away money or outfits that the player does not have, or should
 	// take place in a system that does not match the specified LocationFilter.
 	bool CanBeDone(const PlayerInfo &player, const std::shared_ptr<Ship> &boardingShip = nullptr) const;
+	// Get any prerequisites associated with this action.
+	const ConditionSet &Prerequisites() const;
+	
 	// Perform this action. If a conversation is shown, the given destination
 	// will be highlighted in the map if you bring it up.
 	void Do(PlayerInfo &player, UI *ui = nullptr, const System *destination = nullptr, const std::shared_ptr<Ship> &ship = nullptr) const;
@@ -86,6 +91,9 @@ private:
 	// When this action is performed, the missions with these names fail.
 	std::set<std::string> fail;
 	
+	// This ConditionSet must evaluate to true, for this action to be performed.
+	ConditionSet prerequisites;
+	// This ConditionSet is applied when this action is performed.
 	ConditionSet conditions;
 };
 

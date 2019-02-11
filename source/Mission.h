@@ -186,14 +186,13 @@ private:
 	int passengerLimit = 0;
 	double passengerProb = 0.;
 	
-	ConditionSet toOffer;
-	ConditionSet toComplete;
 	ConditionSet toFail;
 	
 	const Planet *source = nullptr;
 	LocationFilter sourceFilter;
 	const Planet *destination = nullptr;
 	LocationFilter destinationFilter;
+	
 	// Systems that must be visited:
 	std::set<const System *> waypoints;
 	std::list<LocationFilter> waypointFilters;
