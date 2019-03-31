@@ -40,7 +40,7 @@ class Ship;
 int main(int argc, char *argv[])
 {
 	// Only expected argument is the number of times to perform the desired function.
-	unsigned long executions = 20ul;
+	unsigned long executions = 6ul;
 	for(const char *const *it = argv + 1; *it; ++it)
 	{
 		std::string arg = *it;
@@ -61,13 +61,23 @@ int main(int argc, char *argv[])
 	// Load player data, including reference-checking.
 	player.LoadRecent();
 	
-	auto validSystems = std::vector<const System *>();
+	auto validSystems = std::vector<std::pair<const System *, std::set<const Planet *>>>{};
 	for(const auto &it : GameData::Systems())
-	{
-		if(it.second.Name().empty())
-			continue;
-		validSystems.emplace_back(&it.second);
-	}
+		if(!it.second.Name().empty())
+		{
+			// Collect the planets in this system.
+			auto planets = std::set<const Planet *>{ nullptr };
+			for(const auto &obj : it.second.Objects())
+				if(obj.GetPlanet() && !obj.GetPlanet()->TrueName().empty() && !obj.GetPlanet()->IsWormhole())
+					planets.emplace(obj.GetPlanet());
+			
+			validSystems.emplace_back(&it.second, planets);
+		}
+	
+	auto validFleets = std::vector<const Fleet *>{};
+	for(const auto &it : GameData::Fleets())
+		if(it.second.GetGovernment())
+			validFleets.emplace_back(&it.second);
 	
 	auto output = std::ostringstream();
 	size_t successes = 0;
@@ -75,20 +85,16 @@ int main(int argc, char *argv[])
 	auto start = std::chrono::high_resolution_clock::now();
 	while(executions-- > 0)
 	{
+		if(!(executions & 2))
+			std::cout << executions << " remaining" << std::endl;
+		
 		auto shipList = std::list<std::shared_ptr<Ship>>{};
-		for(const auto &s : validSystems)
+		for(const auto &it : validSystems)
 		{
-			// Collect the planets in this system.
-			auto planets = std::set<const Planet *>{ nullptr };
-			for(const auto &it : s->Objects())
-				if(it.GetPlanet() && !it.GetPlanet()->TrueName().empty() && !it.GetPlanet()->IsWormhole())
-					planets.emplace(it.GetPlanet());
-			
+			const auto &s = it.first;
 			// Spawn each fleet multiple times for each planet reference.
-			for(const auto &p : planets)
-				std::for_each(s->Fleets().cbegin(), s->Fleets().cend(), [&](const System::FleetProbability &f)
-				{
-					const Fleet *fleet = f.Get();
+			for(const auto &p : it.second)
+				for(const auto &fleet : validFleets)
 					for(int i = 0; i < 50; ++i)
 					{
 						// Ships are added to the front of the list, so success means the start iterator changed.
@@ -99,7 +105,7 @@ int main(int argc, char *argv[])
 						else
 							++failures;
 					}
-				});
+			
 			shipList.clear(); // Avoid excessive list size.
 		}
 	}
