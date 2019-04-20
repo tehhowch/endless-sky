@@ -48,6 +48,12 @@ protected:
 	
 	
 private:
+	enum class Side {
+		NONE = 0,
+		AVAILABLE,
+		ACCEPTED
+	};
+	
 	// Display and explain the various pointers that may appear on the map.
 	void DrawKey() const;
 	// Display the name of and distance to the selected system.
@@ -81,7 +87,7 @@ private:
 	double availableScroll = 0.;
 	double acceptedScroll = 0.;
 	
-	int dragSide = 0;
+	Side dragged = Side::NONE;
 	WrappedText wrap;
 };
 

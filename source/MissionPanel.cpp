@@ -43,7 +43,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 using namespace std;
 
 namespace {
-	const int SIDE_WIDTH = 280;
+	constexpr int SIDE_WIDTH = 280;
 	
 	// Check if the mission involves the given system,
 	bool Involves(const Mission &mission, const System *system)
@@ -110,7 +110,7 @@ MissionPanel::MissionPanel(const MapPanel &panel)
 	accepted(player.Missions()),
 	availableIt(player.AvailableJobs().begin()),
 	acceptedIt(player.AvailableJobs().empty() ? accepted.begin() : accepted.end()),
-	availableScroll(0), acceptedScroll(0), dragSide(0)
+	availableScroll(0.), acceptedScroll(0.), dragged(Side::NONE)
 {
 	// In this view, always color systems based on player reputation.
 	commodity = SHOW_REPUTATION;
@@ -276,7 +276,7 @@ bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 
 bool MissionPanel::Click(int x, int y, int clicks)
 {
-	dragSide = 0;
+	dragged = Side::NONE;
 	
 	if(x > Screen::Right() - 80 && y > Screen::Bottom() - 50)
 		return DoKey('p');
@@ -290,7 +290,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 			while(index--)
 				++availableIt;
 			acceptedIt = accepted.end();
-			dragSide = -1;
+			dragged = Side::AVAILABLE;
 			selectedSystem = availableIt->Destination()->GetSystem();
 			CenterOnSystem(selectedSystem);
 			return true;
@@ -308,7 +308,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 				++acceptedIt;
 			}
 			availableIt = available.end();
-			dragSide = 1;
+			dragged = Side::ACCEPTED;
 			selectedSystem = acceptedIt->Destination()->GetSystem();
 			CenterOnSystem(selectedSystem);
 			return true;
@@ -383,13 +383,13 @@ bool MissionPanel::Click(int x, int y, int clicks)
 
 bool MissionPanel::Drag(double dx, double dy)
 {
-	if(dragSide < 0)
+	if(dragged == Side::AVAILABLE)
 	{
 		availableScroll = max(0.,
 			min(available.size() * 20. + 190. - Screen::Height(),
 				availableScroll - dy));
 	}
-	else if(dragSide > 0)
+	else if(dragged == Side::ACCEPTED)
 	{
 		acceptedScroll = max(0.,
 			min(accepted.size() * 20. + 160. - Screen::Height(),
@@ -406,26 +406,26 @@ bool MissionPanel::Drag(double dx, double dy)
 // Check to see if the mouse is over either of the mission lists.
 bool MissionPanel::Hover(int x, int y)
 {
-	dragSide = 0;
+	dragged = Side::NONE;
 	unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - Screen::Top()) / 20);
 	if(x < Screen::Left() + SIDE_WIDTH)
 	{
 		if(index < available.size())
-			dragSide = -1;
+			dragged = Side::AVAILABLE;
 	}
 	else if(x >= Screen::Right() - SIDE_WIDTH)
 	{
 		if(static_cast<int>(index) < AcceptedVisible())
-			dragSide = 1;
+			dragged = Side::ACCEPTED;
 	}
-	return dragSide ? true : MapPanel::Hover(x, y);
+	return dragged != Side::NONE ? true : MapPanel::Hover(x, y);
 }
 
 
 
 bool MissionPanel::Scroll(double dx, double dy)
 {
-	if(dragSide)
+	if(dragged != Side::NONE)
 		return Drag(0., dy * Preferences::ScrollSpeed());
 	
 	return MapPanel::Scroll(dx, dy);
