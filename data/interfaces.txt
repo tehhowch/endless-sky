@@ -835,6 +835,22 @@ interface "mission" bottom
 	button A "Abort"
 		center 70 -25
 		dimensions 80 30
+	
+	anchor top left
+	label "Missions available here:"
+		align left
+		from 10 20
+	box "available missions"
+		from 0 20
+		to 280 -150 bottom left
+	
+	anchor top right
+	label "Your current missions:"
+		align left
+		from -270 20
+	box "accepted missions"
+		from 0 20
+		to -280 -150 bottom right
 
 
 
