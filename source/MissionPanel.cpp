@@ -599,6 +599,12 @@ Point MissionPanel::DrawPanel(Point pos, const string &label, int entries) const
 		unselected);
 	pos.Y() += 5.;
 	
+	const Interface *p = GameData::Interfaces().Get("mission");
+	Rectangle leftBox = p->GetBox("available missions");
+	Rectangle rightBox = p->GetBox("accepted missions");
+	FillShader::Fill(leftBox.Center(), leftBox.Dimensions(), selected);
+	FillShader::Fill(rightBox.Center(), rightBox.Dimensions(), selected);
+	
 	return pos;
 }
 
