@@ -784,15 +784,27 @@ bool MissionPanel::FindMissionForSystem(const System *system)
 {
 	if(!system)
 		return false;
-
+	
 	acceptedIt = accepted.end();
-
-	for(availableIt = available.begin(); availableIt != available.end(); ++availableIt)
-		if(availableIt->Destination()->IsInSystem(system))
-			return true;
-	for(acceptedIt = accepted.begin(); acceptedIt != accepted.end(); ++acceptedIt)
-		if(acceptedIt->IsVisible() && acceptedIt->Destination()->IsInSystem(system))
-			return true;
+	
+	// Try to find an available job leading to the given system.
+	availableIt = find_if(available.begin(), available.end(),
+		[&](const Mission &m)
+		{
+			return m.Destination()->IsInSystem(system);
+		}
+	);
+	if(availableIt != available.end())
+		return true;
+	// Try to find an accepted mission/job leading to the given system.
+	acceptedIt = find_if(accepted.begin(), accepted.end(),
+		[&](const Mission &m)
+		{
+			return m.IsVisible() && m.Destination()->IsInSystem(system);
+		}
+	);
+	if(acceptedIt != accepted.end())
+		return true;
 
 	return false;
 }
@@ -803,15 +815,16 @@ bool MissionPanel::SelectAnyMission()
 {
 	if(availableIt == available.end() && acceptedIt == accepted.end())
 	{
-		// no previous selection, reset
+		// No previous selected mission, reset the selection.
 		if(!available.empty())
 			availableIt = available.begin();
-		else
-		{
-			acceptedIt = accepted.begin();
-			while(acceptedIt != accepted.end() && !acceptedIt->IsVisible())
-				++acceptedIt;
-		}
+		else if(!accepted.empty())
+			acceptedIt = find_if(accepted.begin(), accepted.end(),
+				[](const Mission &it)
+				{
+					return it.IsVisible();
+				}
+			);
 		return availableIt != available.end() || acceptedIt != accepted.end();
 	}
 	return false;
