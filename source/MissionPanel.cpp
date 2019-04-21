@@ -44,6 +44,7 @@ using namespace std;
 
 namespace {
 	constexpr int SIDE_WIDTH = 280;
+	constexpr double TEXT_HEIGHT = 20.;
 	
 	// Check if the mission involves the given system,
 	bool Involves(const Mission &mission, const System *system)
@@ -63,6 +64,12 @@ namespace {
 				return true;
 		
 		return false;
+	}
+	
+	// Convert the scroll into the selected index.
+	int GetListIndex(int y, int scroll)
+	{
+		return max(0, (y + scroll - 36 - Screen::Top()) / static_cast<int>(TEXT_HEIGHT));
 	}
 }
 
@@ -294,7 +301,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 	
 	if(x < Screen::Left() + SIDE_WIDTH)
 	{
-		unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - Screen::Top()) / 20);
+		unsigned index = GetListIndex(y, static_cast<int>(availableScroll));
 		if(index < available.size())
 		{
 			availableIt = available.begin();
@@ -309,7 +316,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 	}
 	else if(x >= Screen::Right() - SIDE_WIDTH)
 	{
-		int index = max(0, (y + static_cast<int>(acceptedScroll) - 36 - Screen::Top()) / 20);
+		int index = GetListIndex(y, static_cast<int>(acceptedScroll));
 		if(index < AcceptedVisible())
 		{
 			acceptedIt = accepted.begin();
@@ -397,13 +404,13 @@ bool MissionPanel::Drag(double dx, double dy)
 	if(dragged == Side::AVAILABLE)
 	{
 		availableScroll = max(0.,
-			min(available.size() * 20. + 190. - Screen::Height(),
+			min(available.size() * TEXT_HEIGHT + 190. - Screen::Height(),
 				availableScroll - dy));
 	}
 	else if(dragged == Side::ACCEPTED)
 	{
 		acceptedScroll = max(0.,
-			min(accepted.size() * 20. + 160. - Screen::Height(),
+			min(accepted.size() * TEXT_HEIGHT + 160. - Screen::Height(),
 				acceptedScroll - dy));
 	}
 	else
@@ -418,7 +425,7 @@ bool MissionPanel::Drag(double dx, double dy)
 bool MissionPanel::Hover(int x, int y)
 {
 	dragged = Side::NONE;
-	unsigned index = max(0, (y + static_cast<int>(availableScroll) - 36 - Screen::Top()) / 20);
+	unsigned index = GetListIndex(y, static_cast<int>(availableScroll));
 	if(x < Screen::Left() + SIDE_WIDTH)
 	{
 		if(index < available.size())
@@ -450,10 +457,9 @@ void MissionPanel::DrawKey() const
 	SpriteShader::Draw(back, Screen::BottomLeft() + .5 * Point(back->Width(), -back->Height()));
 	
 	const Font &font = FontSet::Get(14);
-	Point angle = Point(1., 1.).Unit();
 	
-	const int ROWS = 5;
-	Point pos(Screen::Left() + 10., Screen::Bottom() - ROWS * 20. + 5.);
+	constexpr int ROWS = 5;
+	Point pos(Screen::Left() + 10., Screen::Bottom() - ROWS * TEXT_HEIGHT + 5.);
 	Point pointerOff(5., 5.);
 	Point textOff(8., -.5 * font.Height());
 
@@ -480,11 +486,12 @@ void MissionPanel::DrawKey() const
 	if(acceptedIt != accepted.end() && acceptedIt->Destination())
 		selected = 2 + !IsSatisfied(*acceptedIt);
 	
+	Point pointerAngle = Point(1., 1.).Unit();
 	for(int i = 0; i < ROWS; ++i)
 	{
-		PointerShader::Draw(pos + pointerOff, angle, 10.f, 18.f, 0.f, COLOR[i]);
+		PointerShader::Draw(pos + pointerOff, pointerAngle, 10.f, 18.f, 0.f, COLOR[i]);
 		font.Draw(LABEL[i], pos + textOff, i == selected ? bright : dim);
-		pos.Y() += 20.;
+		pos.Y() += TEXT_HEIGHT;
 	}
 }
 
@@ -530,8 +537,8 @@ void MissionPanel::DrawMissionSystem(const Mission &mission, const Color &color)
 {
 	const Color &waypoint = *GameData::Colors().Get("waypoint back");
 	const Color &visited = *GameData::Colors().Get("faint");
-	const float MISSION_OUTER = 22.f;
-	const float MISSION_INNER = 20.5f;
+	constexpr float MISSION_OUTER = 22.f;
+	constexpr float MISSION_INNER = 20.5f;
 	
 	double zoom = Zoom();
 	// Draw a colored ring around the destination system.
@@ -561,7 +568,7 @@ Point MissionPanel::DrawPanel(Point pos, const string &label, int entries) const
 	const Color &selected = *GameData::Colors().Get("bright");
 	
 	// Draw the panel.
-	Point size(SIDE_WIDTH, 20 * entries + 40);
+	Point size(SIDE_WIDTH, TEXT_HEIGHT * entries + 40.);
 	FillShader::Fill(pos + .5 * size, size, back);
 	
 	// Edges:
@@ -584,7 +591,7 @@ Point MissionPanel::DrawPanel(Point pos, const string &label, int entries) const
 	}
 	
 	const Font &font = FontSet::Get(14);
-	pos += Point(10., 10. + (20. - font.Height()) * .5);
+	pos += Point(10., 10. + (TEXT_HEIGHT - font.Height()) * .5);
 	font.Draw(label, pos, selected);
 	FillShader::Fill(
 		pos + Point(.5 * size.X() - 5., 15.),
@@ -610,13 +617,13 @@ Point MissionPanel::DrawList(const list<Mission> &list, Point pos) const
 		if(!it->IsVisible())
 			continue;
 		
-		pos.Y() += 20.;
+		pos.Y() += TEXT_HEIGHT;
 		
 		bool isSelected = (it == availableIt || it == acceptedIt);
 		if(isSelected)
 			FillShader::Fill(
 				pos + Point(.5 * SIDE_WIDTH - 5., 8.),
-				Point(SIDE_WIDTH - 10., 20.),
+				Point(SIDE_WIDTH - 10., TEXT_HEIGHT),
 				highlight);
 		
 		bool canAccept = (&list == &available ? it->HasSpace(player) : IsSatisfied(*it));
