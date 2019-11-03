@@ -83,13 +83,8 @@ string Command::ReplaceNamesWithKeys(const string &text)
 
 
 
-Command::Command() : firing_weps{0, 0, 0, 0, 0, 0, 0, 0}
-{}
-
-
-
 // Create a command representing whatever is mapped to the given key code.
-Command::Command(int keycode) : firing_weps{0, 0, 0, 0, 0, 0, 0, 0}
+Command::Command(int keycode)
 {
 	auto it = commandForKeycode.find(keycode);
 	if(it != commandForKeycode.end())
@@ -169,8 +164,7 @@ void Command::SaveSettings(const string &path)
 void Command::SetKey(Command command, int keycode)
 {
 	// Always reset *all* the mappings when one is set. That way, if two commands
-	// are mapped to the same key and you change one of them, the other stays
-	// mapped.
+	// are mapped to the same key and you change one of them, the other stays mapped.
 	keycodeForCommand[command] = keycode;
 	keyName[command] = SDL_GetKeyName(keycode);
 	
@@ -272,7 +266,7 @@ bool Command::Has(Command command) const
 // Get the commands that are set in this and not in the given command.
 Command Command::AndNot(Command command) const
 {
-	// At the moment, this is only used for key commands (AI.cpp:288)
+	// At the moment, this is only used for key commands.
 	return Command(state & ~command.state);
 }
 
@@ -349,7 +343,7 @@ void Command::SetAim(int index, double amount)
 // Check if any bits are set in this command (including a nonzero turn).
 Command::operator bool() const
 {
-	return !!*this || IsFiring() || turn;
+	return !!*this;
 }
 
 
@@ -397,15 +391,16 @@ Command &Command::operator|=(const Command &command)
 
 // Private constructor.
 Command::Command(uint32_t state)
-		: state(state), firing_weps{0, 0, 0, 0, 0, 0, 0, 0}
-		{}
+	: state(state)
+{
+}
 
 
 
 // Private constructor that also stores the given description in the lookup
 // table. (This is used for the enumeration at the top of this file.)
 Command::Command(uint32_t state, const string &text)
-		: state(state), firing_weps{0, 0, 0, 0, 0, 0, 0, 0}
+	: state(state)
 {
 	if(!text.empty())
 		description[*this] = text;

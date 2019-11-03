@@ -18,6 +18,8 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <string>
 #include <vector>
 
+
+
 // Class mapping key presses to specific commands / actions. The player can
 // change the mappings for most of these keys in the preferences panel.
 // A single Command object can represent multiple individual commands, e.g.
@@ -62,13 +64,15 @@ public:
 	// less than its full thrust in order to come to a complete stop.
 	static const Command STOP;
 	
+	
 public:
 	// In the given text, replace any instances of command names (in angle
 	// brackets) with key names (in quotes).
 	static std::string ReplaceNamesWithKeys(const std::string &text);
 	
+	
 public:
-	Command();
+	Command() = default;
 	// Create a command representing whatever command is mapped to the given
 	// keycode (if any).
 	explicit Command(int keycode);
@@ -120,20 +124,24 @@ public:
 	Command operator|(const Command &command) const;
 	Command &operator|=(const Command &command);
 	
+	
 private:
 	explicit Command(uint32_t state);
 	Command(uint32_t state, const std::string &text);
 	
+	
 private:
-	// Turret turn rates, reduced to 8 bits to save space.
-	signed char aim[512];
-	// 512 bits for weapons firing.
-	uint64_t firing_weps[8];
+	// The key commands are stored in a single 32-bit bitmask.
+	uint32_t state = 0;
 	// Turning amount is stored as a separate double to allow fractional values.
 	double turn = 0.;
-	// The key commands are stored in a single bitmask, with
-	// 32 bits for key commands
-	uint32_t state = 0;
+	// 512 hardpoints are supported.
+	// Hardpoint turn commands (reduced to 8 bits to save space)
+	signed char aim[512] = {};
+	// Weapons firing command.
+	uint64_t firing_weps[8] = {};
 };
+
+
 
 #endif
