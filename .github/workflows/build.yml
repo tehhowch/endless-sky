@@ -18,15 +18,15 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-16.04, macos-latest]
-      fail-fast: true
+      fail-fast: false
     
     steps:
     - uses: actions/checkout@v2
     - name: Install Linux dependencies
-      if: contains(${{ matrix.os }}, 'ubuntu')
+      if: contains(matrix.os, 'ubuntu')
       run: sudo apt install libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev libegl1-mesa-dev libgles2-mesa-dev scons
     - name: Install MacOS dependencies
-      if: ${{ matrix.os }} == 'macos-latest'
+      if: matrix.os == 'macos-latest'
       run: |
         brew update
         brew install libmad libpng jpeg-turbo sdl2
