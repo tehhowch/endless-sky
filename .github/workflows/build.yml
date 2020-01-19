@@ -39,13 +39,14 @@ jobs:
           scons -j2;
           echo "::set-env name=ES_PATH::./endless-sky"
         elif [[ ${{ runner.os }} == 'macOS' ]]; then
-          xcodebuild -configuration "Release" install;
-          echo "::set-env name=ES_PATH::\"/tmp/EndlessSky.dst/Applications/Endless Sky.app/Contents/MacOS/Endless Sky\""
+          xcodebuild -configuration "Release" install -quiet;
+          echo "::set-env name=ES_PATH::/tmp/EndlessSky.dst/Applications/Endless Sky.app/Contents/MacOS/Endless Sky"
           # echo "Completed macOS build";
-          echo && ls -ghtr
+          echo && ls -ghtr build
         fi
     - name: Execute parse test
       run: |
+        set -x
         echo $ES_PATH
         echo "$ES_PATH"
         echo ${ES_PATH}
