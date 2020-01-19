@@ -45,6 +45,11 @@ jobs:
           echo && ls -ghtr
         fi
     - name: Execute parse test
-      run: ./tests/test_parse.sh $ES_PATH
+      run: |
+        echo $ES_PATH
+        echo "$ES_PATH"
+        echo ${ES_PATH}
+        echo "${ES_PATH}"
+        ./tests/test_parse.sh "${ES_PATH}"
       env:
         ES_PATH: ${{ env.ES_PATH }}
