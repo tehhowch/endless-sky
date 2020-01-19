@@ -43,6 +43,6 @@ jobs:
           echo "Completed macOS build";
         fi
     - name: Execute parse test
-      run: ./tests/test_parse.sh $ES_PATH
+      run: ./tests/test_parse.sh "$ES_PATH"
       env:
         ES_PATH: ${{ env.ES_PATH }}
