@@ -2,9 +2,13 @@ name: Build
 
 on:
   push:
-    paths: ['source/*', 'data/*']
+    paths:
+    - 'source/**'
+    - 'data/**'
   pull_request:
-    paths: ['source/*', 'data/*']
+    paths:
+    - 'source/**'
+    - 'data/**'
 
 
 jobs:
@@ -33,4 +37,3 @@ jobs:
         elif [[ ${{ runner.os }} == "macOS" ]]; then
           xcodebuild -configuration "Release" install -quiet
         fi
-    
