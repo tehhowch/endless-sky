@@ -68,6 +68,13 @@ namespace {
 
 
 
+Phrase::Sentence::Sentence(const DataNode &node, const Phrase *parent)
+{
+	Load(node, parent);
+}
+
+
+
 void Phrase::Sentence::Load(const DataNode &node, const Phrase *parent)
 {
 	for(const DataNode &child : node)
@@ -129,8 +136,12 @@ void Phrase::Load(const DataNode &node)
 	// Set the name of this phrase, so we know it has been loaded.
 	name = node.Size() >= 2 ? node.Token(1) : "Unnamed Phrase";
 	
-	sentences.emplace_back();
-	sentences.back().Load(node, this);
+	sentences.emplace_back(node, this);
+	if(sentences.back().parts.empty())
+	{
+		sentences.pop_back();
+		node.PrintTrace("Skipping unparseable node:");
+	}
 }
 
 

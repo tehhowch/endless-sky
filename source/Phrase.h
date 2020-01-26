@@ -51,6 +51,7 @@ private:
 	// Sentence represents a phrase node.
 	class Sentence {
 	public:
+		Sentence(const DataNode &node, const Phrase *parent);
 		void Load(const DataNode &node, const Phrase *parent);
 		
 		std::vector<Part> parts;
