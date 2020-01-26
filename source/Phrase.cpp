@@ -68,7 +68,7 @@ namespace {
 
 
 
-void Phrase::Sentense::Load(const DataNode &node, const Phrase* parent)
+void Phrase::Sentence::Load(const DataNode &node, const Phrase *parent)
 {
 	for(const DataNode &child : node)
 	{
@@ -129,8 +129,8 @@ void Phrase::Load(const DataNode &node)
 	// Set the name of this phrase, so we know it has been loaded.
 	name = node.Size() >= 2 ? node.Token(1) : "Unnamed Phrase";
 	
-	sentenses.emplace_back();
-	sentenses.back().Load(node, this);
+	sentences.emplace_back();
+	sentences.back().Load(node, this);
 }
 
 
@@ -145,10 +145,10 @@ const string &Phrase::Name() const
 string Phrase::Get() const
 {
 	string result;
-	if(sentenses.empty())
+	if(sentences.empty())
 		return result;
 	
-	for(const Part &part : sentenses[Random::Int(sentenses.size())].parts)
+	for(const Part &part : sentences[Random::Int(sentences.size())].parts)
 	{
 		if(!part.options.empty())
 		{
@@ -174,7 +174,7 @@ bool Phrase::ReferencesPhrase(const Phrase *phrase) const
 	if(phrase == this)
 		return true;
 	
-	for(const Sentense &alternative : sentenses)
+	for(const Sentence &alternative : sentences)
 		for(const Part &part : alternative.parts)
 			for(const auto &option : part.options)
 				for(const auto &subphrase : option)

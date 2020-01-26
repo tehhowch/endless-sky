@@ -32,13 +32,12 @@ public:
 	
 	
 private:
-	friend class Sentense;
 	bool ReferencesPhrase(const Phrase *phrase) const;
 	
 	
 public:
 	// Option represents a child node in a "word" or "phrase" node.
-	using Option = std::vector<std::pair<std::string, const Phrase*>>;
+	using Option = std::vector<std::pair<std::string, const Phrase *>>;
 	
 	
 private:
@@ -49,10 +48,10 @@ private:
 		std::vector<std::function<std::string(const std::string&)>> replaceRules;
 	};
 	
-	// Sentense represents a phrase node.
-	class Sentense {
+	// Sentence represents a phrase node.
+	class Sentence {
 	public:
-		void Load(const DataNode &node, const Phrase* parent);
+		void Load(const DataNode &node, const Phrase *parent);
 		
 		std::vector<Part> parts;
 	};
@@ -61,7 +60,7 @@ private:
 private:
 	std::string name;
 	// Each time this phrase is defined, a new sentence is created.
-	std::vector<Sentense> sentenses;
+	std::vector<Sentence> sentences;
 };
 
 
