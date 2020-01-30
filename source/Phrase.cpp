@@ -46,8 +46,6 @@ namespace {
 			out.emplace_back(string(word, start, word.length() - start), nullptr);
 	}
 	
-	
-	
 	// Replace oldStr with newStr in target.
 	string Replace(const string &target, const string &oldStr, const string &newStr)
 	{
@@ -63,6 +61,34 @@ namespace {
 			pos += newSize;
 		}
 		return result;
+	}
+	
+	// Replaces all occurrences of the target string with the given string in-place.
+	void ReplaceAll(string &text, const string &target, const string &replacement)
+	{
+		// If the searched string is an empty string, do nothing.
+		if(target.empty())
+			return;
+		
+		string newString;
+		newString.reserve(text.size());
+		
+		// Index at which to begin searching for the target string.
+		size_t start = 0;
+		size_t matchLength = target.size(); 
+		// Index at which the target string was found.
+		size_t findPos = string::npos;
+		while((findPos = text.find(target, start)) != string::npos)
+		{
+			newString.append(text, start, findPos - start);
+			newString += replacement;
+			start = findPos + matchLength;
+		}
+		
+		// Add the remaining text.
+		newString += text.substr(start);
+		
+		text.swap(newString);
 	}
 }
 
