@@ -36,17 +36,30 @@ private:
 	bool ReferencesPhrase(const Phrase *phrase) const;
 	
 	
-public:
-	// Option represents a child node in a "word" or "phrase" node.
-	using Option = std::vector<std::pair<std::string, const Phrase *>>;
-	
-	
 private:
+	// A Choice represents one entry in a Phrase definition's "word" or "phrase" child
+	// node. If from a "word" node, a Choice may be pure text or contain embedded phrase
+	// references, e.g. `"I'm ${pirate names} and I like '${band names}' concerts."`.
+	class Choice {
+	public:
+		// Create a choice from a grandchild DataNode.
+		Choice(const DataNode &node, bool isPhraseName = false);
+		
+		// Get the text represented by this choice.
+		std::string Get() const;
+		
+		
+	public:
+		// The string-producing segments that comprise this Choice.
+		std::vector<std::pair<std::string, const Phrase *>> sequence;
+	};
+	
+	
 	// A Part represents a the content contained by a "word", "phrase", or "replace" child node.
 	class Part {
 	public:
 		// Sources of text, either literal or via phrase invocation.
-		std::vector<Option> options;
+		std::vector<Choice> choices;
 		// Rules for updating the generated text.
 		std::vector<std::function<std::string(const std::string&)>> replaceRules;
 	};
