@@ -19,33 +19,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 using namespace std;
 
 namespace {
-	// Parse a word and decompose it into a vector of texts and phrase names.
-	void ParseWord(const string &word, Phrase::Option &out)
-	{
-		size_t start = 0;
-		while(start < word.length())
-		{
-			size_t left = word.find("${", start);
-			if(left == string::npos)
-				break;
-			
-			size_t right = word.find('}', left);
-			if(right == string::npos)
-				break;
-			
-			++right;
-			size_t length = right - left;
-			const string leftText(word, start, left - start);
-			const string phraseName(word, left + 2, length - 3);
-			out.emplace_back(leftText, nullptr);
-			out.emplace_back("", GameData::Phrases().Get(phraseName));
-			start = right;
-		}
-		
-		if(word.length() - start > 0)
-			out.emplace_back(string(word, start, word.length() - start), nullptr);
-	}
-	
 	// Replace oldStr with newStr in target.
 	string Replace(const string &target, const string &oldStr, const string &newStr)
 	{
@@ -180,7 +153,31 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 		return;
 	}
 	
-	// TODO
+	// This node is a text string that may contain an interpolation request.
+	const string &entry = node.Token(0);
+	size_t start = 0;
+	while(start < entry.size())
+	{
+		// Determine if there is an interpolation request in this string.
+		size_t left = entry.find("${", start);
+		if(left == string::npos)
+			break;
+		size_t right = entry.find('}', left);
+		if(right == string::npos)
+			break;
+		
+		// Add the text up to the ${, and then add the contained phrase name.
+		++right;
+		size_t length = right - left;
+		auto text = string{entry, start, left - start};
+		auto phraseName = string{entry, left + 2, length - 3};
+		sequence.emplace_back(text, nullptr);
+		sequence.emplace_back(string{}, GameData::Phrases().Get(phraseName));
+		start = right;
+	}
+	// Add the remaining text to the sequence.
+	if(entry.size() - start > 0)
+		sequence.emplace_back(string(entry, start, entry.size() - start), nullptr);
 }
 
 
