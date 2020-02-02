@@ -25,6 +25,7 @@ class DataNode;
 // Class representing a set of rules for generating text strings from words.
 class Phrase {
 public:
+	// Parse the given node into a new branch associated with this phrase.
 	void Load(const DataNode &node);
 	
 	const std::string &Name() const;
@@ -41,10 +42,12 @@ public:
 	
 	
 private:
-	// Part represents a "word", "phrase", or "replace" in a phrase node.
+	// A Part represents a the content contained by a "word", "phrase", or "replace" child node.
 	class Part {
 	public:
+		// Sources of text, either literal or via phrase invocation.
 		std::vector<Option> options;
+		// Rules for updating the generated text.
 		std::vector<std::function<std::string(const std::string&)>> replaceRules;
 	};
 	
