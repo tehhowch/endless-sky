@@ -21,23 +21,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 using namespace std;
 
 namespace {
-	// Replace oldStr with newStr in target.
-	string Replace(const string &target, const string &oldStr, const string &newStr)
-	{
-		const size_t oldSize = oldStr.size();
-		const size_t newSize = newStr.size();
-		string result = target;
-		for(size_t pos = 0;;)
-		{
-			pos = result.find(oldStr, pos);
-			if(pos == string::npos)
-				break;
-			result.replace(pos, oldSize, newStr);
-			pos += newSize;
-		}
-		return result;
-	}
-	
 	// Replaces all occurrences of the target string with the given string in-place.
 	void ReplaceAll(string &text, const string &target, const string &replacement)
 	{
@@ -116,7 +99,7 @@ string Phrase::Get() const
 		}
 		else if(!part.replaceRules.empty())
 			for(const auto &f : part.replaceRules)
-				result = f(result);
+				f(result);
 	}
 	
 	return result;
@@ -235,13 +218,12 @@ void Phrase::Sentence::Load(const DataNode &node, const Phrase *parent)
 		{
 			for(const DataNode &grand : child)
 			{
-				const string oldStr(grand.Token(0));
-				const string newStr(grand.Size() >= 2 ? grand.Token(1) : "");
-				auto f = [oldStr, newStr](const string &s) -> string
-					{
-						return Replace(s, oldStr, newStr);
-					};
-				part.replaceRules.emplace_back(f);
+				const string oldStr = grand.Token(0);
+				const string newStr = grand.Size() >= 2 ? grand.Token(1) : "";
+				part.replaceRules.emplace_back([oldStr, newStr](string &s) -> void
+				{
+					ReplaceAll(s, oldStr, newStr);
+				});
 			}
 		}
 		else
