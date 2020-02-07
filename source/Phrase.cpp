@@ -16,8 +16,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "GameData.h"
 #include "Random.h"
 
-#include <numeric>
-
 using namespace std;
 
 namespace {
@@ -95,7 +93,8 @@ string Phrase::Get() const
 		if(!part.choices.empty())
 		{
 			const auto &choice = part.choices[Random::Int(part.choices.size())];
-			result += choice.Get();
+			for(const auto &element : choice.sequence)
+				result += element.second ? element.second->Get() : element.first;
 		}
 		else if(!part.replaceRules.empty())
 			for(const auto &f : part.replaceRules)
@@ -177,11 +176,10 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 // Convert this non-empty Choice into a text representation.
 string Phrase::Choice::Get() const
 {
-	return accumulate(sequence.begin(), sequence.end(), string{},
-		[](string &a, const pair<string, const Phrase *> &item)
-		{
-			return a += (!item.second ? item.first : item.second->Get());
-		});
+	string result {};
+	for(const auto &element : sequence)
+		result += (element.second ? element.second->Get() : element.first);
+	return result;
 }
 
 
