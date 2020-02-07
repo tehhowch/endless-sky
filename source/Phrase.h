@@ -39,14 +39,11 @@ private:
 private:
 	// A Choice represents one entry in a Phrase definition's "word" or "phrase" child
 	// node. If from a "word" node, a Choice may be pure text or contain embedded phrase
-	// references, e.g. `"I'm ${pirate names} and I like '${band names}' concerts."`.
+	// references, e.g. `"I'm ${pirate} and I like '${band}' concerts."`.
 	class Choice {
 	public:
 		// Create a choice from a grandchild DataNode.
 		Choice(const DataNode &node, bool isPhraseName = false);
-		
-		// Get the text represented by this choice.
-		std::string Get() const;
 		
 		
 	public:
@@ -60,8 +57,9 @@ private:
 	public:
 		// Sources of text, either literal or via phrase invocation.
 		std::vector<Choice> choices;
-		// Rules for updating the generated text.
-		std::vector<std::function<void(std::string&)>> replaceRules;
+		// Character sequences that should be replaced, e.g. "llo"->"y"
+		// would transfrom "Hello hello" into "Hey hey"
+		std::vector<std::pair<std::string, std::string>> replacements;
 	};
 	
 	
