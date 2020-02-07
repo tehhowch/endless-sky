@@ -30,10 +30,12 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <windows.h>
 #endif
 
+void Test(long executions);
+
 int main(int argc, char *argv[])
 {
 	// Only expected argument is the number of times to perform the desired function.
-	long executions = 100;
+	long executions = 100000;
 	for(const char *const *it = argv + 1; *it; ++it)
 	{
 		std::string arg = *it;
@@ -43,18 +45,25 @@ int main(int argc, char *argv[])
 				executions = std::atol(*it);
 		}
 	}
-	std::cout << "Commencing test with n=" << executions << std::endl;
 	
 	// Begin loading the game data. Exit early if we are not using the UI.
 	if(!GameData::BeginLoad(argv))
 		return 0;
 	
+	std::cout << "Commencing test with n=" << executions << std::endl;
+	Test(executions);
+	return 0;
+}
+
+
+void Test(long executions)
+{
 	auto validPhrases = std::vector<const Phrase *>();
 	for(const auto &it : GameData::Phrases())
 		validPhrases.emplace_back(&it.second);
 	
-	auto start = std::chrono::high_resolution_clock::now();
 	auto text = std::map<std::string, std::set<std::string>>{};
+	auto start = std::chrono::high_resolution_clock::now();
 	for(const auto &p : validPhrases)
 	{
 		auto &set = text[p->Name()];
@@ -65,6 +74,5 @@ int main(int argc, char *argv[])
 	// Print results.
 	auto output = std::ostringstream();
 	std::cout << output.str() << '\n' << "Took " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms for "
-		<< executions << " Get() from every named Phrase" << std::endl;
-	return 0;
+		<< executions << " Get() from every named Phrase (" << text.size() << " tested.)" << std::endl;
 }
