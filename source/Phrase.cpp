@@ -64,7 +64,7 @@ string Phrase::Get() const
 		if(!part.choices.empty())
 		{
 			const auto &choice = part.choices[Random::Int(part.choices.size())];
-			for(const auto &element : choice.sequence)
+			for(const auto &element : choice)
 				result += element.second ? element.second->Get() : element.first;
 		}
 		else if(!part.replacements.empty())
@@ -87,7 +87,7 @@ bool Phrase::ReferencesPhrase(const Phrase *other) const
 	for(const auto &sentence : sentences)
 		for(const auto &part : sentence)
 			for(const auto &choice : part.choices)
-				for(const auto &element : choice.sequence)
+				for(const auto &element : choice)
 					if(element.second && element.second->ReferencesPhrase(other))
 						return true;
 	
@@ -104,7 +104,7 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 
 	if(isPhraseName)
 	{
-		sequence.emplace_back(string{}, GameData::Phrases().Get(node.Token(0)));
+		emplace_back(string{}, GameData::Phrases().Get(node.Token(0)));
 		return;
 	}
 	
@@ -113,7 +113,7 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 	if(entry.empty())
 	{
 		// A blank choice was desired.
-		sequence.emplace_back();
+		emplace_back();
 		return;
 	}
 	
@@ -133,13 +133,13 @@ Phrase::Choice::Choice(const DataNode &node, bool isPhraseName)
 		size_t length = right - left;
 		auto text = string{entry, start, left - start};
 		auto phraseName = string{entry, left + 2, length - 3};
-		sequence.emplace_back(text, nullptr);
-		sequence.emplace_back(string{}, GameData::Phrases().Get(phraseName));
+		emplace_back(text, nullptr);
+		emplace_back(string{}, GameData::Phrases().Get(phraseName));
 		start = right;
 	}
 	// Add the remaining text to the sequence.
 	if(entry.length() - start > 0)
-		sequence.emplace_back(string(entry, start, entry.length() - start), nullptr);
+		emplace_back(string(entry, start, entry.length() - start), nullptr);
 }
 
 
@@ -181,7 +181,7 @@ void Phrase::Sentence::Load(const DataNode &node, const Phrase *parent)
 		// Require any newly added phrases have no recursive references. Any recursions
 		// will instead yield an empty string, rather than possibly infinite text.
 		for(auto &choice : part.choices)
-			for(auto &element : choice.sequence)
+			for(auto &element : choice)
 				if(element.second && element.second->ReferencesPhrase(parent))
 				{
 					child.PrintTrace("Replaced recursive '" + element.second->Name() + "' phrase reference with \"\":");

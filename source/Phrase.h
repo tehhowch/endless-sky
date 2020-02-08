@@ -40,15 +40,15 @@ private:
 	// A Choice represents one entry in a Phrase definition's "word" or "phrase" child
 	// node. If from a "word" node, a Choice may be pure text or contain embedded phrase
 	// references, e.g. `"I'm ${pirate} and I like '${band}' concerts."`.
-	class Choice {
+	class Choice : private std::vector<std::pair<std::string, const Phrase *>> {
 	public:
 		// Create a choice from a grandchild DataNode.
 		Choice(const DataNode &node, bool isPhraseName = false);
 		
-		
-	public:
-		// The string-producing segments that comprise this Choice.
-		std::vector<std::pair<std::string, const Phrase *>> sequence;
+		// Enable empty checks and iteration:
+		using std::vector<std::pair<std::string, const Phrase *>>::empty;
+		using std::vector<std::pair<std::string, const Phrase *>>::begin;
+		using std::vector<std::pair<std::string, const Phrase *>>::end;
 	};
 	
 	
@@ -69,7 +69,7 @@ private:
 		Sentence(const DataNode &node, const Phrase *parent);
 		void Load(const DataNode &node, const Phrase *parent);
 		
-		// Expose certain functions from the underlying vector:
+		// Enable empty checks and iteration:
 		using std::vector<Part>::empty;
 		using std::vector<Part>::begin;
 		using std::vector<Part>::end;
