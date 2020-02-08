@@ -30,6 +30,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <windows.h>
 #endif
 
+bool Load(char *argv[]);
 void Test(long executions);
 
 int main(int argc, char *argv[])
@@ -47,7 +48,7 @@ int main(int argc, char *argv[])
 	}
 	
 	// Begin loading the game data. Exit early if we are not using the UI.
-	if(!GameData::BeginLoad(argv))
+	if(!Load(argv))
 		return 0;
 	
 	std::cout << "Commencing test with n=" << executions << std::endl;
@@ -55,6 +56,10 @@ int main(int argc, char *argv[])
 	return 0;
 }
 
+bool Load(char *argv[])
+{
+	return GameData::BeginLoad(argv);
+}
 
 void Test(long executions)
 {
@@ -62,17 +67,15 @@ void Test(long executions)
 	for(const auto &it : GameData::Phrases())
 		validPhrases.emplace_back(&it.second);
 	
-	auto text = std::map<std::string, std::set<std::string>>{};
 	auto start = std::chrono::high_resolution_clock::now();
 	for(const auto &p : validPhrases)
 	{
-		auto &set = text[p->Name()];
 		for(int i = 0; i < executions; ++i)
-			set.emplace(p->Get());
+			p->Get();
 	}
 	auto end = std::chrono::high_resolution_clock::now();
 	// Print results.
 	auto output = std::ostringstream();
 	std::cout << output.str() << '\n' << "Took " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << " ms for "
-		<< executions << " Get() from every named Phrase (" << text.size() << " tested.)" << std::endl;
+		<< executions << " Get() from every named Phrase (" << GameData::Phrases().size() << " tested.)" << std::endl;
 }
