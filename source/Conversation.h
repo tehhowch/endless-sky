@@ -59,6 +59,9 @@ public:
 	// Check if any data is loaded in this conversation object.
 	bool IsEmpty() const;
 	
+	// Get all of the condition names that could be used by this conversation.
+	std::vector<std::string> Conditions() const;
+	
 	// Do text replacement throughout this conversation. This returns a new
 	// Conversation object with things like the player's name filled in.
 	Conversation Substitute(const std::map<std::string, std::string> &subs) const;

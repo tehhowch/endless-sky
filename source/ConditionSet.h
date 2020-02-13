@@ -42,6 +42,9 @@ public:
 	// Check if there are any entries in this set.
 	bool IsEmpty() const;
 	
+	// Get the names of all conditions used by this set.
+	std::vector<std::string> ConditionNames() const;
+	
 	// Read a single condition from a data node.
 	void Add(const DataNode &node);
 	bool Add(const std::string &firstToken, const std::string &secondToken);
@@ -103,9 +106,9 @@ private:
 			SubExpression(const std::string &side);
 			
 			// Interleave tokens and operators to reproduce the initial string.
-			const std::string ToString() const;
+			std::string ToString() const;
 			// Interleave tokens and operators, but do not combine.
-			const std::vector<std::string> ToStrings() const;
+			std::vector<std::string> ToStrings() const;
 			
 			bool IsEmpty() const;
 			

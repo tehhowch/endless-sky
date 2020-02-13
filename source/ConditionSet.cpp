@@ -271,6 +271,18 @@ bool ConditionSet::IsEmpty() const
 
 
 
+vector<string> ConditionSet::ConditionNames() const
+{
+	auto result = vector<string>{};
+	if(!IsEmpty())
+	{
+		// TODO: need to break down complex expressions! Yikes!
+		// Could perhaps settle for just collecting the string representation, and doing a needle-haystack comparison.
+	}
+}
+
+
+
 // Read a single condition from a data node.
 void ConditionSet::Add(const DataNode &node)
 {
@@ -586,7 +598,7 @@ ConditionSet::Expression::SubExpression::SubExpression(const string &side)
 
 
 // Convert the tokens and operators back to a string, for use in logging.
-const string ConditionSet::Expression::SubExpression::ToString() const
+string ConditionSet::Expression::SubExpression::ToString() const
 {
 	string out;
 	static const string SPACE = " ";
@@ -615,7 +627,7 @@ const string ConditionSet::Expression::SubExpression::ToString() const
 
 
 // Interleave the tokens and operators, for use in the save file.
-const vector<string> ConditionSet::Expression::SubExpression::ToStrings() const
+vector<string> ConditionSet::Expression::SubExpression::ToStrings() const
 {
 	auto out = vector<string>();
 	out.reserve(tokens.size() + operators.size());

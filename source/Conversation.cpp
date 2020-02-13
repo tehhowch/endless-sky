@@ -278,6 +278,22 @@ bool Conversation::IsEmpty() const
 
 
 
+vector<string> Conversation::Conditions() const
+{
+	auto result = vector<string>{};
+	if(!IsEmpty())
+		for(const Node &node : nodes)
+			if(!node.conditions.IsEmpty())
+			{
+				const auto &names = node.conditions.ConditionNames();
+				result.insert(result.end(), names.begin(), names.end());
+			}
+	
+	return result;
+}
+
+
+
 // Do text replacement throughout this conversation.
 Conversation Conversation::Substitute(const map<string, string> &subs) const
 {
