@@ -162,8 +162,7 @@ MissionPanel::MissionPanel(const MapPanel &panel)
 	available(player.AvailableJobs()),
 	accepted(player.Missions()),
 	availableIt(player.AvailableJobs().begin()),
-	acceptedIt(player.AvailableJobs().empty() ? accepted.begin() : accepted.end()),
-	availableScroll(0.), acceptedScroll(0.), dragged(Side::NONE)
+	acceptedIt(player.AvailableJobs().empty() ? accepted.begin() : accepted.end())
 {
 	// In this view, always color systems based on player reputation.
 	commodity = SHOW_REPUTATION;
@@ -596,9 +595,9 @@ void MissionPanel::DrawMissionSystem(const Mission &mission, const Color &color)
 	constexpr float MISSION_OUTER = 22.f;
 	constexpr float MISSION_INNER = 20.5f;
 	
-	double zoom = Zoom();
+	const double zoom = Zoom();
 	// Draw a colored ring around the destination system.
-	Point pos = zoom * (mission.Destination()->GetSystem()->Position() + center);
+	const Point pos = zoom * (mission.Destination()->GetSystem()->Position() + center);
 	RingShader::Draw(pos, MISSION_OUTER, MISSION_INNER, color);
 	
 	// Draw bright rings around systems that still need to be visited.
@@ -624,20 +623,20 @@ Point MissionPanel::DrawPanel(Point pos, const string &label, int entries) const
 	const Color &selected = *GameData::Colors().Get("bright");
 	
 	// Draw the panel.
-	Point size(SIDE_WIDTH, TEXT_HEIGHT * entries + 40.);
+	const Point size(SIDE_WIDTH, TEXT_HEIGHT * entries + 40.);
 	FillShader::Fill(pos + .5 * size, size, back);
 	
 	// Edges:
 	const Sprite *bottom = SpriteSet::Get("ui/bottom edge");
+	const Point bottomOff(0., .5 * bottom->Height());
 	Point edgePos = pos + Point(.5 * size.X(), size.Y());
-	Point bottomOff(0., .5 * bottom->Height());
 	SpriteShader::Draw(bottom, edgePos + bottomOff);
 	
 	const Sprite *left = SpriteSet::Get("ui/left edge");
 	const Sprite *right = SpriteSet::Get("ui/right edge");
-	double dy = .5 * left->Height();
-	Point leftOff(-.5 * (size.X() + left->Width()), 0.);
-	Point rightOff(.5 * (size.X() + right->Width()), 0.);
+	const double dy = .5 * left->Height();
+	const Point leftOff(-.5 * (size.X() + left->Width()), 0.);
+	const Point rightOff(.5 * (size.X() + right->Width()), 0.);
 	while(dy && edgePos.Y() > Screen::Top())
 	{
 		edgePos.Y() -= dy;
