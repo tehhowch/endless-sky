@@ -109,6 +109,26 @@ namespace {
 			}
 		}
 	}
+	
+	// Draw a faint line along the route the player would take to the given system.
+	void DrawRoute(const DistanceMap &router, const System *dest, const Point &uiCenter, const double zoom)
+	{
+		const Color routeColor(.2f, .1f, 0.f, 0.f);
+		while(router.Days(dest) > 0)
+		{
+			const System *next = router.Route(dest);
+			
+			Point from = zoom * (next->Position() + uiCenter);
+			Point to = zoom * (dest->Position() + uiCenter);
+			Point unit = (from - to).Unit() * 7.;
+			from -= unit;
+			to += unit;
+			
+			LineShader::Draw(from, to, 5.f, routeColor);
+			
+			dest = next;
+		}
+	}
 }
 
 
@@ -200,23 +220,7 @@ void MissionPanel::Step()
 void MissionPanel::Draw()
 {
 	MapPanel::Draw();
-	
-	Color routeColor(.2f, .1f, 0.f, 0.f);
-	const System *system = selectedSystem;
-	while(distance.Days(system) > 0)
-	{
-		const System *next = distance.Route(system);
-		
-		Point from = Zoom() * (next->Position() + center);
-		Point to = Zoom() * (system->Position() + center);
-		Point unit = (from - to).Unit() * 7.;
-		from -= unit;
-		to += unit;
-		
-		LineShader::Draw(from, to, 5.f, routeColor);
-		
-		system = next;
-	}
+	DrawRoute(distance, selectedSystem, center, Zoom());
 	
 	const Set<Color> &colors = GameData::Colors();
 	const Color &availableColor = *colors.Get("available back");
@@ -833,10 +837,12 @@ void MissionPanel::AbortMission()
 	
 int MissionPanel::AcceptedVisible() const
 {
-	int count = 0;
-	for(const Mission &mission : accepted)
-		count += mission.IsVisible();
-	return count;
+	return count_if(accepted.begin(), accepted.end(),
+		[](const Mission &m)
+		{
+			return m.IsVisible();
+		}
+	);
 }
 
 
