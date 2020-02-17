@@ -38,6 +38,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "UI.h"
 
 #include <algorithm>
+#include <cmath>
 #include <sstream>
 
 using namespace std;
@@ -71,6 +72,43 @@ namespace {
 	{
 		return max(0, (y + scroll - 36 - Screen::Top()) / static_cast<int>(TEXT_HEIGHT));
 	}
+	
+	size_t MaxDisplayedMissions(bool onRight)
+	{
+		return static_cast<unsigned>(max(0, static_cast<int>(floor((Screen::Height() - (onRight ? 160. : 190.)) / 20.))));
+	}
+	
+	// Compute the required scroll amount for the given list of jobs/missions.
+	void DoScroll(const list<Mission> &missionList, const list<Mission>::const_iterator &it, double &sideScroll, bool checkVisibility)
+	{
+		// We don't need to scroll at all if the selection must be within the viewport. The current
+		// scroll could be non-zero if missions were added/aborted, so return the delta that will reset it.
+		const auto maxViewable = MaxDisplayedMissions(checkVisibility);
+		const auto missionCount = missionList.size();
+		if(missionCount < maxViewable)
+			sideScroll = 0;
+		else
+		{
+			const auto countBefore = static_cast<size_t>(checkVisibility
+					? count_if(missionList.begin(), it, [](const Mission &m) { return m.IsVisible(); })
+					: distance(missionList.begin(), it));
+			
+			const auto maximumScroll = (missionCount - maxViewable) * 20.;
+			const auto pageScroll = maxViewable * 20.;
+			const auto desiredScroll = countBefore * 20.;
+			const auto bottomOfPage = sideScroll + pageScroll;
+			if(desiredScroll < sideScroll)
+			{
+				// Scroll upwards.
+				sideScroll = desiredScroll;
+			}
+			else if(desiredScroll > bottomOfPage)
+			{
+				// Scroll downwards (but not so far that the list's bottom sprite comes upwards further than needed).
+				sideScroll = min(maximumScroll, sideScroll + (desiredScroll - bottomOfPage));
+			}
+		}
+	}
 }
 
 
@@ -102,9 +140,15 @@ MissionPanel::MissionPanel(PlayerInfo &player)
 	
 	// Auto select the destination system for the current mission.
 	if(availableIt != available.end())
+	{
 		selectedSystem = availableIt->Destination()->GetSystem();
+		DoScroll(available, availableIt, availableScroll, false);
+	}
 	else if(acceptedIt != accepted.end())
+	{
 		selectedSystem = acceptedIt->Destination()->GetSystem();
+		DoScroll(accepted, acceptedIt, acceptedScroll, true);
+	}
 	
 	// Center on the selected system.
 	CenterOnSystem(selectedSystem, true);
@@ -175,8 +219,15 @@ void MissionPanel::Draw()
 		system = next;
 	}
 	
-	DrawKey();
-	DrawSelectedSystem();
+	const Set<Color> &colors = GameData::Colors();
+	const Color &availableColor = *colors.Get("available back");
+	const Color &unavailableColor = *colors.Get("unavailable back");
+	const Color &currentColor = *colors.Get("active back");
+	const Color &blockedColor = *colors.Get("blocked back");
+	if(availableIt != available.end() && availableIt->Destination())
+		DrawMissionSystem(*availableIt, CanAccept() ? availableColor : unavailableColor);
+	if(acceptedIt != accepted.end() && acceptedIt->Destination())
+		DrawMissionSystem(*acceptedIt, IsSatisfied(*acceptedIt) ? currentColor : blockedColor);
 	
 	Point pos = DrawPanel(
 		Screen::TopLeft() + Point(0., -availableScroll),
@@ -190,18 +241,10 @@ void MissionPanel::Draw()
 		AcceptedVisible());
 	DrawList(accepted, pos);
 	
+	// Now that the mission lists and map elements are drawn, draw the top-most UI elements.
+	DrawKey();
+	DrawSelectedSystem();
 	DrawMissionInfo();
-	
-	const Set<Color> &colors = GameData::Colors();
-	const Color &availableColor = *colors.Get("available back");
-	const Color &unavailableColor = *colors.Get("unavailable back");
-	const Color &currentColor = *colors.Get("active back");
-	const Color &blockedColor = *colors.Get("blocked back");
-	if(availableIt != available.end() && availableIt->Destination())
-		DrawMissionSystem(*availableIt, CanAccept() ? availableColor : unavailableColor);
-	if(acceptedIt != accepted.end() && acceptedIt->Destination())
-		DrawMissionSystem(*acceptedIt, IsSatisfied(*acceptedIt) ? currentColor : blockedColor);
-	
 	DrawButtons("is missions");
 }
 
@@ -281,9 +324,15 @@ bool MissionPanel::KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, 
 	// To reach here, we changed the selected mission. Scroll the active
 	// mission list, update the selected system, and pan the map.
 	if(availableIt != available.end())
+	{
 		selectedSystem = availableIt->Destination()->GetSystem();
+		DoScroll(available, availableIt, availableScroll, false);
+	}
 	else if(acceptedIt != accepted.end())
+	{
 		selectedSystem = acceptedIt->Destination()->GetSystem();
+		DoScroll(accepted, acceptedIt, acceptedScroll, true);
+	}
 	if(selectedSystem)
 		CenterOnSystem(selectedSystem);
 	
@@ -310,6 +359,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 			acceptedIt = accepted.end();
 			dragged = Side::AVAILABLE;
 			selectedSystem = availableIt->Destination()->GetSystem();
+			DoScroll(available, availableIt, availableScroll, false);
 			CenterOnSystem(selectedSystem);
 			return true;
 		}
@@ -328,6 +378,7 @@ bool MissionPanel::Click(int x, int y, int clicks)
 			availableIt = available.end();
 			dragged = Side::ACCEPTED;
 			selectedSystem = acceptedIt->Destination()->GetSystem();
+			DoScroll(accepted, acceptedIt, acceptedScroll, true);
 			CenterOnSystem(selectedSystem);
 			return true;
 		}
@@ -392,6 +443,11 @@ bool MissionPanel::Click(int x, int y, int clicks)
 		// no other missions in this system.
 		if(acceptedIt != accepted.end() && !acceptedIt->IsVisible())
 			acceptedIt = accepted.end();
+		// Scroll the relevant panel so that the mission highlighted is visible.
+		if(availableIt != available.end())
+			DoScroll(available, availableIt, availableScroll, false);
+		else if(acceptedIt != accepted.end())
+			DoScroll(accepted, acceptedIt, acceptedScroll, true);
 	}
 	
 	return true;
@@ -821,7 +877,7 @@ bool MissionPanel::SelectAnyMission()
 {
 	if(availableIt == available.end() && acceptedIt == accepted.end())
 	{
-		// No previous selected mission, reset the selection.
+		// No previous selected mission, so select the first job/mission for any system.
 		if(!available.empty())
 			availableIt = available.begin();
 		else if(!accepted.empty())
