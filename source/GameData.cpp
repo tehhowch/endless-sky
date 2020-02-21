@@ -1385,16 +1385,39 @@ void GameData::PrintSystemTable()
 
 void GameData::PrintAllContentPluginList()
 {
-	vector<string> shipList;
-	vector<string> outfitList;
+	auto shipList = vector<string>{};
+	auto unsoldShips = vector<string>{};
 	for(const auto &it : ships)
-		if(it.second.ModelName() == it.first && !it.second.Attributes().Category().empty())
-			shipList.emplace_back(it.first);
+		if(it.second.ModelName() == it.first)
+		{
+			auto &list = it.second.Attributes().Category().empty() ? unsoldShips : shipList;
+			list.emplace_back(it.first);
+		}
 	sort(shipList.begin(), shipList.end());
 	
+	const string LICENSE = " License";
+	auto IsLicense = [&LICENSE](const string &name) -> bool
+	{
+		if(name.length() < LICENSE.length())
+			return false;
+		if(name.compare(name.length() - LICENSE.length(), LICENSE.length(), LICENSE))
+			return false;
+		
+		return true;
+	};
+	auto outfitList = vector<string>{};
+	auto unsoldOutfits = vector<string>{};
+	auto licenseList = vector<string>{};
 	for(const auto &it : outfits)
+	{
 		if(!it.second.Category().empty())
-			outfitList.emplace_back(it.first);
+		{
+			auto &list = IsLicense(it.first) ? licenseList : outfitList;
+			list.emplace_back(it.first);
+		}
+		else
+			unsoldOutfits.emplace_back(it.first);
+	}
 	sort(outfitList.begin(), outfitList.end());
 	
 	DataWriter out(Files::Config() + "allcontent.txt");
@@ -1406,10 +1429,38 @@ void GameData::PrintAllContentPluginList()
 	}
 	out.EndChild();
 	out.Write();
+	
 	out.Write("outfitter", "All Outfits");
 	out.BeginChild();
 	{
 		for(const string &str : outfitList)
+			out.Write(str);
+	}
+	out.EndChild();
+	out.Write();
+	
+	out.Write("outfitter", "Unsold Outfits");
+	out.BeginChild();
+	{
+		for(const string &str : unsoldOutfits)
+			out.Write(str);
+	}
+	out.EndChild();
+	out.Write();
+	
+	out.Write("shipyard", "Unsold Ships");
+	out.BeginChild();
+	{
+		for(const string &str : unsoldShips)
+			out.Write(str);
+	}
+	out.EndChild();
+	out.Write();
+	
+	out.Write("outfitter", "All Licenses");
+	out.BeginChild();
+	{
+		for(const string &str : licenseList)
 			out.Write(str);
 	}
 	out.EndChild();
