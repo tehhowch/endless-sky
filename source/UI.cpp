@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "UI.h"
 
 #include "Command.h"
-#include "Panel.h"
+#include "panels/Panel.h"
 #include "Screen.h"
 
 #include <SDL2/SDL.h>

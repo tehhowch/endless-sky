@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #ifndef DIALOG_H_
 #define DIALOG_H_
 
-#include "Panel.h"
+#include "panels/Panel.h"
 
 #include "Point.h"
 #include "WrappedText.h"

@@ -20,7 +20,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Font.h"
 #include "FontSet.h"
 #include "GameData.h"
-#include "MapDetailPanel.h"
+#include "panels/MapDetailPanel.h"
 #include "PlayerInfo.h"
 #include "Point.h"
 #include "shift.h"

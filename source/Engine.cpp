@@ -25,7 +25,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "GameData.h"
 #include "Government.h"
 #include "Interface.h"
-#include "MapPanel.h"
+#include "panels/MapPanel.h"
 #include "Mask.h"
 #include "Messages.h"
 #include "Minable.h"

@@ -12,7 +12,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "NPC.h"
 
-#include "ConversationPanel.h"
+#include "panels/ConversationPanel.h"
 #include "DataNode.h"
 #include "DataWriter.h"
 #include "Dialog.h"

@@ -19,7 +19,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Information.h"
 #include "LineShader.h"
 #include "OutlineShader.h"
-#include "Panel.h"
+#include "panels/Panel.h"
 #include "Rectangle.h"
 #include "RingShader.h"
 #include "Screen.h"

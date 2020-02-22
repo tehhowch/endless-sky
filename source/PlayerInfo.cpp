@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "PlayerInfo.h"
 
 #include "Audio.h"
-#include "ConversationPanel.h"
+#include "panels/ConversationPanel.h"
 #include "DataFile.h"
 #include "DataWriter.h"
 #include "Dialog.h"

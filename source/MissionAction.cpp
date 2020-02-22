@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "MissionAction.h"
 
 #include "CargoHold.h"
-#include "ConversationPanel.h"
+#include "panels/ConversationPanel.h"
 #include "DataNode.h"
 #include "DataWriter.h"
 #include "Dialog.h"
