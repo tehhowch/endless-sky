@@ -24,6 +24,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "GameData.h"
 #include "GameWindow.h"
 #include "panels/MenuPanel.h"
+#include "panels/FakePanel.h"
 #include "panels/Panel.h"
 #include "PlayerInfo.h"
 #include "Preferences.h"
@@ -85,7 +86,8 @@ int main(int argc, char *argv[])
 		else if(arg == "-p" || arg == "--parse-save")
 			loadOnly = true;
 	}
-	
+	FakePanel fake;
+	fake.Log();
 	// Begin loading the game data. Exit early if we are not using the UI.
 	if(!GameData::BeginLoad(argv))
 		return 0;
