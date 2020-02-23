@@ -3,10 +3,12 @@ name: Check xcode completeness
 on:
   push:
     paths:
+    - '.github/workflows/xcode_check.yml'
     - 'source/**'
     - 'tests/check_xcode.sh'
   pull_request:
     paths:
+    - '.github/workflows/xcode_check.yml'
     - 'source/**'
     - 'tests/check_xcode.sh'
 
@@ -17,8 +19,11 @@ jobs:
     - uses: actions/checkout@v2
     - name: Install dependencies
       run: |
-        sudo apt-get install python3-setuptools
-        pip3 install pbxproj
+        sudo apt-get install python3-setuptools python3-wheel
+        pip3 install docopt openstep_parser --user
+    - name: Install mod-pbxproj
+      run: |
+        pip3 install pbxproj --user
     - name: Execute xcode completeness check
       run: |
         ./tests/check_xcode.sh

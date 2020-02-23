@@ -23,6 +23,7 @@ echo "script-dir: ${HERE}"
 echo "es-top-dir: ${ESTOP}"
 
 NUM_ADDED=0
+RESULT=0
 for FILE in $(find source -type f | sed s,^source/,, | sort)
 do
 	# Check if the file is already in the XCode project
@@ -43,13 +44,23 @@ do
 		grep "$FILE" ${XPROJECT}/project.pbxproj > /dev/null
 		if [ $? -ne 0 ]
 		then
-			echo "Error: file ${FILE} not added to XCode project"
-			echo "Git status:"
-			git status
-			echo ""
-			echo "Diff (between project and checked-in version)"
-			git diff ${XPROJECT}/project.pbxproj
-			exit 1
+			BASENAME=$(basename "${FILE}")
+			OTHERNAME=$(grep "${BASENAME}" ${XPROJECT}/project.pbxproj)
+			if [ $? -eq 0 ]
+			then
+				echo "Error: file ${FILE} not added to XCode project"
+				echo "The file does appear to be present under a different name/path:"
+				echo "${OTHERNAME}"
+				echo "Are you trying to move files? (There is no support to give suggestions for moved files.)"
+			else
+				echo "Error: file ${FILE} not added to XCode project"
+				echo "Git status:"
+				git status
+				echo ""
+				echo "Diff (between project and checked-in version)"
+				git diff ${XPROJECT}/project.pbxproj
+			fi
+			RESULT=1
 		fi
 		NUM_ADDED=$(( NUM_ADDED + 1 ))
 	fi
@@ -62,6 +73,7 @@ then
 	echo ""
 	git diff ${XPROJECT}/project.pbxproj
 	echo ""
-	exit 1
+	# Also set the result to non-zero here (since the project is incomplete)
+	RESULT=1
 fi
-exit 0
+exit ${RESULT}
