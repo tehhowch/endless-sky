@@ -38,7 +38,7 @@ public:
 	// only an "ok" button, not a "cancel" button.
 	explicit Dialog(const std::string &text);
 	// Mission accept / decline dialog.
-	Dialog(const std::string &text, PlayerInfo &player, const System *system = nullptr);
+	Dialog(const std::string &text, PlayerInfo &player, std::function<void(int)> intFun, const System *system = nullptr);
 	virtual ~Dialog() = default;
 	
 	// Three different kinds of dialogs can be constructed: requesting numerical

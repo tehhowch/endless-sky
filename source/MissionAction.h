@@ -68,6 +68,12 @@ public:
 	
 	
 private:
+	// Actually perform this action. For actions that don't involve any UI, this will be called directly,
+	// but for any actions that display a UI element, we wait until that element has been closed.
+	void Resolve(PlayerInfo &player, UI *ui = nullptr, int response = 0) const;
+	
+	
+private:
 	std::string trigger;
 	std::string system;
 	LocationFilter systemFilter;

@@ -41,8 +41,11 @@ class ConversationPanel : public Panel {
 public:
 	ConversationPanel(PlayerInfo &player, const Conversation &conversation, const System *system = nullptr, const std::shared_ptr<Ship> &ship = nullptr);
 	
+	// Store a class member function.
 template <class T>
 	void SetCallback(T *t, void (T::*fun)(int));
+	// Store a generic function.
+	void SetCallback(std::function<void(int)> callback);
 	
 	// Draw this panel.
 	virtual void Draw() override;

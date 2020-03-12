@@ -76,6 +76,14 @@ ConversationPanel::ConversationPanel(PlayerInfo &player, const Conversation &con
 
 
 
+// Store the function to be called when the conversation panel closes.
+void ConversationPanel::SetCallback(function<void(int)> callback)
+{
+	this->callback = callback;
+}
+
+
+
 // Draw this panel.
 void ConversationPanel::Draw()
 {

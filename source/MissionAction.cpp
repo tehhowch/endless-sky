@@ -28,6 +28,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "UI.h"
 
 #include <cstdlib>
+#include <functional>
 #include <vector>
 
 using namespace std;
@@ -403,77 +404,48 @@ bool MissionAction::CanBeDone(const PlayerInfo &player, const shared_ptr<Ship> &
 
 void MissionAction::Do(PlayerInfo &player, UI *ui, const System *destination, const shared_ptr<Ship> &ship, const bool isUnique) const
 {
-	bool isOffer = (trigger == "offer");
-	if(!conversation.IsEmpty() && ui)
+	// If we have the ability to show UI, and text to show, we should defer processing any of this action's
+	// characteristics until after the UI has closed. This prevents the player entering a state where this
+	// action has been applied, but the game hasn't recorded that it was applied.
+	if(ui)
 	{
-		// Conversations offered while boarding or assisting reference a ship,
-		// which may be destroyed depending on the player's choices.
-		ConversationPanel *panel = new ConversationPanel(player, conversation, destination, ship);
-		if(isOffer)
-			panel->SetCallback(&player, &PlayerInfo::MissionCallback);
-		// Use a basic callback to handle forced departure outside of `on offer`
-		// conversations.
-		else
-			panel->SetCallback(&player, &PlayerInfo::BasicCallback);
-		ui->Push(panel);
-	}
-	else if(!dialogText.empty() && ui)
-	{
-		map<string, string> subs;
-		subs["<first>"] = player.FirstName();
-		subs["<last>"] = player.LastName();
-		if(player.Flagship())
-			subs["<ship>"] = player.Flagship()->Name();
-		string text = Format::Replace(dialogText, subs);
-		
-		// Don't push the dialog text if this is a visit action on a nonunique
-		// mission; on visit, nonunique dialogs are handled by PlayerInfo as to
-		// avoid the player being spammed by dialogs if they have multiple
-		// missions active with the same destination (e.g. in the case of
-		// stacking bounty jobs).
-		if(isOffer)
-			ui->Push(new Dialog(text, player, destination));
-		else if(isUnique || trigger != "visit")
-			ui->Push(new Dialog(text));
-	}
-	else if(isOffer && ui)
-		player.MissionCallback(Conversation::ACCEPT);
-	
-	if(!logText.empty())
-		player.AddLogEntry(logText);
-	for(const auto &it : specialLogText)
-		for(const auto &eit : it.second)
-			player.AddSpecialLog(it.first, eit.first, eit.second);
-	
-	// If multiple outfits are being transferred, first remove them before
-	// adding any new ones.
-	for(const auto &it : gifts)
-		if(it.second < 0)
-			DoGift(player, it.first, it.second, ui);
-	for(const auto &it : gifts)
-		if(it.second > 0)
-			DoGift(player, it.first, it.second, ui);
-	
-	if(payment)
-		player.Accounts().AddCredits(payment);
-	
-	for(const auto &it : events)
-		player.AddEvent(*it.first, player.GetDate() + it.second.first);
-	
-	if(!fail.empty())
-	{
-		// If this action causes this or any other mission to fail, mark that
-		// mission as failed. It will not be removed from the player's mission
-		// list until it is safe to do so.
-		for(const Mission &mission : player.Missions())
-			if(fail.count(mission.Identifier()))
-				player.FailMission(mission);
+		// TODO: is afterUi passed as a prvalue and thus creating dangling references?
+		auto afterUi = [&](const int response) -> void
+		{
+			// TODO: does player get copied? that's a no-no
+			Resolve(player, ui, response);
+		};
+		if(!conversation.IsEmpty())
+		{
+			// Conversations offered while boarding or assisting reference a ship, which may be
+			// destroyed depending on the player's choices. All conversations may result in a "launch" event.
+			ConversationPanel *panel = new ConversationPanel(player, conversation, destination, ship);
+			panel->SetCallback(afterUi);
+			return;
+		}
+		else if(!dialogText.empty())
+		{
+			auto subs = map<string, string>{
+				{"<first>", player.FirstName()},
+				{"<last>", player.LastName()},
+			};
+			if(player.Flagship())
+				subs["<ship>"] = player.Flagship()->Name();
+			string text = Format::Replace(dialogText, subs);
+			
+			if(trigger == "offer")
+				ui->Push(new Dialog(text, player, afterUi, destination));
+			// Don't display dialog text for the visit action of non-unique missions as they are
+			// handled by PlayerInfo directly. This treatment avoids spamming the player with many
+			// dialogs if they have multiple missions active with the same destination.
+			else if(isUnique || trigger != "visit")
+				ui->Push(new Dialog(text));
+			return;
+		}
 	}
 	
-	// Check if applying the conditions changes the player's reputations.
-	player.SetReputationConditions();
-	conditions.Apply(player.Conditions());
-	player.CheckReputationConditions();
+	// Perform the rest of this action.
+	Resolve(player, ui);
 }
 
 
@@ -531,4 +503,72 @@ MissionAction MissionAction::Instantiate(map<string, string> &subs, const System
 		subs["<payment>"] = previousPayment;
 	
 	return result;
+}
+
+
+
+void MissionAction::Resolve(PlayerInfo &player, UI *ui, int response) const
+{
+	if(!logText.empty())
+		player.AddLogEntry(logText);
+	for(const auto &it : specialLogText)
+		for(const auto &eit : it.second)
+			player.AddSpecialLog(it.first, eit.first, eit.second);
+	
+	// If multiple outfits are being transferred, first remove them before
+	// adding any new ones.
+	for(const auto &it : gifts)
+		if(it.second < 0)
+			DoGift(player, it.first, it.second, ui);
+	for(const auto &it : gifts)
+		if(it.second > 0)
+			DoGift(player, it.first, it.second, ui);
+	
+	if(payment)
+		player.Accounts().AddCredits(payment);
+	
+	for(const auto &it : events)
+		player.AddEvent(*it.first, player.GetDate() + it.second.first);
+	
+	// Check if applying the conditions changes the player's reputations.
+	player.SetReputationConditions();
+	conditions.Apply(player.Conditions());
+	player.CheckReputationConditions();
+	
+	// Process the exit code from the UI panel that was displayed, if any.
+	if(ui)
+	{
+		bool isOffer = (trigger == "offer");
+		if(!conversation.IsEmpty())
+		{
+			if(isOffer)
+				player.MissionCallback(response);
+			// Even non-offer conversations can trigger a forced departure.
+			else
+				player.BasicCallback(response);
+		}
+		else if(!dialogText.empty())
+		{
+			if(isOffer)
+				player.MissionCallback(response);
+		}
+		// If this was an "on offer" action that had no text, it is automatically accepted.
+		else if(isOffer)
+			player.MissionCallback(Conversation::ACCEPT);
+	}
+	// TODO: if this action's UI results in a DECLINE or DEFER, the MissionCallback executes `missionList.pop_front()`
+	// Does this result in the parent Mission of this action no longer being referenced elsewhere? What's the call stack?
+	// Why wasn't this an issue in the original code? Or is it fine, as whoever initiated the Do(OFFER) still has a handle to this mission object?
+	// TODO: Where do we need to process `fail`, such that we can maintain compatibility with pre 0.9.12 missions?
+	
+	// Now that any callbacks have been completed (which may have resulted in other actions
+	// being fully executed, or adding to the player's list of missions), process missions
+	// which should be failed by this action. They won't be removed from the mission list
+	// until it is safe to do so.
+	if(!fail.empty())
+	{
+		for(const Mission &mission : player.Missions())
+			if(fail.count(mission.Identifier()))
+				player.FailMission(mission);
+	}
 }
