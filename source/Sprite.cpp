@@ -132,10 +132,10 @@ int Sprite::Frames() const
 
 // Get the offset of the center from the top left corner; this is for easy
 // shifting of corner to center coordinates.
-Point Sprite::Center() const
-{
-	return Point(.5 * width, .5 * height);
-}
+// Point Sprite::Center() const
+// {
+// 	return Point(.5 * width, .5 * height);
+// }
 
 
 
