@@ -1387,11 +1387,16 @@ void GameData::PrintAllContentPluginList()
 {
 	auto shipList = vector<string>{};
 	auto unsoldShips = vector<string>{};
+	auto requiredLicenses = set<string>{};
 	for(const auto &it : ships)
 		if(it.second.ModelName() == it.first)
 		{
 			auto &list = it.second.Attributes().Category().empty() ? unsoldShips : shipList;
 			list.emplace_back(it.first);
+			
+			auto &licenses = it.second.Attributes().Licenses();
+			if(!licenses.empty())
+				requiredLicenses.insert(licenses.cbegin(), licenses.cend());
 		}
 	sort(shipList.begin(), shipList.end());
 	
@@ -1414,11 +1419,25 @@ void GameData::PrintAllContentPluginList()
 		{
 			auto &list = IsLicense(it.first) ? licenseList : outfitList;
 			list.emplace_back(it.first);
+						
+			auto &licenses = it.second.Licenses();
+			if(!licenses.empty())
+				requiredLicenses.insert(licenses.cbegin(), licenses.cend());
 		}
 		else
 			unsoldOutfits.emplace_back(it.first);
 	}
 	sort(outfitList.begin(), outfitList.end());
+	
+	// Add any licenses that don't have a full outfit to the list of licenses.
+	for_each(requiredLicenses.begin(), requiredLicenses.end(), [&licenseList](string str) -> void
+	{
+		string outfitName = str + " License";
+		auto it = find(licenseList.begin(), licenseList.end(), outfitName);
+		if(it == licenseList.end())
+			licenseList.push_back(outfitName);
+	});
+	sort(licenseList.begin(), licenseList.end());
 	
 	DataWriter out(Files::Config() + "allcontent.txt");
 	out.Write("shipyard", "All Ships");
@@ -1457,12 +1476,19 @@ void GameData::PrintAllContentPluginList()
 	out.EndChild();
 	out.Write();
 	
-	out.Write("outfitter", "All Licenses");
+	out.WriteComment("license conditions");
 	out.BeginChild();
 	{
+		const string prefix = "license: ";
+		const string omitted = " License";
+		const size_t minLength = omitted.length();
 		for(const string &str : licenseList)
-			out.Write(str);
+		{
+			string name = str.length() > minLength ? str.substr(0, str.length() - minLength) : str;
+			out.Write("set", prefix + name);
+		}
 	}
 	out.EndChild();
+	
 	cerr << "All-content list printed." << endl;
 }
