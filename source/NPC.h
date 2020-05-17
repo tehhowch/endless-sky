@@ -54,6 +54,10 @@ public:
 	// Determine if this NPC or NPC template uses well-defined data.
 	bool IsValid(bool asTemplate = false) const;
 	
+	const std::string &UUID() const;
+	void EnsureUUID();
+	void NewUUID();
+	
 	// Update or check spawning and despawning for this NPC.
 	void UpdateSpawning(const PlayerInfo &player);
 	bool ShouldSpawn() const;
@@ -81,6 +85,8 @@ private:
 	// The government of the ships in this NPC:
 	const Government *government = nullptr;
 	Personality personality;
+	
+	std::string uuid;
 	
 	// Start out in a location matching this filter, or in a particular system:
 	LocationFilter location;
