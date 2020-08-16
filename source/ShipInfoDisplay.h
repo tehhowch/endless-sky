@@ -49,11 +49,14 @@ public:
 	// Provided by ItemInfoDisplay:
 	// void DrawDescription(const Point &topLeft) const;
 	virtual void DrawAttributes(const Point &topLeft) const override;
-	void DrawOutfits(const Point &topLeft) const;
+	virtual void DrawOther(const Point &topLeft) const override;
+	// Draw the snippet indicating what a player-owned ship would sell for.
 	void DrawSale(const Point &topLeft) const;
 	
 	
 private:
+	// Draw the outfits installed in this ship.
+	void DrawOutfits(const Point &topLeft) const;
 	void UpdateAttributes(const Ship &ship, const Depreciation &depreciation, int day);
 	void UpdateOutfits(const Ship &ship, const Depreciation &depreciation, int day);
 	

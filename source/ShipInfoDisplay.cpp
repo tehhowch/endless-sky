@@ -95,6 +95,13 @@ void ShipInfoDisplay::DrawAttributes(const Point &topLeft) const
 
 
 
+void ShipInfoDisplay::DrawOther(const Point &topLeft) const
+{
+	DrawOutfits(topLeft);
+}
+
+
+
 void ShipInfoDisplay::DrawOutfits(const Point &topLeft) const
 {
 	Draw(topLeft, outfitLabels, outfitValues);
@@ -102,6 +109,7 @@ void ShipInfoDisplay::DrawOutfits(const Point &topLeft) const
 
 
 
+// Draw what this ship is worth, should the player sell it, in terms of chassis + outfits.
 void ShipInfoDisplay::DrawSale(const Point &topLeft) const
 {
 	Draw(topLeft, saleLabels, saleValues);

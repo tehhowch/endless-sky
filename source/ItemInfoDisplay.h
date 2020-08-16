@@ -48,7 +48,7 @@ public:
 	void DrawDescription(const Point &topLeft) const;
 	virtual void DrawAttributes(const Point &topLeft) const;
 	// Draw information unique to the derived item info class.
-	virtual void DrawOthers(const Point &topLeft) const = 0;
+	virtual void DrawOther(const Point &topLeft) const = 0;
 	
 	void DrawTooltips() const;
 	

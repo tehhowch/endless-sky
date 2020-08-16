@@ -217,7 +217,7 @@ int OutfitterPanel::DrawDetails(const Point &center)
 	Point offset(outfitInfo.PanelWidth(), 0.);
 	
 	outfitInfo.DrawDescription(center - offset * 1.5 - Point(0., 10.));
-	outfitInfo.DrawOthers(center - offset * .5 - Point(0., 10.));
+	outfitInfo.DrawOther(center - offset * .5 - Point(0., 10.));
 	outfitInfo.DrawAttributes(center + offset * .5 - Point(0., 10.));
 	
 	return outfitInfo.MaximumHeight();

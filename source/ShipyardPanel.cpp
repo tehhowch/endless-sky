@@ -143,7 +143,7 @@ int ShipyardPanel::DrawDetails(const Point &center)
 	
 	shipInfo.DrawDescription(center - offset * 1.5);
 	shipInfo.DrawAttributes(center - offset * .5);
-	shipInfo.DrawOutfits(center + offset * .5);
+	shipInfo.DrawOther(center + offset * .5);
 	
 	return shipInfo.MaximumHeight();
 }
