@@ -47,6 +47,9 @@ public:
 	// Draw each of the panels.
 	void DrawDescription(const Point &topLeft) const;
 	virtual void DrawAttributes(const Point &topLeft) const;
+	// Draw information unique to the derived item info class.
+	virtual void DrawOthers(const Point &topLeft) const = 0;
+	
 	void DrawTooltips() const;
 	
 	// Update the location where the mouse is hovering.

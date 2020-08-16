@@ -47,10 +47,11 @@ public:
 	// Provided by ItemInfoDisplay:
 	// void DrawDescription(const Point &topLeft) const;
 	// void DrawAttributes(const Point &topLeft) const;
-	void DrawRequirements(const Point &topLeft) const;
+	virtual void DrawOthers(const Point &topLeft) const override;
 	
 	
 private:
+	void DrawRequirements(const Point &topLeft) const;
 	void UpdateRequirements(const Outfit &outfit, const PlayerInfo &player, bool canSell);
 	void UpdateAttributes(const Outfit &outfit);
 	
