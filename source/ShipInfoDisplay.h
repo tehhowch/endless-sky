@@ -37,6 +37,7 @@ public:
 	void Update(const Ship &ship, const Depreciation &depreciation, int day);
 	
 	// Provided by ItemInfoDisplay:
+	// const Sprite *Image() const;
 	// int PanelWidth();
 	// int MaximumHeight() const;
 	// int DescriptionHeight() const;

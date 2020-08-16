@@ -19,16 +19,23 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <string>
 #include <vector>
 
+class Sprite;
 class Table;
 
 
 
-// Class representing three panels of information about a given item. One shows
+// Base class representing a selected item in the shop, including a sprite
+// to display and three panels of information about it. The first shows
 // a text description, one shows the item's attributes, and a third may be
 // different depending on what kind of item it is (a ship or an outfit).
 class ItemInfoDisplay {
 public:
 	ItemInfoDisplay();
+	virtual ~ItemInfoDisplay() = default;
+	
+	// Get/set the image used to display this item.
+	const Sprite *Image() const;
+	void SetImage(const Sprite *newImage);
 	
 	// Get the panel width.
 	static int PanelWidth();
@@ -56,8 +63,10 @@ protected:
 protected:
 	static const int WIDTH = 250;
 	
-	WrappedText description;
+	const Sprite *itemImage = nullptr;
+	
 	int descriptionHeight = 0;
+	WrappedText description;
 	
 	std::vector<std::string> attributeLabels;
 	std::vector<std::string> attributeValues;

@@ -43,6 +43,21 @@ ItemInfoDisplay::ItemInfoDisplay()
 
 
 
+// Get the image used to display this item.
+const Sprite *ItemInfoDisplay::Image() const
+{
+	return itemImage;
+}
+
+
+
+void ItemInfoDisplay::SetImage(const Sprite *newImage)
+{
+	itemImage = newImage;
+}
+
+
+
 // Get the panel width.
 int ItemInfoDisplay::PanelWidth()
 {
