@@ -37,6 +37,7 @@ public:
 	
 	// Provided by ItemInfoDisplay:
 	// const Sprite *Image() const;
+	// void SetImage(const Sprite *);
 	// int PanelWidth();
 	// int MaximumHeight() const;
 	// int DescriptionHeight() const;
