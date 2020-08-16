@@ -51,14 +51,14 @@ MapShipyardPanel::MapShipyardPanel(const MapPanel &panel, bool onlyHere)
 
 const Sprite *MapShipyardPanel::SelectedSprite() const
 {
-	return selected ? selected->Thumbnail() ? selected->Thumbnail() : selected->GetSprite() : nullptr;
+	return selectedInfo.Image();
 }
 
 
 
 const Sprite *MapShipyardPanel::CompareSprite() const
 {
-	return compare ? compare->Thumbnail() ? compare->Thumbnail() : compare->GetSprite() : nullptr;
+	return compareInfo.Image();
 }
 
 

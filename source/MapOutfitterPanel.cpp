@@ -52,14 +52,14 @@ MapOutfitterPanel::MapOutfitterPanel(const MapPanel &panel, bool onlyHere)
 
 const Sprite *MapOutfitterPanel::SelectedSprite() const
 {
-	return selected ? selected->Thumbnail() : nullptr;
+	return selectedInfo.Image();
 }
 
 
 
 const Sprite *MapOutfitterPanel::CompareSprite() const
 {
-	return compare ? compare->Thumbnail() : nullptr;
+	return compareInfo.Image();
 }
 
 
