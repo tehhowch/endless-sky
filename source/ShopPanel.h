@@ -46,11 +46,11 @@ protected:
 	void DrawButtons();
 	void DrawMain();
 	
+	// Draw a detailed ship thumbnail (or sprite, if no thumbnail) at the given location.
 	void DrawShip(const Ship &ship, const Point &center, bool isSelected);
 	
 	// These are for the individual shop panels to override.
 	virtual int TileSize() const = 0;
-	virtual int DrawPlayerShipInfo(const Point &point) = 0;
 	virtual bool HasItem(const std::string &name) const = 0;
 	virtual void DrawItem(const std::string &name, const Point &point, int scrollY) = 0;
 	virtual int DividerOffset() const = 0;
@@ -61,14 +61,18 @@ protected:
 	virtual void FailBuy() const = 0;
 	virtual bool CanSell(bool toCargo = false) const = 0;
 	virtual void Sell(bool toCargo = false) = 0;
+	
+	// Default implementations of ShopPanel behavior.
 	virtual void FailSell(bool toCargo = false) const;
 	virtual bool CanSellMultiple() const;
-	virtual bool ShouldHighlight(const Ship *ship);
+	virtual bool ShouldHighlight(const Ship *ship) const;
 	virtual void DrawKey();
 	virtual void ToggleForSale();
 	virtual void ToggleCargo();
+	// Draw details about the selected player-owned ship in the sidebar.
+	virtual int DrawPlayerShipInfo(const Point &point);
 	
-	// Only override the ones you need; the default action is to return false.
+	// Only override the Panel behaviors you need; the default action is to return false.
 	virtual bool KeyDown(SDL_Keycode key, Uint16 mod, const Command &command, bool isNewPress) override;
 	virtual bool Click(int x, int y, int clicks) override;
 	virtual bool Hover(int x, int y) override;
@@ -145,6 +149,8 @@ protected:
 	
 	ShipInfoDisplay shipInfo;
 	OutfitInfoDisplay outfitInfo;
+	// Details about the currently-selected player-owned ship.
+	ShipInfoDisplay playerShipInfo;
 	
 	mutable Point warningPoint;
 	mutable std::string warningType;

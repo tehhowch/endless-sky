@@ -91,17 +91,6 @@ int ShipyardPanel::TileSize() const
 
 
 
-int ShipyardPanel::DrawPlayerShipInfo(const Point &point)
-{
-	shipInfo.Update(*playerShip, player.FleetDepreciation(), player.GetDate().DaysSinceEpoch());
-	shipInfo.DrawSale(point);
-	shipInfo.DrawAttributes(point + Point(0, shipInfo.SaleHeight()));
-	
-	return shipInfo.SaleHeight() + shipInfo.AttributesHeight();
-}
-
-
-
 bool ShipyardPanel::HasItem(const string &name) const
 {
 	const Ship *ship = GameData::Ships().Get(name);
@@ -288,6 +277,17 @@ void ShipyardPanel::Sell(bool toCargo)
 bool ShipyardPanel::CanSellMultiple() const
 {
 	return false;
+}
+
+
+
+int ShipyardPanel::DrawPlayerShipInfo(const Point &point)
+{
+	playerShipInfo.Update(*playerShip, player.FleetDepreciation(), player.GetDate().DaysSinceEpoch());
+	playerShipInfo.DrawSale(point);
+	playerShipInfo.DrawAttributes(point + Point(0, playerShipInfo.SaleHeight()));
+	
+	return playerShipInfo.SaleHeight() + playerShipInfo.AttributesHeight();
 }
 
 

@@ -528,7 +528,7 @@ bool ShopPanel::CanSellMultiple() const
 
 
 
-bool ShopPanel::ShouldHighlight(const Ship *ship)
+bool ShopPanel::ShouldHighlight(const Ship * /* ship */) const
 {
 	return (hoverButton == 's');
 }
@@ -551,6 +551,16 @@ void ShopPanel::ToggleForSale()
 void ShopPanel::ToggleCargo()
 {
 	sameSelectedTopY = true;
+}
+
+
+
+int ShopPanel::DrawPlayerShipInfo(const Point &point)
+{
+	playerShipInfo.Update(*playerShip, player.FleetDepreciation(), day);
+	playerShipInfo.DrawAttributes(point);
+	
+	return playerShipInfo.AttributesHeight();
 }
 
 

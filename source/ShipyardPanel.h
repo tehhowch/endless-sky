@@ -36,8 +36,8 @@ public:
 	
 	
 protected:
+	// Required overrides.
 	virtual int TileSize() const override;
-	virtual int DrawPlayerShipInfo(const Point &point) override;
 	virtual bool HasItem(const std::string &name) const override;
 	virtual void DrawItem(const std::string &name, const Point &point, int scrollY) override;
 	virtual int DividerOffset() const override;
@@ -48,7 +48,10 @@ protected:
 	virtual void FailBuy() const override;
 	virtual bool CanSell(bool toCargo = false) const override;
 	virtual void Sell(bool toCargo = false) override;
+	
+	// Optional overrides of ShopPanel behaviors.
 	virtual bool CanSellMultiple() const override;
+	virtual int DrawPlayerShipInfo(const Point &point) override;
 	
 	
 private:

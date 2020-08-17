@@ -91,16 +91,6 @@ int OutfitterPanel::TileSize() const
 
 
 
-int OutfitterPanel::DrawPlayerShipInfo(const Point &point)
-{
-	shipInfo.Update(*playerShip, player.FleetDepreciation(), day);
-	shipInfo.DrawAttributes(point);
-	
-	return shipInfo.AttributesHeight();
-}
-
-
-
 bool OutfitterPanel::HasItem(const string &name) const
 {
 	const Outfit *outfit = GameData::Outfits().Get(name);
@@ -608,7 +598,7 @@ void OutfitterPanel::FailSell(bool toCargo) const
 
 
 
-bool OutfitterPanel::ShouldHighlight(const Ship *ship)
+bool OutfitterPanel::ShouldHighlight(const Ship *ship) const
 {
 	if(!selectedOutfit)
 		return false;
