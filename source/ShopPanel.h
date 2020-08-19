@@ -16,7 +16,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Panel.h"
 
 #include "ClickZone.h"
-#include "OutfitInfoDisplay.h"
+#include "ItemInfoDisplay.h"
 #include "Point.h"
 #include "ShipInfoDisplay.h"
 
@@ -50,6 +50,7 @@ protected:
 	void DrawShip(const Ship &ship, const Point &center, bool isSelected);
 	
 	// These are for the individual shop panels to override.
+	virtual ItemInfoDisplay &SelectedItemInfo() = 0;
 	virtual int TileSize() const = 0;
 	virtual bool HasItem(const std::string &name) const = 0;
 	virtual void DrawItem(const std::string &name, const Point &point, int scrollY) = 0;
@@ -147,8 +148,6 @@ protected:
 	const std::vector<std::string> &categories;
 	std::set<std::string> &collapsed;
 	
-	ShipInfoDisplay shipInfo;
-	OutfitInfoDisplay outfitInfo;
 	// Details about the currently-selected player-owned ship.
 	ShipInfoDisplay playerShipInfo;
 	

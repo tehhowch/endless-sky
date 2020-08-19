@@ -110,8 +110,7 @@ void ShopPanel::Draw()
 	DrawMain();
 	DrawKey();
 	
-	shipInfo.DrawTooltips();
-	outfitInfo.DrawTooltips();
+	SelectedItemInfo().DrawTooltips();
 	
 	if(!warningType.empty())
 	{
@@ -557,6 +556,8 @@ void ShopPanel::ToggleCargo()
 
 int ShopPanel::DrawPlayerShipInfo(const Point &point)
 {
+	// Since there are a number of ways the player can update which of their ships is the
+	// first one selected, we only update the drawn info prior to displaying it.
 	playerShipInfo.Update(*playerShip, player.FleetDepreciation(), day);
 	playerShipInfo.DrawAttributes(point);
 	
@@ -778,18 +779,14 @@ bool ShopPanel::Click(int x, int y, int /* clicks */)
 
 bool ShopPanel::Hover(int x, int y)
 {
-	Point point(x, y);
 	// Check that the point is not in the button area.
 	hoverButton = CheckButton(x, y);
 	if(hoverButton)
-	{
-		shipInfo.ClearHover();
-		outfitInfo.ClearHover();
-	}
+		SelectedItemInfo().ClearHover();
 	else
 	{
-		shipInfo.Hover(point);
-		outfitInfo.Hover(point);
+		const auto hoverPoint = Point(x, y);
+		SelectedItemInfo().Hover(hoverPoint);
 	}
 	
 	dragMain = (x < Screen::Right() - SIDE_WIDTH);

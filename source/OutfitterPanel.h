@@ -15,6 +15,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "ShopPanel.h"
 
+#include "OutfitInfoDisplay.h"
 #include "Sale.h"
 
 #include <map>
@@ -45,6 +46,7 @@ public:
 	
 protected:
 	// Required overrides.
+	virtual ItemInfoDisplay &SelectedItemInfo() override;
 	virtual int TileSize() const override;
 	virtual bool HasItem(const std::string &name) const override;
 	virtual void DrawItem(const std::string &name, const Point &point, int scrollY) override;
@@ -90,6 +92,8 @@ private:
 	std::set<Ship *> previousShips;
 	
 	Sale<Outfit> outfitter;
+	// Details about the currently selected outfit in the main panel.
+	OutfitInfoDisplay outfitInfo;
 	
 	// Keep track of how many of the outfitter help screens have been shown
 	bool checkedHelp = false;

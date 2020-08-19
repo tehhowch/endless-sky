@@ -15,6 +15,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "ShopPanel.h"
 
+#include "ShipInfoDisplay.h"
 #include "Sale.h"
 
 #include <string>
@@ -37,6 +38,7 @@ public:
 	
 protected:
 	// Required overrides.
+	virtual ItemInfoDisplay &SelectedItemInfo() override;
 	virtual int TileSize() const override;
 	virtual bool HasItem(const std::string &name) const override;
 	virtual void DrawItem(const std::string &name, const Point &point, int scrollY) override;
@@ -63,6 +65,8 @@ private:
 	int modifier;
 	
 	Sale<Ship> shipyard;
+	// Details about the currently selected ship in the main panel.
+	ShipInfoDisplay shipInfo;
 };
 
 

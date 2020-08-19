@@ -84,6 +84,13 @@ ShipyardPanel::ShipyardPanel(PlayerInfo &player)
 
 
 
+ItemInfoDisplay &ShipyardPanel::SelectedItemInfo()
+{
+	return shipInfo;
+}
+
+
+
 int ShipyardPanel::TileSize() const
 {
 	return SHIP_SIZE;

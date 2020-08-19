@@ -84,6 +84,13 @@ void OutfitterPanel::Step()
 
 
 
+ItemInfoDisplay &OutfitterPanel::SelectedItemInfo()
+{
+	return outfitInfo;
+}
+
+
+
 int OutfitterPanel::TileSize() const
 {
 	return OUTFIT_SIZE;
