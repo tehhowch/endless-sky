@@ -134,7 +134,7 @@ int ShipyardPanel::DetailWidth() const
 
 int ShipyardPanel::DrawDetails(const Point &center)
 {
-	shipInfo.Update(*selectedShip, player.StockDepreciation(), player.GetDate().DaysSinceEpoch());
+	shipInfo.Update(*selectedShip, player.StockDepreciation(), day);
 	Point offset(shipInfo.PanelWidth(), 0.);
 	
 	shipInfo.DrawDescription(center - offset * 1.5);
@@ -290,7 +290,7 @@ bool ShipyardPanel::CanSellMultiple() const
 
 int ShipyardPanel::DrawPlayerShipInfo(const Point &point)
 {
-	playerShipInfo.Update(*playerShip, player.FleetDepreciation(), player.GetDate().DaysSinceEpoch());
+	playerShipInfo.Update(*playerShip, player.FleetDepreciation(), day);
 	playerShipInfo.DrawSale(point);
 	playerShipInfo.DrawAttributes(point + Point(0, playerShipInfo.SaleHeight()));
 	
