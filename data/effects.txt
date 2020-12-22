@@ -43,12 +43,11 @@ effect "slowing spark"
 	"random spin" 30
 	"random velocity" .1
 
-# TODO: Use a unique effect and sprite
 effect "cloak disruption spark"
-	sprite "effect/nano spark"
+	sprite "effect/cloak-disrupt"
 		"random start frame"
-		"frame rate" 16
-	"lifetime" 1
+		"frame rate" 8
+	"lifetime" 29
 	"random angle" 360
 	"random spin" 4
 
