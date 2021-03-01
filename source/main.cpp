@@ -112,6 +112,11 @@ int main(int argc, char *argv[])
 			Files::LogError("Test \"" + testToRunName + "\" not found.");
 			return 1;
 		}
+		if(printAllContent)
+		{
+			GameData::PrintAllContentPluginList();
+			return 0;
+		}
 		
 		// Load player data, including reference-checking.
 		PlayerInfo player;
@@ -131,11 +136,6 @@ int main(int argc, char *argv[])
 		else if(printSystems)
 		{
 			GameData::PrintSystemTable();
-			return 0;
-		}
-		else if(printAllContent)
-		{
-			GameData::PrintAllContentPluginList();
 			return 0;
 		}
 		
