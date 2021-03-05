@@ -61,8 +61,8 @@ jobs:
       run: |
         sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_V} 100
         sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_V} 100
-        update-alternatives --set gcc "/usr/bin/gcc-${GCC_V}"
-        update-alternatives --set g++ "/usr/bin/g++-${GCC_V}"
+        sudo update-alternatives --set gcc "/usr/bin/gcc-${GCC_V}"
+        sudo update-alternatives --set g++ "/usr/bin/g++-${GCC_V}"
     - name: Print toolchain versions
       run: |
         g++ -v
