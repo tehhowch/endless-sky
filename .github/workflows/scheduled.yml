@@ -28,29 +28,29 @@ jobs:
       matrix:
         include:
           - os: ubuntu-16.04
-            compiler: g++5.5
+            compiler: g++5.5.0
           - os: ubuntu-16.04
-            compiler: g++7.5
+            compiler: g++7.5.0
           - os: ubuntu-16.04
-            compiler: g++8.4
+            compiler: g++8.4.0
           - os: ubuntu-16.04
-            compiler: g++9.3
+            compiler: g++9.3.0
           - os: ubuntu-18.04
-            compiler: g++7.5
+            compiler: g++7.5.0
           - os: ubuntu-18.04
-            compiler: g++8.4
+            compiler: g++8.4.0
           - os: ubuntu-18.04
-            compiler: g++9.3
+            compiler: g++9.3.0
           - os: ubuntu-18.04
-            compiler: g++10.1
+            compiler: g++10.1.0
           - os: ubuntu-20.04
-            compiler: g++7.5
+            compiler: g++7.5.0
           - os: ubuntu-20.04
-            compiler: g++8.4
+            compiler: g++8.4.0
           - os: ubuntu-20.04
-            compiler: g++9.3
+            compiler: g++9.3.0
           - os: ubuntu-20.04
-            compiler: g++10.2
+            compiler: g++10.2.0
     env:
         CCACHE_DIR: ./ccache/
         AR: gcc-ar
@@ -66,8 +66,11 @@ jobs:
       run: echo "CXX=ccache ${{ matrix.compiler }}" >> $GITHUB_ENV
     - name: Print env CXX value
       run: echo "${CXX}"
+    - name: Print path
+      run: echo $PATH
     - name: Print toolchain versions
       run: |
+        g++ -v
         ${CXX} -v
         gcc-ar --version
         gcc-ranlib --version
