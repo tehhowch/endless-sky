@@ -28,29 +28,29 @@ jobs:
       matrix:
         include:
           - os: ubuntu-16.04
-            compiler: g++5
+            compiler: g++5.5
           - os: ubuntu-16.04
-            compiler: g++7
+            compiler: g++7.5
           - os: ubuntu-16.04
-            compiler: g++8
+            compiler: g++8.4
           - os: ubuntu-16.04
-            compiler: g++9
+            compiler: g++9.3
           - os: ubuntu-18.04
-            compiler: g++7
+            compiler: g++7.5
           - os: ubuntu-18.04
-            compiler: g++8
+            compiler: g++8.4
           - os: ubuntu-18.04
-            compiler: g++9
+            compiler: g++9.3
           - os: ubuntu-18.04
-            compiler: g++10
+            compiler: g++10.1
           - os: ubuntu-20.04
-            compiler: g++7
+            compiler: g++7.5
           - os: ubuntu-20.04
-            compiler: g++8
+            compiler: g++8.4
           - os: ubuntu-20.04
-            compiler: g++9
+            compiler: g++9.3
           - os: ubuntu-20.04
-            compiler: g++10
+            compiler: g++10.2
     env:
         CCACHE_DIR: ./ccache/
         AR: gcc-ar
