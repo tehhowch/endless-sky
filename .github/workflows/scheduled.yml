@@ -51,7 +51,7 @@ jobs:
         sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail
         sudo apt-get update
     - name: Set target compiler
-      run: sudo apt install -y --no-install-recommends gcc-${{ matrix.cfg.gcc }}
+      run: sudo apt-get install -y --no-install-recommends gcc-${{ matrix.cfg.gcc }}
     - name: Install other development dependencies
       run: sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
     - name: Print toolchain versions
