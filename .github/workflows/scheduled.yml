@@ -46,6 +46,10 @@ jobs:
         RANLIB: gcc-ranlib
     steps:
     - uses: actions/checkout@v2
+    - name: Search for actions runner env version
+      env:
+        RUNNER_CTX: ${{ toJSON(runner) }}
+      run: echo "${RUNNER_CTX}"
     - name: Install Prep
       run: |
         sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail
