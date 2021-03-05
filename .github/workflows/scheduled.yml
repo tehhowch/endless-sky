@@ -28,31 +28,32 @@ jobs:
       matrix:
         include:
           - os: ubuntu-16.04
-            compiler: g++5.5.0
+            compiler: 5
           - os: ubuntu-16.04
-            compiler: g++7.5.0
+            compiler: 7
           - os: ubuntu-16.04
-            compiler: g++8.4.0
+            compiler: 8
           - os: ubuntu-16.04
-            compiler: g++9.3.0
+            compiler: 9
           - os: ubuntu-18.04
-            compiler: g++7.5.0
+            compiler: 7
           - os: ubuntu-18.04
-            compiler: g++8.4.0
+            compiler: 8
           - os: ubuntu-18.04
-            compiler: g++9.3.0
+            compiler: 9
           - os: ubuntu-18.04
-            compiler: g++10.1.0
+            compiler: 10
           - os: ubuntu-20.04
-            compiler: g++7.5.0
+            compiler: 7
           - os: ubuntu-20.04
-            compiler: g++8.4.0
+            compiler: 8
           - os: ubuntu-20.04
-            compiler: g++9.3.0
+            compiler: 9
           - os: ubuntu-20.04
-            compiler: g++10.2.0
+            compiler: 10
     env:
         CCACHE_DIR: ./ccache/
+        CXX: ccache g++
         AR: gcc-ar
         RANLIB: gcc-ranlib
     steps:
@@ -62,16 +63,17 @@ jobs:
         sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail # Speed up installation and get rid of unwanted lists
         sudo apt-get update
         sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
-    - name: Set env CXX value
+    - name: Set target compiler
+      run: |
+        # sudo update-alternatives --remove-all gcc
+        # sudo update-alternatives --remove-all g++
+        # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.compiler }}
+        update-alternatives --set gcc "/usr/bin/gcc-${{ matrix.compiler }}"
+        update-alternatives --set g++ "/usr/bin/g++-${{ matrix.compiler }}"
       run: echo "CXX=ccache ${{ matrix.compiler }}" >> $GITHUB_ENV
-    - name: Print env CXX value
-      run: echo "${CXX}"
-    - name: Print path
-      run: echo $PATH
     - name: Print toolchain versions
       run: |
         g++ -v
-        ${CXX} -v
         gcc-ar --version
         gcc-ranlib --version
         ld -v
