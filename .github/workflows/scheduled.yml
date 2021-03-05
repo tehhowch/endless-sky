@@ -23,34 +23,22 @@ jobs:
 
   build_ubuntu:
     name: G++ Compat
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ matrix.cfg.os }}
     strategy:
       matrix:
-        include:
-          - os: ubuntu-16.04
-            compiler: 5
-          - os: ubuntu-16.04
-            compiler: 7
-          - os: ubuntu-16.04
-            compiler: 8
-          - os: ubuntu-16.04
-            compiler: 9
-          - os: ubuntu-18.04
-            compiler: 7
-          - os: ubuntu-18.04
-            compiler: 8
-          - os: ubuntu-18.04
-            compiler: 9
-          - os: ubuntu-18.04
-            compiler: 10
-          - os: ubuntu-20.04
-            compiler: 7
-          - os: ubuntu-20.04
-            compiler: 8
-          - os: ubuntu-20.04
-            compiler: 9
-          - os: ubuntu-20.04
-            compiler: 10
+        cfg:
+          - { os: ubuntu-16.04, gcc: 5 }
+          - { os: ubuntu-16.04, gcc: 7 }
+          - { os: ubuntu-16.04, gcc: 8 }
+          - { os: ubuntu-16.04, gcc: 9 }
+          - { os: ubuntu-18.04, gcc: 7 }
+          - { os: ubuntu-18.04, gcc: 8 }
+          - { os: ubuntu-18.04, gcc: 9 }
+          - { os: ubuntu-18.04, gcc: 10 }
+          - { os: ubuntu-20.04, gcc: 7 }
+          - { os: ubuntu-20.04, gcc: 8 }
+          - { os: ubuntu-20.04, gcc: 9 }
+          - { os: ubuntu-20.04, gcc: 10 }
     env:
         CCACHE_DIR: ./ccache/
         CXX: ccache g++
@@ -58,18 +46,14 @@ jobs:
         RANLIB: gcc-ranlib
     steps:
     - uses: actions/checkout@v2
-    - name: Install development dependencies
+    - name: Install Prep
       run: |
-        sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail # Speed up installation and get rid of unwanted lists
+        sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail
         sudo apt-get update
-        sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
     - name: Set target compiler
-      run: |
-        # sudo update-alternatives --remove-all gcc
-        # sudo update-alternatives --remove-all g++
-        # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.compiler }}
-        update-alternatives --set gcc "/usr/bin/gcc-${{ matrix.compiler }}"
-        update-alternatives --set g++ "/usr/bin/g++-${{ matrix.compiler }}"
+      run: sudo apt install -y --no-install-recommends gcc-${{ matrix.cfg.gcc }}
+    - name: Install other development dependencies
+      run: sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
     - name: Print toolchain versions
       run: |
         g++ -v
@@ -80,11 +64,11 @@ jobs:
       uses: actions/cache@v2
       with:
         path: ${{ env.CCACHE_DIR }}
-        key: ${{ matrix.os }}-${{ matrix.compiler }}-ccache-${{ github.repository }}-${{ github.ref }}-${{ github.sha }}
+        key: ${{ matrix.cfg.os }}-${{ matrix.cfg.gcc }}-ccache-${{ github.repository }}-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ${{ matrix.os }}-${{ matrix.compiler }}-ccache-${{ github.repository }}-${{ github.ref }}-
-          ${{ matrix.os }}-${{ matrix.compiler }}-ccache-${{ github.repository }}-
-          ${{ matrix.os }}-${{ matrix.compiler }}-ccache-
+          ${{ matrix.cfg.os }}-${{ matrix.cfg.gcc }}-ccache-${{ github.repository }}-${{ github.ref }}-
+          ${{ matrix.cfg.os }}-${{ matrix.cfg.gcc }}-ccache-${{ github.repository }}-
+          ${{ matrix.cfg.os }}-${{ matrix.cfg.gcc }}-ccache-
     - name: Compile
       run: scons -Qj $(nproc);
 
