@@ -50,14 +50,19 @@ jobs:
       env:
         RUNNER_CTX: ${{ toJSON(runner) }}
       run: echo "${RUNNER_CTX}"
-    - name: Install Prep
+    - name: Install development dependencies
       run: |
         sudo rm /etc/apt/sources.list.d/* && sudo dpkg --clear-avail
         sudo apt-get update
+        sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
     - name: Set target compiler
-      run: sudo apt-get install -y --no-install-recommends gcc-${{ matrix.cfg.gcc }}
-    - name: Install other development dependencies
-      run: sudo apt-get install -y --no-install-recommends libsdl2-dev libpng-dev libjpeg-turbo8-dev libopenal-dev libmad0-dev libglew-dev libgl1-mesa-dev scons ccache
+      env:
+        GCC_V: ${{ matrix.cfg.gcc }}
+      run: |
+        sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCC_V} 100
+        sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCC_V} 100
+        update-alternatives --set gcc "/usr/bin/gcc-${GCC_V}"
+        update-alternatives --set g++ "/usr/bin/g++-${GCC_V}"
     - name: Print toolchain versions
       run: |
         g++ -v
