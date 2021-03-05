@@ -70,7 +70,6 @@ jobs:
         # sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${{ matrix.compiler }}
         update-alternatives --set gcc "/usr/bin/gcc-${{ matrix.compiler }}"
         update-alternatives --set g++ "/usr/bin/g++-${{ matrix.compiler }}"
-      run: echo "CXX=ccache ${{ matrix.compiler }}" >> $GITHUB_ENV
     - name: Print toolchain versions
       run: |
         g++ -v
