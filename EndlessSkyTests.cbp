@@ -68,6 +68,7 @@
 		<Unit filename="tests/src/test_point.cpp" />
 		<Unit filename="tests/src/test_random.cpp" />
 		<Unit filename="tests/src/test_set.cpp" />
+		<Unit filename="tests/src/test_uuid.cpp" />
 		<Unit filename="tests/src/text/test_alignment.cpp" />
 		<Unit filename="tests/src/text/test_displaytext.cpp" />
 		<Unit filename="tests/src/text/test_layout.cpp" />
