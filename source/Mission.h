@@ -44,7 +44,7 @@ class UI;
 // exactly the same every time you replay the game.
 class Mission {
 public:
-	Mission() = default;
+	Mission() noexcept = default;
 	// Copying a mission instance would delete its UUID.
 	Mission(const Mission &) = delete;
 	Mission &operator=(const Mission &) = delete;

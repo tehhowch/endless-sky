@@ -47,7 +47,7 @@ public:
 	// Copying an NPC instance would delete its UUID.
 	NPC(const NPC &) = delete;
 	NPC &operator=(const NPC &) = delete;
-	NPC(NPC &&) = default;
+	NPC(NPC &&) noexcept = default;
 	NPC &operator=(NPC &&) noexcept = default;
 	~NPC() noexcept = default;
 	
