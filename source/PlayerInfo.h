@@ -56,7 +56,7 @@ public:
 	// Don't allow copying this class.
 	PlayerInfo(const PlayerInfo &) = delete;
 	PlayerInfo &operator=(const PlayerInfo &) = delete;
-	PlayerInfo(PlayerInfo &&) noexcept = default;
+	PlayerInfo(PlayerInfo &&) = default;
 	PlayerInfo &operator=(PlayerInfo &&) = default;
 	~PlayerInfo() noexcept = default;
 	
@@ -306,7 +306,7 @@ private:
 	bool isDead = false;
 	
 	// The amount of in-game time played, in seconds.
-	double playTime = 0.0;
+	double playTime = 0.;
 	
 	Account accounts;
 	

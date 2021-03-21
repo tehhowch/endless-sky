@@ -44,7 +44,7 @@ public:
 	
 	
 public:
-	GameEvent() = default;
+	GameEvent() noexcept = default;
 	// Construct and Load() at the same time.
 	GameEvent(const DataNode &node);
 	
