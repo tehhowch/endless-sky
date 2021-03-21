@@ -13,11 +13,10 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "es-test.hpp"
 
 // Include only the tested class's header.
-#include "../../../source/Uuid.h"
+#include "../../source/Uuid.h"
 
 // ... and any system includes needed for the test file.
 #include <string>
-#include <sstream>
 #include <type_traits>
 
 namespace { // test namespace
@@ -45,9 +44,8 @@ TEST_CASE( "Uuid class", "[uuid]" ) {
 	SECTION( "Construction Traits" ) {
 		CHECK( std::is_default_constructible<T>::value );
 		CHECK( std::is_nothrow_default_constructible<T>::value );
-		CHECK_FALSE( std::is_copy_constructible<T>::value );
-		CHECK_FALSE( std::is_trivially_copy_constructible<T>::value );
-		CHECK_FALSE( std::is_nothrow_copy_constructible<T>::value );
+		// TODO: enable after refactoring how we create ships from stock models.
+		// CHECK_FALSE( std::is_copy_constructible<T>::value );
 		CHECK( std::is_move_constructible<T>::value );
 		// Class stores a string, and thus has the same behavior as that string.
 		CHECK_FALSE( std::is_trivially_move_constructible<T>::value );
@@ -55,12 +53,10 @@ TEST_CASE( "Uuid class", "[uuid]" ) {
 			std::is_trivially_move_constructible<std::string>::value );
 		CHECK( std::is_nothrow_move_constructible<T>::value );
 	}
-	SECTION( "Copy Traits" ) {
-		CHECK_FALSE( std::is_copy_assignable<T>::value );
-		CHECK_FALSE( std::is_trivially_copyable<T>::value );
-		CHECK_FALSE( std::is_trivially_copy_assignable<T>::value );
-		CHECK_FALSE( std::is_nothrow_copy_assignable<T>::value );
-	}
+	// TODO: enable, as above.
+	// SECTION( "Copy Traits" ) {
+	// 	CHECK_FALSE( std::is_copy_assignable<T>::value );
+	// }
 	SECTION( "Move Traits" ) {
 		CHECK( std::is_move_assignable<T>::value );
 		// Class stores a string, and thus has the same behavior as that string.
@@ -114,6 +110,41 @@ SCENARIO( "Comparing IDs", "[uuid]" ) {
 			Uuid other;
 			THEN( "the two are never equal" ) {
 				CHECK( id != other );
+			}
+		}
+	}
+}
+
+SCENARIO( "Copying uniquely identifiable objects", "[uuid]" ) {
+	// ES generally does not copy identifiable objects, with the sole exception of Ship instances. Copies
+	// are currently done when creating ships from a "stock" instance held by GameData, a StartCondition,
+	// or when registering a captured NPC. When creating a ship from a stock instance, the source and copy
+	// should not share a UUID value. When registering a captured ship, however, the ships should share an
+	// identifier.
+	// (It is also not required for a ship gifted to a new pilot be strictly identified, just that it
+	// can be identified as a starting ship at a later instance. The same goes for ships gifted by missions:
+	// a later mission should be able to identify which of the player's ships was gifted by some particular
+	// previous mission.)
+	GIVEN( "an object owning a UUID" ) {
+		Identifiable source;
+		std::string sourceId = source.id.ToString();
+		WHEN( "a copy is made via constructor" ) {
+			Identifiable other(source);
+			THEN( "the copy has a different ID" ) {
+				CHECK( other.id.ToString() != sourceId );
+			}
+		}
+		WHEN( "a copy is made via assignment" ) {
+			Identifiable other = source;
+			THEN( "the copy has a different ID" ) {
+				CHECK( other.id.ToString() != sourceId );
+			}
+		}
+		WHEN( "a copy is explicitly requested" ) {
+			Identifiable other;
+			other.id.clone(source.id);
+			THEN( "the copy has the same ID" ) {
+				CHECK( other.id.ToString() == sourceId );
 			}
 		}
 	}

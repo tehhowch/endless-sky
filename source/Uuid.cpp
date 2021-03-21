@@ -26,6 +26,31 @@ Uuid Uuid::FromString(const std::string &input)
 
 
 
+// Copy-constructing a UUID returns an empty UUID.
+Uuid::Uuid(const Uuid &other)
+	: value()
+{
+}
+
+
+
+// Copy-assigning also results in an empty UUID.
+Uuid &Uuid::operator=(const Uuid &other)
+{
+	*this = Uuid(other);
+	return *this;
+}
+
+
+
+// Explicitly copy the value of the other UUID.
+void Uuid::clone(const Uuid &other)
+{
+	value = other.Value();
+}
+
+
+
 bool Uuid::operator==(const Uuid &other) const
 {
 	return Value() == other.Value();

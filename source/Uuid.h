@@ -23,16 +23,20 @@ public:
 	static Uuid FromString(const std::string &input);
 	Uuid() noexcept = default;
 	~Uuid() noexcept = default;
-	// UUIDs cannot be copied.
-	Uuid(const Uuid &other) = delete;
-	Uuid &operator=(const Uuid &other) = delete;
-	// UUIDs can be moved.
+	// Copying a UUID does not copy its value. (This allows us to use simple copy operations on stock
+	// ship definitions when spawning fleets, etc.)
+	Uuid(const Uuid &other);
+	Uuid &operator=(const Uuid &other);
+	// UUIDs can be moved as-is.
 	Uuid(Uuid &&other) noexcept = default;
 	Uuid &operator=(Uuid &&other) noexcept = default;
 	
 	// UUIDs can be compared against other UUIDs.
 	bool operator==(const Uuid &other) const;
 	bool operator!=(const Uuid &other) const;
+	
+	// Explicitly clone this UUID.
+	void clone(const Uuid &other);
 	
 	// Get a string representation of this ID, e.g. for serialization.
 	const std::string &ToString() const;
@@ -49,8 +53,6 @@ private:
 	// The internal representation of the UUID. For now, we store the UUID as an
 	// arbitrary-length string, rather than the more correct collection of bytes.
 	mutable std::string value;
-	
-	
 };
 
 
