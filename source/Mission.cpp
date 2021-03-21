@@ -138,7 +138,7 @@ void Mission::Load(const DataNode &node)
 		if(child.Token(0) == "name" && child.Size() >= 2)
 			displayName = child.Token(1);
 		else if(child.Token(0) == "uuid" && child.Size() >= 2)
-			uuid = child.Token(1);
+			uuid = Uuid::FromString(child.Token(1));
 		else if(child.Token(0) == "description" && child.Size() >= 2)
 			description = child.Token(1);
 		else if(child.Token(0) == "blocked" && child.Size() >= 2)
@@ -255,10 +255,7 @@ void Mission::Load(const DataNode &node)
 		else if(child.Token(0) == "stopover" && child.HasChildren())
 			stopoverFilters.emplace_back(child);
 		else if(child.Token(0) == "npc")
-		{
 			npcs.emplace_back(child);
-			npcs.back().EnsureUUID();
-		}
 		else if(child.Token(0) == "on" && child.Size() >= 2 && child.Token(1) == "enter")
 		{
 			// "on enter" nodes may either name a specific system or use a LocationFilter
@@ -309,8 +306,7 @@ void Mission::Save(DataWriter &out, const string &tag) const
 	out.BeginChild();
 	{
 		out.Write("name", displayName);
-		if(uuid.size())
-			out.Write("uuid", uuid);
+		out.Write("uuid", uuid.ToString());
 		if(!description.empty())
 			out.Write("description", description);
 		if(!blocked.empty())
@@ -413,7 +409,7 @@ void Mission::Save(DataWriter &out, const string &tag) const
 
 
 // Basic mission information.
-const string &Mission::UUID() const
+const Uuid &Mission::UUID() const noexcept
 {
 	return uuid;
 }
@@ -508,14 +504,6 @@ bool Mission::HasPriority() const
 bool Mission::IsMinor() const
 {
 	return isMinor;
-}
-
-
-
-void Mission::EnsureUUID()
-{
-	if(uuid.empty())
-		uuid = Random::UUID();
 }
 
 
@@ -1098,7 +1086,6 @@ Mission Mission::Instantiate(const PlayerInfo &player, const shared_ptr<Ship> &b
 {
 	Mission result;
 	// If anything goes wrong below, this mission should not be offered.
-	result.uuid = Random::UUID();
 	result.hasFailed = true;
 	result.isVisible = isVisible;
 	result.hasPriority = hasPriority;

@@ -18,6 +18,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "LocationFilter.h"
 #include "Personality.h"
 #include "Phrase.h"
+#include "Uuid.h"
 
 #include <list>
 #include <map>
@@ -43,6 +44,13 @@ class UI;
 class NPC {
 public:
 	NPC() = default;
+	// Copying an NPC instance would delete its UUID.
+	NPC(const NPC &) = delete;
+	NPC &operator=(const NPC &) = delete;
+	NPC(NPC &&) = default;
+	NPC &operator=(NPC &&) noexcept = default;
+	~NPC() noexcept = default;
+	
 	// Construct and Load() at the same time.
 	NPC(const DataNode &node);
 	
@@ -54,9 +62,7 @@ public:
 	// Determine if this NPC or NPC template uses well-defined data.
 	bool IsValid(bool asTemplate = false) const;
 	
-	const std::string &UUID() const;
-	void EnsureUUID();
-	void NewUUID();
+	const Uuid &UUID() const noexcept;
 	
 	// Update or check spawning and despawning for this NPC.
 	void UpdateSpawning(const PlayerInfo &player);
@@ -86,7 +92,7 @@ private:
 	const Government *government = nullptr;
 	Personality personality;
 	
-	std::string uuid;
+	Uuid uuid;
 	
 	// Start out in a location matching this filter, or in a particular system:
 	LocationFilter location;
