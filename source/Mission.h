@@ -18,7 +18,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "LocationFilter.h"
 #include "MissionAction.h"
 #include "NPC.h"
-#include "Uuid.h"
+#include "EsUuid.h"
 
 #include <list>
 #include <map>
@@ -62,7 +62,7 @@ public:
 	void Save(DataWriter &out, const std::string &tag = "mission") const;
 	
 	// Basic mission information.
-	const Uuid &UUID() const noexcept;
+	const EsUuid &UUID() const noexcept;
 	const std::string &Name() const;
 	const std::string &Description() const;
 	// Check if this mission should be shown in your mission list. If not, the
@@ -181,7 +181,7 @@ private:
 	std::string blocked;
 	Location location = SPACEPORT;
 	
-	Uuid uuid;
+	EsUuid uuid;
 	
 	bool hasFailed = false;
 	bool isVisible = true;

@@ -1,4 +1,4 @@
-/* Uuid.cpp
+/* EsUuid.cpp
 Copyright (c) 2021 by Benjamin Hauch
 
 Endless Sky is free software: you can redistribute it and/or modify it under the
@@ -10,7 +10,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 */
 
-#include "Uuid.h"
+#include "EsUuid.h"
 
 #include "Files.h"
 #include "Random.h"
@@ -19,15 +19,15 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 
 
-Uuid Uuid::FromString(const std::string &input)
+EsUuid EsUuid::FromString(const std::string &input)
 {
-	return Uuid(input);
+	return EsUuid(input);
 }
 
 
 
 // Copy-constructing a UUID returns an empty UUID.
-Uuid::Uuid(const Uuid &other)
+EsUuid::EsUuid(const EsUuid &other)
 	: value()
 {
 }
@@ -35,37 +35,37 @@ Uuid::Uuid(const Uuid &other)
 
 
 // Copy-assigning also results in an empty UUID.
-Uuid &Uuid::operator=(const Uuid &other)
+EsUuid &EsUuid::operator=(const EsUuid &other)
 {
-	*this = Uuid(other);
+	*this = EsUuid(other);
 	return *this;
 }
 
 
 
 // Explicitly copy the value of the other UUID.
-void Uuid::clone(const Uuid &other)
+void EsUuid::clone(const EsUuid &other)
 {
 	value = other.Value();
 }
 
 
 
-bool Uuid::operator==(const Uuid &other) const
+bool EsUuid::operator==(const EsUuid &other) const
 {
 	return Value() == other.Value();
 }
 
 
 
-bool Uuid::operator!=(const Uuid &other) const
+bool EsUuid::operator!=(const EsUuid &other) const
 {
 	return Value() != other.Value();
 }
 
 
 
-const std::string &Uuid::ToString() const
+const std::string &EsUuid::ToString() const
 {
 	return Value();
 }
@@ -74,7 +74,7 @@ const std::string &Uuid::ToString() const
 
 // Internal constructor. Note that the provided value may not be a valid v4 UUID, in which case an error is logged
 // and we return a new UUID.
-Uuid::Uuid(const std::string &input)
+EsUuid::EsUuid(const std::string &input)
 {
 	// The input must have the correct number of characters and contain the correct subset
 	// of characters. This validation isn't exact, nor do we really require it to be, since
@@ -94,7 +94,7 @@ Uuid::Uuid(const std::string &input)
 
 
 
-const std::string &Uuid::Value() const
+const std::string &EsUuid::Value() const
 {
 	if(value.empty())
 		value = Random::UUID();

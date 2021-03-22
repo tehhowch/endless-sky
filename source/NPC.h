@@ -18,7 +18,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "LocationFilter.h"
 #include "Personality.h"
 #include "Phrase.h"
-#include "Uuid.h"
+#include "EsUuid.h"
 
 #include <list>
 #include <map>
@@ -62,7 +62,7 @@ public:
 	// Determine if this NPC or NPC template uses well-defined data.
 	bool IsValid(bool asTemplate = false) const;
 	
-	const Uuid &UUID() const noexcept;
+	const EsUuid &UUID() const noexcept;
 	
 	// Update or check spawning and despawning for this NPC.
 	void UpdateSpawning(const PlayerInfo &player);
@@ -92,7 +92,7 @@ private:
 	const Government *government = nullptr;
 	Personality personality;
 	
-	Uuid uuid;
+	EsUuid uuid;
 	
 	// Start out in a location matching this filter, or in a particular system:
 	LocationFilter location;

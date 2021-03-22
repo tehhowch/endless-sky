@@ -138,7 +138,7 @@ void Mission::Load(const DataNode &node)
 		if(child.Token(0) == "name" && child.Size() >= 2)
 			displayName = child.Token(1);
 		else if(child.Token(0) == "uuid" && child.Size() >= 2)
-			uuid = Uuid::FromString(child.Token(1));
+			uuid = EsUuid::FromString(child.Token(1));
 		else if(child.Token(0) == "description" && child.Size() >= 2)
 			description = child.Token(1);
 		else if(child.Token(0) == "blocked" && child.Size() >= 2)
@@ -409,7 +409,7 @@ void Mission::Save(DataWriter &out, const string &tag) const
 
 
 // Basic mission information.
-const Uuid &Mission::UUID() const noexcept
+const EsUuid &Mission::UUID() const noexcept
 {
 	return uuid;
 }

@@ -1,4 +1,4 @@
-/* Uuid.h
+/* EsUuid.h
 Copyright (c) 2021 by Benjamin Hauch
 
 Endless Sky is free software: you can redistribute it and/or modify it under the
@@ -18,25 +18,25 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 
 // Class wrapping IETF v4 GUIDs, providing lazy initialization.
-class Uuid final {
+class EsUuid final {
 public:
-	static Uuid FromString(const std::string &input);
-	Uuid() noexcept = default;
-	~Uuid() noexcept = default;
+	static EsUuid FromString(const std::string &input);
+	EsUuid() noexcept = default;
+	~EsUuid() noexcept = default;
 	// Copying a UUID does not copy its value. (This allows us to use simple copy operations on stock
 	// ship definitions when spawning fleets, etc.)
-	Uuid(const Uuid &other);
-	Uuid &operator=(const Uuid &other);
+	EsUuid(const EsUuid &other);
+	EsUuid &operator=(const EsUuid &other);
 	// UUIDs can be moved as-is.
-	Uuid(Uuid &&other) noexcept = default;
-	Uuid &operator=(Uuid &&other) noexcept = default;
+	EsUuid(EsUuid &&other) noexcept = default;
+	EsUuid &operator=(EsUuid &&other) noexcept = default;
 	
 	// UUIDs can be compared against other UUIDs.
-	bool operator==(const Uuid &other) const;
-	bool operator!=(const Uuid &other) const;
+	bool operator==(const EsUuid &other) const;
+	bool operator!=(const EsUuid &other) const;
 	
 	// Explicitly clone this UUID.
-	void clone(const Uuid &other);
+	void clone(const EsUuid &other);
 	
 	// Get a string representation of this ID, e.g. for serialization.
 	const std::string &ToString() const;
@@ -44,7 +44,7 @@ public:
 	
 private:
 	// Internal constructor, from a string.
-	explicit Uuid(const std::string &input);
+	explicit EsUuid(const std::string &input);
 	// Lazy initialization getter.
 	const std::string &Value() const;
 	

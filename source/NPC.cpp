@@ -96,7 +96,7 @@ void NPC::Load(const DataNode &node)
 				location.Load(child);
 		}
 		else if(child.Token(0) == "uuid" && child.Size() >= 2)
-			uuid = Uuid::FromString(child.Token(1));
+			uuid = EsUuid::FromString(child.Token(1));
 		else if(child.Token(0) == "planet" && child.Size() >= 2)
 			planet = GameData::Planets().Get(child.Token(1));
 		else if(child.Token(0) == "succeed" && child.Size() >= 2)
@@ -346,7 +346,7 @@ bool NPC::IsValid(bool asTemplate) const
 
 
 
-const Uuid &NPC::UUID() const noexcept
+const EsUuid &NPC::UUID() const noexcept
 {
 	return uuid;
 }

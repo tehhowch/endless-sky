@@ -22,7 +22,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Outfit.h"
 #include "Personality.h"
 #include "Point.h"
-#include "Uuid.h"
+#include "EsUuid.h"
 
 #include <list>
 #include <map>
@@ -136,9 +136,9 @@ public:
 	// Save a full description of this ship, as currently configured.
 	void Save(DataWriter &out) const;
 	
-	const Uuid &UUID() const noexcept;
+	const EsUuid &UUID() const noexcept;
 	// Explicitly set this ship's ID.
-	void SetUUID(const Uuid &id);
+	void SetUUID(const EsUuid &id);
 	
 	// Get the name of this particular ship.
 	const std::string &Name() const;
@@ -460,7 +460,7 @@ private:
 	std::string description;
 	const Sprite *thumbnail = nullptr;
 	// Characteristics of this particular ship:
-	Uuid uuid;
+	EsUuid uuid;
 	std::string name;
 	bool canBeCarried = false;
 	

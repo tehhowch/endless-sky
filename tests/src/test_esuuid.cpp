@@ -1,4 +1,4 @@
-/* test_uuid.cpp
+/* test_esuuid.cpp
 Copyright (c) 2021 by Benjamin Hauch
 
 Endless Sky is free software: you can redistribute it and/or modify it under the
@@ -13,7 +13,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "es-test.hpp"
 
 // Include only the tested class's header.
-#include "../../source/Uuid.h"
+#include "../../source/EsUuid.h"
 
 // ... and any system includes needed for the test file.
 #include <string>
@@ -23,15 +23,15 @@ namespace { // test namespace
 
 // #region mock data
 struct Identifiable {
-	Uuid id;
+	EsUuid id;
 };
 // #endregion mock data
 
 
 
 // #region unit tests
-TEST_CASE( "Uuid class", "[uuid]" ) {
-	using T = Uuid;
+TEST_CASE( "EsUuid class", "[uuid]" ) {
+	using T = EsUuid;
 	SECTION( "Class Traits" ) {
 		CHECK_FALSE( std::is_trivial<T>::value );
 		CHECK( std::is_standard_layout<T>::value );
@@ -69,7 +69,7 @@ TEST_CASE( "Uuid class", "[uuid]" ) {
 
 SCENARIO( "Creating a UUID", "[uuid]") {
 	GIVEN( "No arguments" ) {
-		Uuid id;
+		EsUuid id;
 		THEN( "it takes a random value" ) {
 			CHECK_FALSE( id.ToString().empty() );
 		}
@@ -78,7 +78,7 @@ SCENARIO( "Creating a UUID", "[uuid]") {
 		WHEN( "the string is valid" ) {
 			const std::string valid = "5be91256-f6ba-47cd-96df-1ce1cb4fee86";
 			THEN( "it takes the given value" ) {
-				auto id = Uuid::FromString(valid);
+				auto id = EsUuid::FromString(valid);
 				CHECK( id.ToString() == valid );
 			}
 		}
@@ -89,7 +89,7 @@ SCENARIO( "Creating a UUID", "[uuid]") {
 					, "ZZZZZZZZ-ZZZZ-ZZZZ-ZZZZ-ZZZZZZZZZZZZ"
 					, "5be91256-f6ba-47cd-96df-1ce1cb-fee86"
 				);
-				auto id = Uuid::FromString(invalid);
+				auto id = EsUuid::FromString(invalid);
 				CHECK( id.ToString() != invalid );
 			}
 		}
@@ -98,7 +98,7 @@ SCENARIO( "Creating a UUID", "[uuid]") {
 
 SCENARIO( "Comparing IDs", "[uuid]" ) {
 	GIVEN( "a UUID" ) {
-		Uuid id;
+		EsUuid id;
 		THEN( "it always has the same string representation" ) {
 			std::string value(id.ToString());
 			CHECK( value == id.ToString() );
@@ -107,7 +107,7 @@ SCENARIO( "Comparing IDs", "[uuid]" ) {
 			CHECK( id == id );
 		}
 		AND_GIVEN( "a second UUID" ) {
-			Uuid other;
+			EsUuid other;
 			THEN( "the two are never equal" ) {
 				CHECK( id != other );
 			}
