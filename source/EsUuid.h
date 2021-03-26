@@ -15,6 +15,18 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <string>
 
+#ifdef _WIN32
+// Don't include <windows.h>, which will shadow our Rectangle class.
+#define RPC_NO_WINDOWS_H
+#include <rpc.h>
+// "interface" is a reserved word on Windows, meaning we can't use it as a variable name.
+// But we'll clean that up later. Refs:
+// https://bugzilla.redhat.com/show_bug.cgi?id=980270
+// https://docs.microsoft.com/en-us/cpp/extensions/interface-class-cpp-component-extensions?view=msvc-160
+#undef interface
+#else
+// #include <uuid/uuid.h>
+#endif
 
 
 // Class wrapping IETF v4 GUIDs, providing lazy initialization.
@@ -39,20 +51,28 @@ public:
 	void clone(const EsUuid &other);
 	
 	// Get a string representation of this ID, e.g. for serialization.
-	const std::string &ToString() const;
+	std::string ToString() const;
 	
 	
 private:
 	// Internal constructor, from a string.
 	explicit EsUuid(const std::string &input);
 	// Lazy initialization getter.
+#ifdef _WIN32
+	const UUID &Value() const;
+#else
 	const std::string &Value() const;
+#endif
 	
 	
 private:
+#ifdef _WIN32
+	mutable UUID value;
+#else
 	// The internal representation of the UUID. For now, we store the UUID as an
 	// arbitrary-length string, rather than the more correct collection of bytes.
 	mutable std::string value;
+#endif
 };
 
 

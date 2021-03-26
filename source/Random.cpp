@@ -27,8 +27,10 @@ namespace {
 	mt19937_64 gen;
 	uniform_int_distribution<uint32_t> uniform;
 	uniform_real_distribution<double> real;
+#ifndef _WIN32
 	uniform_real_distribution<> zeroToFifteen(0, 15);
 	uniform_real_distribution<> eightToEleven(8, 11);
+#endif
 #else
 	thread_local mt19937_64 gen;
 	thread_local uniform_int_distribution<uint32_t> uniform;
@@ -119,6 +121,7 @@ double Random::Normal()
 
 
 
+#ifndef _WIN32
 // Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122)
 // which are hexidecimal strings like "2c8ab67c-e7cc-471a-a415-08a63ba52527"
 // and contain 121 bits of random data.
@@ -151,3 +154,4 @@ string Random::UUID()
 	
 	return uuid;
 }
+#endif

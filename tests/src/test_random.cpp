@@ -31,6 +31,7 @@ TEST_CASE( "Random::Int", "[random][int]") {
 	REQUIRE( Random::Int(1) == 0 );
 }
 
+#ifndef _WIN32
 TEST_CASE( "Random::UUID", "[random][uuid]" ) {
 	SECTION( "Generates reasonably unique values" ) {
 		constexpr size_t scale = 2000000;
@@ -42,6 +43,7 @@ TEST_CASE( "Random::UUID", "[random][uuid]" ) {
 		CHECK( results.size() == scale );
 	}
 }
+#endif
 // Test code goes here. Preferably, use scenario-driven language making use of the SCENARIO, GIVEN,
 // WHEN, and THEN macros. (There will be cases where the more traditional TEST_CASE and SECTION macros
 // are better suited to declaration of the public API.)
@@ -73,11 +75,13 @@ TEST_CASE( "Benchmark Random::Real", "[!benchmark][random]" ) {
 		return Random::Real();
 	};
 }
+#ifndef _WIN32
 TEST_CASE( "Benchmark Random::UUID", "[!benchmark][random][uuid]" ) {
 	BENCHMARK( "Random::UUID" ) {
 		return Random::UUID();
 	};
 }
+#endif
 #endif
 // #endregion benchmarks
 
