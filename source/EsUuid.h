@@ -29,6 +29,16 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #endif
 
 
+namespace es_uuid::detail {
+#ifdef _WIN32
+	UUID MakeUuid();
+#else
+	std::string MakeUuid();
+#endif
+}
+
+
+
 // Class wrapping IETF v4 GUIDs, providing lazy initialization.
 class EsUuid final {
 public:

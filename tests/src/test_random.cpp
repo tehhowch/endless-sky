@@ -75,13 +75,6 @@ TEST_CASE( "Benchmark Random::Real", "[!benchmark][random]" ) {
 		return Random::Real();
 	};
 }
-#ifndef _WIN32
-TEST_CASE( "Benchmark Random::UUID", "[!benchmark][random][uuid]" ) {
-	BENCHMARK( "Random::UUID" ) {
-		return Random::UUID();
-	};
-}
-#endif
 #endif
 // #endregion benchmarks
 

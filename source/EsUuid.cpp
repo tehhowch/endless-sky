@@ -24,7 +24,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // #include <uuid/uuid.h>
 #endif
 
-namespace {
+namespace es_uuid::detail {
 #ifdef _WIN32
 // #region TODO: export Files.cpp string helpers to avoid duplication.
 std::wstring ToUTF16(const std::string &input)
@@ -139,6 +139,7 @@ std::string Serialize(const std::string &s)
 }
 #endif
 }
+using namespace es_uuid::detail;
 
 
 

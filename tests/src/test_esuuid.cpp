@@ -170,6 +170,13 @@ SCENARIO( "Copying uniquely identifiable objects", "[uuid]" ) {
 // the REQUIRE / REQUIRE_FALSE macros for fundamental / "validity" assertions. If a CHECK fails, the rest
 // of the block's statements will still be evaluated, but a REQUIRE failure will exit the current block.
 
+// TODO: remove, and revert the usage of a namespace to expose the method. Kept only for benchmarking
+// purposes during development.
+TEST_CASE( "Benchmark UUID Creation", "[!benchmark][uuid]" ) {
+	BENCHMARK( "MakeUuid" ) {
+		return es_uuid::detail::MakeUuid();
+	};
+}
 // #endregion unit tests
 
 
