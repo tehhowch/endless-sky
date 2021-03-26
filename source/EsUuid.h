@@ -29,12 +29,14 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #endif
 
 
-namespace es_uuid::detail {
+namespace es_uuid {
+namespace detail {
 #ifdef _WIN32
 	UUID MakeUuid();
 #else
 	std::string MakeUuid();
 #endif
+}
 }
 
 
