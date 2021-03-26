@@ -16,9 +16,9 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "Random.h"
 
 #include <algorithm>
+#include <stdexcept>
 
 #ifdef _WIN32
-#include <stdexcept>
 #include <windows.h>
 #else
 // #include <uuid/uuid.h>
