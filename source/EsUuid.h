@@ -15,7 +15,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <string>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 // Don't include <windows.h>, which will shadow our Rectangle class.
 #define RPC_NO_WINDOWS_H
 #include <rpc.h>
@@ -24,25 +24,27 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // https://bugzilla.redhat.com/show_bug.cgi?id=980270
 // https://docs.microsoft.com/en-us/cpp/extensions/interface-class-cpp-component-extensions?view=msvc-160
 #undef interface
-#else
-// #include <uuid/uuid.h>
+#elif !defined(__APPLE__)
+#include <uuid/uuid.h>
 #endif
-
-
-namespace es_uuid {
-namespace detail {
-#ifdef _WIN32
-	UUID MakeUuid();
-#else
-	std::string MakeUuid();
-#endif
-}
-}
 
 
 
 // Class wrapping IETF v4 GUIDs, providing lazy initialization.
 class EsUuid final {
+public:
+	// Used to represent a UUID across supported platforms.
+	struct UuidType final {
+#if defined(__APPLE__)
+		std::string id;
+#elif defined(_WIN32)
+		UUID id;
+#else
+		uuid_t id;
+#endif
+	};
+	
+	
 public:
 	static EsUuid FromString(const std::string &input);
 	EsUuid() noexcept = default;
@@ -70,21 +72,11 @@ private:
 	// Internal constructor, from a string.
 	explicit EsUuid(const std::string &input);
 	// Lazy initialization getter.
-#ifdef _WIN32
-	const UUID &Value() const;
-#else
-	const std::string &Value() const;
-#endif
+	const UuidType &Value() const;
 	
 	
 private:
-#ifdef _WIN32
-	mutable UUID value;
-#else
-	// The internal representation of the UUID. For now, we store the UUID as an
-	// arbitrary-length string, rather than the more correct collection of bytes.
-	mutable std::string value;
-#endif
+	mutable UuidType value;
 };
 
 

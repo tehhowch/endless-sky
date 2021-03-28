@@ -15,6 +15,12 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // Include only the tested class's header.
 #include "../../source/EsUuid.h"
 
+namespace es_uuid {
+namespace detail {
+	EsUuid::UuidType MakeUuid();
+}
+}
+
 // ... and any system includes needed for the test file.
 #include <string>
 #include <type_traits>
@@ -36,13 +42,13 @@ TEST_CASE( "EsUuid class", "[uuid]" ) {
 		CHECK_FALSE( std::is_trivial<T>::value );
 		CHECK( std::is_standard_layout<T>::value );
 		CHECK( std::is_nothrow_destructible<T>::value );
-#ifdef _WIN32
-		CHECK( std::is_trivially_destructible<T>::value );
-#else
+#ifdef __APPLE__
 		// Class stores a string, and thus has the same behavior as that string.
 		CHECK_FALSE( std::is_trivially_destructible<T>::value );
 		CHECK( std::is_trivially_destructible<T>::value ==
 			std::is_trivially_destructible<std::string>::value );
+#else
+		CHECK( std::is_trivially_destructible<T>::value );
 #endif
 	}
 	SECTION( "Construction Traits" ) {
@@ -51,13 +57,13 @@ TEST_CASE( "EsUuid class", "[uuid]" ) {
 		// TODO: enable after refactoring how we create ships from stock models.
 		// CHECK_FALSE( std::is_copy_constructible<T>::value );
 		CHECK( std::is_move_constructible<T>::value );
-#ifdef _WIN32
-		CHECK( std::is_trivially_move_constructible<T>::value );
-#else
+#ifdef __APPLE__
 		// Class stores a string, and thus has the same behavior as that string.
 		CHECK_FALSE( std::is_trivially_move_constructible<T>::value );
 		CHECK( std::is_trivially_move_constructible<T>::value ==
 			std::is_trivially_move_constructible<std::string>::value );
+#else
+		CHECK( std::is_trivially_move_constructible<T>::value );
 #endif
 		CHECK( std::is_nothrow_move_constructible<T>::value );
 	}
@@ -67,13 +73,13 @@ TEST_CASE( "EsUuid class", "[uuid]" ) {
 	// }
 	SECTION( "Move Traits" ) {
 		CHECK( std::is_move_assignable<T>::value );
-#ifdef _WIN32
-		CHECK( std::is_trivially_move_assignable<T>::value );
-#else
+#ifdef __APPLE__
 		// Class stores a string, and thus has the same behavior as that string.
 		CHECK_FALSE( std::is_trivially_move_assignable<T>::value );
 		CHECK( std::is_trivially_move_assignable<T>::value ==
 			std::is_trivially_move_assignable<std::string>::value );
+#else
+		CHECK( std::is_trivially_move_assignable<T>::value );
 #endif
 		CHECK( std::is_nothrow_move_assignable<T>::value );
 	}

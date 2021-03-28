@@ -13,20 +13,23 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "EsUuid.h"
 
 #include "Files.h"
-#include "Random.h"
 
+#if defined(__APPLE__)
+#include "Random.h"
 #include <algorithm>
+#endif
+
 #include <stdexcept>
 
-#ifdef _WIN32
+#if defined(_WIN32)
 #include <windows.h>
-#else
-// #include <uuid/uuid.h>
+#elif !defined(__APPLE__)
+#include <uuid/uuid.h>
 #endif
 
 namespace es_uuid {
 namespace detail {
-#ifdef _WIN32
+#if defined(_WIN32)
 // #region TODO: export Files.cpp string helpers to avoid duplication.
 std::wstring ToUTF16(const std::string &input)
 {
@@ -58,29 +61,29 @@ std::string ToUTF8(const wchar_t *str)
 // #endregion TODO
 
 // Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
-UUID MakeUuid()
+EsUuid::UuidType MakeUuid()
 {
-	UUID id;
-	RPC_STATUS status = UuidCreate(&id);
+	EsUuid::UuidType value;
+	RPC_STATUS status = UuidCreate(&value.id);
 	if(status == RPC_S_UUID_LOCAL_ONLY)
 		Files::LogError("Created locally unique UUID only");
 	else if(status == RPC_S_UUID_NO_ADDRESS)
 		throw std::runtime_error("Failed to create UUID");
 	
-	return id;
+	return value;
 }
 
-UUID ParseUuid(const std::string &str)
+EsUuid::UuidType ParseUuid(const std::string &str)
 {
-	UUID id;
+	EsUuid::UuidType value;
 	auto data = ToUTF16(str);
-	RPC_STATUS status = UuidFromStringW(reinterpret_cast<RPC_WSTR>(&data[0]), &id);
+	RPC_STATUS status = UuidFromStringW(reinterpret_cast<RPC_WSTR>(&data[0]), &value.id);
 	if(status == RPC_S_INVALID_STRING_UUID)
 		throw std::invalid_argument("Cannot convert \"" + str + "\" into a UUID");
 	else if(status != RPC_S_OK)
 		throw std::runtime_error("Fatal error parsing \"" + str + "\" as a UUID");
 	
-	return id;
+	return value;
 }
 
 bool IsNil(const UUID &id)
@@ -102,16 +105,18 @@ std::string Serialize(const UUID &id)
 	
 	return result;
 }
-#else
+#elif defined(__APPLE__)
 // Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
-std::string MakeUuid()
+EsUuid::UuidType MakeUuid()
 {
-	return Random::UUID();
+	EsUuid::UuidType value;
+	value.id = Random::UUID();
+	return value;
 }
 
-std::string ParseUuid(const std::string &input)
+EsUuid::UuidType ParseUuid(const std::string &input)
 {
-	std::string value;
+	EsUuid::UuidType value;
 	// The input must have the correct number of characters and contain the correct subset
 	// of characters. This validation isn't exact, nor do we really require it to be, since
 	// this is not a networked application.
@@ -123,7 +128,7 @@ std::string ParseUuid(const std::string &input)
 			});
 	
 	if(isValid)
-		value = input;
+		value.id = input;
 	else
 		Files::LogError("Warning: Replacing invalid v4 UUID string \"" + input + "\"");
 	return value;
@@ -137,6 +142,37 @@ bool IsNil(const std::string &s)
 std::string Serialize(const std::string &s)
 {
 	return s;
+}
+#else
+EsUuid::UuidType MakeUuid()
+{
+	EsUuid::UuidType value;
+	uuid_generate_random(value.id);
+	return value;
+}
+
+EsUuid::UuidType ParseUuid(const std::string &str)
+{
+	EsUuid::UuidType value;
+	auto result = uuid_parse(str.data(), value.id);
+	if(result == -1)
+		throw std::invalid_argument("Cannot convert \"" + str + "\" into a UUID");
+	else if(result != 0)
+		throw std::runtime_error("Fatal error parsing \"" + str + "\" as a UUID");
+	
+	return value;
+}
+
+bool IsNil(const uuid_t &id)
+{
+	return uuid_is_null(id) == 1;
+}
+
+std::string Serialize(const uuid_t &id)
+{
+	char buf[UUID_STR_LEN];
+	uuid_unparse(id, buf);
+	return std::string(buf);
 }
 #endif
 }
@@ -179,21 +215,21 @@ void EsUuid::clone(const EsUuid &other)
 
 bool EsUuid::operator==(const EsUuid &other) const
 {
-	return Value() == other.Value();
+	return Value().id == other.Value().id;
 }
 
 
 
 bool EsUuid::operator!=(const EsUuid &other) const
 {
-	return Value() != other.Value();
+	return Value().id != other.Value().id;
 }
 
 
 
 std::string EsUuid::ToString() const
 {
-	return Serialize(Value());
+	return Serialize(Value().id);
 }
 
 
@@ -214,13 +250,9 @@ EsUuid::EsUuid(const std::string &input)
 
 
 
-#ifdef _WIN32
-const UUID &EsUuid::Value() const
-#else
-const std::string &EsUuid::Value() const
-#endif
+const EsUuid::UuidType &EsUuid::Value() const
 {
-	if(IsNil(value))
+	if(IsNil(value.id))
 		value = MakeUuid();
 	
 	return value;
