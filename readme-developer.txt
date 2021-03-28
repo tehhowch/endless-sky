@@ -15,7 +15,8 @@ DEB-based distros:
    libgl1-mesa-dev \
    libglew-dev \
    libopenal-dev \
-   libmad0-dev
+   libmad0-dev \
+   uuid-dev
 
 RPM-based distros:
    gcc-c++ \
@@ -26,7 +27,8 @@ RPM-based distros:
    mesa-libGL-devel \
    glew-devel \
    openal-soft-devel \
-   libmad-devel
+   libmad-devel \
+   libuuid-devel
 
 Then, from the project root folder, simply type:
 
@@ -91,6 +93,9 @@ Once Homebrew is installed, use it to install the libraries you will need:
   $ brew install libjpeg-turbo
   $ brew install libmad
   $ brew install sdl2
+  
+  # TODO: different uuid gen for macOS? Is this even needed?
+  $ brew install util-linux
 
 If the versions of those libraries are different from the ones that the Xcode project is set up for, you will need to modify the file paths in the “Frameworks” section in Xcode.
 It is possible that you will also need to modify the “Header Search Paths” and “Library Search Paths” in “Build Settings” to point to wherever Homebrew installed those libraries.

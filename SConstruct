@@ -69,7 +69,7 @@ env.Replace(ARFLAGS = 'rcST' if create_thin_archives else 'rcS')
 sys_libs = [
 	"rpcrt4",
 ] if is_windows_host else [
-
+	"uuid"
 ]
 env.Append(LIBS = sys_libs)
 
