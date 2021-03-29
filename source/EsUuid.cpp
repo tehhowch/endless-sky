@@ -25,6 +25,9 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <windows.h>
 #elif !defined(__APPLE__)
 #include <uuid/uuid.h>
+#if !defined(UUID_STR_LEN)
+#define UUID_STR_LEN 37
+#endif
 #endif
 
 namespace es_uuid {
