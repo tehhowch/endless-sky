@@ -19,11 +19,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // Don't include <windows.h>, which will shadow our Rectangle class.
 #define RPC_NO_WINDOWS_H
 #include <rpc.h>
-// "interface" is a reserved word on Windows, meaning we can't use it as a variable name.
-// But we'll clean that up later. Refs:
-// https://bugzilla.redhat.com/show_bug.cgi?id=980270
-// https://docs.microsoft.com/en-us/cpp/extensions/interface-class-cpp-component-extensions?view=msvc-160
-#undef interface
 #elif !defined(__APPLE__)
 #include <uuid/uuid.h>
 #endif
