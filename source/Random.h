@@ -15,10 +15,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include <cstdint>
 
-#ifndef _WIN32
-#include <string>
-#endif
-
 
 
 // Collection of functions for generating random numbers with a variety of
@@ -45,13 +41,6 @@ public:
 	static uint32_t Binomial(uint32_t t, double p = .5);
 	// Get a normally distributed number (mean = 0, sigma= 1).
 	static double Normal();
-	
-#ifndef _WIN32
-	// Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122)
-	// which are hexidecimal strings like "2c8ab67c-e7cc-471a-a415-08a63ba52527"
-	// and contain 121 bits of random data.
-	static std::string UUID();
-#endif
 };
 
 
