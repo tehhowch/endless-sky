@@ -13,7 +13,9 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include "EsUuid.h"
 
 #include "Files.h"
-
+#if defined(_WIN32)
+#include "text/Utf8.h"
+#endif
 
 #include <stdexcept>
 
@@ -29,36 +31,6 @@ namespace detail {
 constexpr std::size_t UUID_BUFFER_LENGTH = 37;
 
 #if defined(_WIN32)
-// #region TODO: export Files.cpp string helpers to avoid duplication.
-std::wstring ToUTF16(const std::string &input)
-{
-	const auto page = CP_UTF8;
-	std::wstring result;
-	if(input.empty())
-		return result;
-	
-	int size = MultiByteToWideChar(page, 0, &input[0], input.length(), nullptr, 0);
-	result.resize(size);
-	MultiByteToWideChar(page, 0, &input[0], input.length(), &result[0], size);
-	
-	return result;
-}
-std::string ToUTF8(const wchar_t *str)
-{
-	std::string result;
-	if(!str || !*str)
-		return result;
-	
-	const auto page = CP_UTF8;
-	// The returned size will include the null character at the end.
-	int size = WideCharToMultiByte(page, 0, str, -1, nullptr, 0, nullptr, nullptr) - 1;
-	result.resize(size);
-	WideCharToMultiByte(page, 0, str, -1, &result[0], size, nullptr, nullptr);
-	
-	return result;
-}
-// #endregion TODO
-
 // Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
 EsUuid::UuidType MakeUuid()
 {
@@ -75,7 +47,7 @@ EsUuid::UuidType MakeUuid()
 EsUuid::UuidType ParseUuid(const std::string &str)
 {
 	EsUuid::UuidType value;
-	auto data = ToUTF16(str);
+	auto data = Utf8::ToUTF16(str);
 	RPC_STATUS status = UuidFromStringW(reinterpret_cast<RPC_WSTR>(&data[0]), &value.id);
 	if(status == RPC_S_INVALID_STRING_UUID)
 		throw std::invalid_argument("Cannot convert \"" + str + "\" into a UUID");
@@ -96,7 +68,7 @@ std::string Serialize(const UUID &id)
 	wchar_t *buf = nullptr;
 	RPC_STATUS status = UuidToStringW(const_cast<UUID *>(&id), reinterpret_cast<RPC_WSTR *>(&buf));
 	
-	std::string result = (status == RPC_S_OK) ? ToUTF8(buf) : "";
+	std::string result = (status == RPC_S_OK) ? Utf8::ToUTF8(buf) : "";
 	if(result.empty())
 		Files::LogError("Failed to serialize UUID!");
 	else
