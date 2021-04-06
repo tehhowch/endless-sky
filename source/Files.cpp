@@ -275,7 +275,7 @@ vector<string> Files::ListDirectories(string directory)
 
 #if defined _WIN32
 	WIN32_FIND_DATAW ffd;
-	HANDLE hFind = FindFirstFileW(ToUTF16(directory + '*').c_str(), &ffd);
+	HANDLE hFind = FindFirstFileW(Utf8::ToUTF16(directory + '*').c_str(), &ffd);
 	if(!hFind)
 		return list;
 	
@@ -340,7 +340,7 @@ void Files::RecursiveList(string directory, vector<string> *list)
 	
 #if defined _WIN32
 	WIN32_FIND_DATAW ffd;
-	HANDLE hFind = FindFirstFileW(ToUTF16(directory + '*').c_str(), &ffd);
+	HANDLE hFind = FindFirstFileW(Utf8::ToUTF16(directory + '*').c_str(), &ffd);
 	if(hFind == INVALID_HANDLE_VALUE)
 		return;
 	
