@@ -16,22 +16,21 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 #include <windows.h>
 #endif
 
-
-
 using namespace std;
 
 namespace Utf8 {
 #if defined(_WIN32)
-	wstring ToUTF16(const string &input)
+	wstring ToUTF16(const string &input, bool isPath)
 	{
 		const auto page = CP_UTF8;
 		wstring result;
 		if(input.empty())
 			return result;
 		
-		int size = MultiByteToWideChar(page, 0, &input[0], input.length(), nullptr, 0);
+		bool endsInSlash = isPath && (input.back() == '/' || input.back() == '\\');
+		int size = MultiByteToWideChar(page, 0, &input[0], input.length() - endsInSlash, nullptr, 0);
 		result.resize(size);
-		MultiByteToWideChar(page, 0, &input[0], input.length(), &result[0], size);
+		MultiByteToWideChar(page, 0, &input[0], input.length() - endsInSlash, &result[0], size);
 		
 		return result;
 	}

@@ -47,7 +47,7 @@ EsUuid::UuidType MakeUuid()
 EsUuid::UuidType ParseUuid(const std::string &str)
 {
 	EsUuid::UuidType value;
-	auto data = Utf8::ToUTF16(str);
+	auto data = Utf8::ToUTF16(str, false);
 	RPC_STATUS status = UuidFromStringW(reinterpret_cast<RPC_WSTR>(&data[0]), &value.id);
 	if(status == RPC_S_INVALID_STRING_UUID)
 		throw std::invalid_argument("Cannot convert \"" + str + "\" into a UUID");

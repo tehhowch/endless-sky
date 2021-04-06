@@ -18,7 +18,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 namespace Utf8 {
 #if defined(_WIN32)
-	std::wstring ToUTF16(const std::string &str);
+	std::wstring ToUTF16(const std::string &str, bool isPath = true);
 	std::string ToUTF8(const wchar_t *str);
 #endif
 	
