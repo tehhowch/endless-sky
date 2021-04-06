@@ -14,16 +14,17 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 #include "Files.h"
 
-#if defined(__APPLE__)
-#include "Random.h"
-#include <algorithm>
-#endif
+// #if defined(__APPLE__)
+// #include "Random.h"
+// #include <algorithm>
+// #endif
 
 #include <stdexcept>
 
 #if defined(_WIN32)
 #include <windows.h>
-#elif !defined(__APPLE__)
+// #elif !defined(__APPLE__)
+#else
 #include <uuid/uuid.h>
 #if !defined(UUID_STR_LEN)
 #define UUID_STR_LEN 37
@@ -108,44 +109,44 @@ std::string Serialize(const UUID &id)
 	
 	return result;
 }
-#elif defined(__APPLE__)
-// Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
-EsUuid::UuidType MakeUuid()
-{
-	EsUuid::UuidType value;
-	value.id = Random::UUID();
-	return value;
-}
+// #elif defined(__APPLE__)
+// // Get a version 4 (random) Universally Unique Identifier (see IETF RFC 4122).
+// EsUuid::UuidType MakeUuid()
+// {
+// 	EsUuid::UuidType value;
+// 	value.id = Random::UUID();
+// 	return value;
+// }
 
-EsUuid::UuidType ParseUuid(const std::string &input)
-{
-	EsUuid::UuidType value;
-	// The input must have the correct number of characters and contain the correct subset
-	// of characters. This validation isn't exact, nor do we really require it to be, since
-	// this is not a networked application.
-	bool isValid = input.size() == 36
-			&& std::count(input.begin(), input.end(), '-') == 4
-			&& std::all_of(input.begin(), input.end(), [](const char &c) noexcept -> bool
-			{
-				return c == '-' || std::isxdigit(static_cast<unsigned char>(c));
-			});
+// EsUuid::UuidType ParseUuid(const std::string &input)
+// {
+// 	EsUuid::UuidType value;
+// 	// The input must have the correct number of characters and contain the correct subset
+// 	// of characters. This validation isn't exact, nor do we really require it to be, since
+// 	// this is not a networked application.
+// 	bool isValid = input.size() == 36
+// 			&& std::count(input.begin(), input.end(), '-') == 4
+// 			&& std::all_of(input.begin(), input.end(), [](const char &c) noexcept -> bool
+// 			{
+// 				return c == '-' || std::isxdigit(static_cast<unsigned char>(c));
+// 			});
 	
-	if(isValid)
-		value.id = input;
-	else
-		Files::LogError("Warning: Replacing invalid v4 UUID string \"" + input + "\"");
-	return value;
-}
+// 	if(isValid)
+// 		value.id = input;
+// 	else
+// 		Files::LogError("Warning: Replacing invalid v4 UUID string \"" + input + "\"");
+// 	return value;
+// }
 
-bool IsNil(const std::string &s)
-{
-	return s.empty();
-}
+// bool IsNil(const std::string &s)
+// {
+// 	return s.empty();
+// }
 
-std::string Serialize(const std::string &s)
-{
-	return s;
-}
+// std::string Serialize(const std::string &s)
+// {
+// 	return s;
+// }
 #else
 EsUuid::UuidType MakeUuid()
 {
