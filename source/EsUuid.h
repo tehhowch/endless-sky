@@ -19,7 +19,6 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // Don't include <windows.h>, which will shadow our Rectangle class.
 #define RPC_NO_WINDOWS_H
 #include <rpc.h>
-// #elif !defined(__APPLE__)
 #else
 #include <uuid/uuid.h>
 #endif
@@ -33,8 +32,6 @@ public:
 	struct UuidType final {
 #if defined(_WIN32)
 		UUID id;
-#elif defined(__APPLE__)
-		std::string id;
 #else
 		uuid_t id;
 #endif
