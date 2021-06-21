@@ -22,7 +22,7 @@ PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 // when trying to increment dates in whole-day steps.
 class Date {
 public:
-	Date() = default;
+	Date() noexcept = default;
 	Date(int day, int month, int year);
 	
 	// Get this date as a string, in the form "Day, DD Mon Year".

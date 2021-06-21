@@ -68,6 +68,14 @@ env.Append(CCFLAGS = flags)
 create_thin_archives = any(env.get(var, '').startswith('gcc') for var in ('AR', 'RANLIB'))
 env.Replace(ARFLAGS = 'rcST' if create_thin_archives else 'rcS')
 
+# Required system libraries, such as UUID generator runtimes.
+sys_libs = [
+	"rpcrt4",
+] if is_windows_host else [
+	"uuid"
+]
+env.Append(LIBS = sys_libs)
+
 game_libs = [
 	"winmm",
 	"mingw32",
@@ -134,7 +142,7 @@ test = env.Program(
 	 # Add Catch header & additional test includes to the existing search paths
 	CPPPATH=(env.get('CPPPATH', []) + [pathjoin('tests', 'include')]),
 	# Do not link against the actual implementations of SDL, OpenGL, etc.
-	LIBS=[],
+	LIBS=sys_libs,
 	# Pass the necessary link flags for a console program.
 	LINKFLAGS=[x for x in env.get('LINKFLAGS', []) if x not in ('-mwindows',)]
 )

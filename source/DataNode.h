@@ -32,8 +32,9 @@ public:
 	explicit DataNode(const DataNode *parent = nullptr);
 	// Copy constructor.
 	DataNode(const DataNode &other);
-	
 	DataNode &operator=(const DataNode &other);
+	DataNode(DataNode &&) noexcept = default;
+	DataNode &operator=(DataNode &&) noexcept = default;
 	
 	// Get the number of tokens in this node.
 	int Size() const;

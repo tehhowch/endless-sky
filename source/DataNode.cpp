@@ -36,7 +36,7 @@ DataNode::DataNode(const DataNode *parent)
 
 // Copy constructor.
 DataNode::DataNode(const DataNode &other)
-	: children(other.children), tokens(other.tokens)
+	: children(other.children), tokens(other.tokens), lineNumber(other.lineNumber)
 {
 	Reparent();
 }
@@ -48,6 +48,7 @@ DataNode &DataNode::operator=(const DataNode &other)
 {
 	children = other.children;
 	tokens = other.tokens;
+	lineNumber = other.lineNumber;
 	Reparent();
 	return *this;
 }
